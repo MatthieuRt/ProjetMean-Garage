@@ -10,8 +10,14 @@ const userSchema = mongoose.Schema({
             modele:String
         }
     ],
-    profil:'user', 
-    valid: false
+    profil:{
+        type:String,
+        default : 'user'
+    }, 
+    valid: {
+        type:Boolean,
+        default : false
+    }
 
 })
 module.exports = mongoose.model('Utilisateur',userSchema);
