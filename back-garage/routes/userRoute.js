@@ -1,9 +1,11 @@
+const { request, response } = require('express');
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 
 const Utilisateur = require('../models/Utilisateur');
 
+// inscription de l'utilisateur pour créer un nouveau compte
 router.post('/inscription',(request,response)=>{
     const user = new Utilisateur({
         identfiant : request.body.identfiant,
@@ -22,7 +24,7 @@ router.post('/inscription',(request,response)=>{
 
     user.save()
         .then(data=>{
-            var body = '<h1>Bonjour!</h1><p>Veuillez cliquer ici pour confirmer la création de votre compte <a href="http://localhost:9000/user/confirmation/'+data._id+'">here</a> to visit our website</p>'; 
+            var body = '<h1>Bonjour!</h1><p>Veuillez cliquer ici pour confirmer la création de votre compte <a href="http://localhost:9000/user/confirmation/'+data._id+'">Ici</a> pour confirmer.</p>'; 
             let mailOptions = {
                 to: 'andrianmattax@gmail.com',
                 subject: 'Email de confirmation de création de compte',
@@ -42,6 +44,7 @@ router.post('/inscription',(request,response)=>{
    
     
 })
+// confirmation compte utilisateur par email
 router.get('/confirmation/:id',async (request,response)=>{
     console.log(request.params.id)
     try {
@@ -53,5 +56,18 @@ router.get('/confirmation/:id',async (request,response)=>{
     } catch (error) {
         response.json({code : 404,message : error});
     }
+})
+// connexion utilisateur
+router.post('/login',(request,response)=>{
+    console.log({mail : request.body.mail, motDePasse: request.body.password,valid:true})
+    Utilisateur.find({mail : request.body.mail, motDePasse: request.body.password},(err,user)=>{
+        if(err)
+            response.send(err);
+        else if(user.length==0){
+            response.json({code:405,message:'Votre email ou votre mots de passe est incorrect'})
+        }
+        console.log(user)
+        response.json(user)
+    })
 })
 module.exports = router;
