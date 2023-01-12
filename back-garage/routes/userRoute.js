@@ -22,7 +22,7 @@ router.post('/inscription',(request,response)=>{
 
     user.save()
         .then(data=>{
-            var body = '<h1>Bonjour!</h1><p>Veuillez clicker ici pour confirmer la création de votre compte <a href="http://localhost:9000/user/confirmation/'+data._id+'">here</a> to visit our website</p>'; 
+            var body = '<h1>Bonjour!</h1><p>Veuillez cliquer ici pour confirmer la création de votre compte <a href="http://localhost:9000/user/confirmation/'+data._id+'">here</a> to visit our website</p>'; 
             let mailOptions = {
                 to: 'andrianmattax@gmail.com',
                 subject: 'Email de confirmation de création de compte',
