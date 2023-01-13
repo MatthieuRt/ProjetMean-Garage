@@ -4,6 +4,7 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 
 const Utilisateur = require('../models/Utilisateur');
+const ConfirmCompte = require('../models/ConfirmCompte');
 
 // inscription de l'utilisateur pour créer un nouveau compte
 router.post('/inscription',(request,response)=>{
@@ -19,40 +20,93 @@ router.post('/inscription',(request,response)=>{
             pass: 'xmfqlhsxkgslrbdp'
         }
     });
-    // var body = '<h1>Bonjour!</h1><p>Veuillez confirmer par cette email la création de votre compte</p>'
-    // var body ='<h1>Bonjour!</h1><p>Veuillez confirmer par cette email la création de votre compte</p><p><a href=\'localhost:9000/user/confirmation/'+data._id+'\'> cliquer ici '+data._id+'!</a></p>'; 
+    //check compte s'il existe déjà
+    Utilisateur.find({mail : user.mail} , (err,userExist)=>{
+        //si utilisateur n'existe pas encore
+        if(userExist.length==0){
+            user.save()
+            .then(data=>{
+                const uuid = new ConfirmCompte({
+                    userId : data._id,
+                })
+                uuid.save()
+                    .then(code=>{
+                        var body = '<h1>Bonjour,</h1><p>Nous avons reçu une demande de création de compte pour cette adresse e-mail.</p><p> Pour compléter la création de votre compte, veuillez entrer le code de confirmation suivant : '+code._id+'sur notre site web.</p> \n'
+                        +'<p>Merci d\'avoir utiliser notre service.</p><p>Cordialement,</p> <p>L\'équipe de notre service</p>';
+                        let mailOptions = {
+                            to: 'andrianmattax@gmail.com',
+                            subject: 'Email de confirmation de création de compte',
+                            html: body
+                        };
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                const rep = {
+                                    message : 'OK',
+                                    value : null,
+                                    code : 200
+                                }
+                                response.json(rep);
+                                console.log('Email sent: ' + info.response);
+                            }
+                        });
+                    })
+                
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+        }
+        // utilisateur existe déja avec compte déja activé
+        else if(userExist.valid){
+            const rep = {
+                message : 'KO',
+                erreur :'l\'email appartient déjà à un compte existant.',
+                value : null,
+                code:404
+            }
+        }
+        else{
+            const rep = {
+                message : 'KO',
+                value :'/confirmation-required',
+                code:404
+            }
+        }
 
-    user.save()
-        .then(data=>{
-            var body = '<h1>Bonjour!</h1><p>Veuillez cliquer ici pour confirmer la création de votre compte <a href="http://localhost:9000/user/confirmation/'+data._id+'">Ici</a> pour confirmer.</p>'; 
-            let mailOptions = {
-                to: 'andrianmattax@gmail.com',
-                subject: 'Email de confirmation de création de compte',
-                html: body
-            };
-            transporter.sendMail(mailOptions, function(error, info){
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-   
+    })   
     
 })
 // confirmation compte utilisateur par email
-router.get('/confirmation/:id',async (request,response)=>{
-    console.log(request.params.id)
+router.post('/confirmation',async (request,response)=>{
+    console.log(request.body.code)
+    let rep = {}
     try {
-        await Utilisateur.updateOne(
-            { _id: request.params.id }, 
-            {$set : {valid:true}}
-        )
-
+        ConfirmCompte.find({_id : request.body.code},async (err,confirmUser)=>{
+            if(err){
+                rep ={
+                    message : 'KO',
+                    code:404,
+                    value : err
+                }
+            }
+            const updatedUser = await Utilisateur.updateOne(
+                { _id: confirmUser.userId}, 
+                {$set : {valid:true}},(err,up)=>{
+                    if(up){
+                        ConfirmCompte.deleteOne({_id:confirmUser._id})
+                    }
+                }
+            )
+            rep = {
+                message : 'OK',
+                value : updatedUser,
+                code : 200
+            }
+        })
+        
+        response.json(rep);
     } catch (error) {
         response.json({code : 404,message : error});
     }
@@ -61,13 +115,31 @@ router.get('/confirmation/:id',async (request,response)=>{
 router.post('/login',(request,response)=>{
     console.log({mail : request.body.mail, motDePasse: request.body.password,valid:true})
     Utilisateur.find({mail : request.body.mail, motDePasse: request.body.password},(err,user)=>{
-        if(err)
-            response.send(err);
+        if(err){
+            const rep = {
+                message : 'KO',
+                code : 404,
+                value :  err
+            }
+            response.send(rep);
+        }
         else if(user.length==0){
-            response.json({code:405,message:'Votre email ou votre mots de passe est incorrect'})
+            const reponse = {
+                message : 'KO',
+                value : 'Votre email ou votre mots de passe est incorrect',
+                code : 404
+            }
+            response.json(reponse)
         }
         console.log(user)
-        response.json(user)
+        const reponse = {
+            message : 'OK',
+            value : user,
+            code : 200
+        }
+        response.json(reponse)
+        console.log('----------------------------------------------------')
+        console.log(reponse);
     })
 })
 module.exports = router;
