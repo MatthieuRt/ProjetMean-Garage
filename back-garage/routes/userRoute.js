@@ -34,12 +34,6 @@ router.post('/inscription',(request,response)=>{
                 if (error) {
                     console.log(error);
                 } else {
-                    const rep = {
-                        message : 'OK',
-                        value : null,
-                        code : 200
-                    }
-                    response.json(rep);
                     console.log('Email sent: ' + info.response);
                 }
             });
@@ -54,16 +48,11 @@ router.post('/inscription',(request,response)=>{
 router.get('/confirmation/:id',async (request,response)=>{
     console.log(request.params.id)
     try {
-        const updatedUser = await Utilisateur.updateOne(
+        await Utilisateur.updateOne(
             { _id: request.params.id }, 
             {$set : {valid:true}}
         )
-        const reponse = {
-            message : 'OK',
-            value : updatedUser,
-            code : 200
-        }
-        response.json(reponse);
+
     } catch (error) {
         response.json({code : 404,message : error});
     }
@@ -75,22 +64,10 @@ router.post('/login',(request,response)=>{
         if(err)
             response.send(err);
         else if(user.length==0){
-            const reponse = {
-                message : 'KO',
-                value : 'Votre email ou votre mots de passe est incorrect',
-                code : 404
-            }
-            response.json(reponse)
+            response.json({code:405,message:'Votre email ou votre mots de passe est incorrect'})
         }
         console.log(user)
-        const reponse = {
-            message : 'OK',
-            value : user,
-            code : 200
-        }
-        response.json(reponse)
-        console.log('----------------------------------------------------')
-        console.log(reponse);
+        response.json(user)
     })
 })
 module.exports = router;

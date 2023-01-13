@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 require('./DbConnexion');
 
 app.use(bodyParser.json());
-app.use(cors());
 
 const userRoute = require('./routes/userRoute');
 const reparationsRoute = require('./routes/reparationsRoute');
