@@ -44,9 +44,9 @@ export class AuthSignUpComponent implements OnInit
     {
         // Create the form
         this.signUpForm = this._formBuilder.group({
-                name      : ['', Validators.required],
-                mail     : ['', [Validators.required, Validators.email]],
-                password  : ['', Validators.required],
+                identifiant      : ['naina', Validators.required],
+                mail     : ['andrianmattax@gmail.com', [Validators.required, Validators.email]],
+                motDePasse  : ['12345', Validators.required],
                 // agreements: ['', Validators.requiredTrue]
             }
         );
@@ -61,6 +61,7 @@ export class AuthSignUpComponent implements OnInit
      */
     signUp(): void
     {
+        console.log("signUP lancer");
         // Do nothing if the form is invalid
         if ( this.signUpForm.invalid )
         {
@@ -101,30 +102,6 @@ export class AuthSignUpComponent implements OnInit
             }
         };
         // Sign up
-        this._authService.signUp(this.signUpForm.value)
-            .subscribe(
-                (response) => {
-
-                    // Navigate to the confirmation required page
-                    this._router.navigateByUrl('/confirmation-required');
-                },
-                (response) => {
-
-                    // Re-enable the form
-                    this.signUpForm.enable();
-
-                    // Reset the form
-                    this.signUpNgForm.resetForm();
-
-                    // Set the alert
-                    this.alert = {
-                        type   : 'error',
-                        message: 'Something went wrong, please try again.'
-                    };
-
-                    // Show the alert
-                    this.showAlert = true;
-                }
-            );
+        this._authService.signUp(this.signUpForm.value).subscribe(onSuccess);
     }
 }

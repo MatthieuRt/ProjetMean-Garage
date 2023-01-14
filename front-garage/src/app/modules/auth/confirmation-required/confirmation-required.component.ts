@@ -49,8 +49,11 @@ export class AuthConfirmationRequiredComponent  implements OnInit
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         const onSuccess  =(response: any)=>{
             if(response.message==='OK'){
-                sessionStorage.setItem('user',response.value);
+                const user  = response.value;
+                user.removeAttribute('motDePasse');
+                sessionStorage.setItem('user',JSON.stringify(user));
                 this._authService._authenticated = true;
+                this._router.navigateByUrl('/dashboards/project');
             }else{
                  // Re-enable the form
                  this.confirmForm.enable();

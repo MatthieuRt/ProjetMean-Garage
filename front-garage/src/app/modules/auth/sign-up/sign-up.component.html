@@ -33,14 +33,14 @@
                 [formGroup]="signUpForm"
                 #signUpNgForm="ngForm">
 
-                <!-- Name field -->
+                <!-- identifiant field -->
                 <mat-form-field class="w-full">
                     <mat-label>Identifiant</mat-label>
                     <input
-                        id="name"
+                        id="identifiant"
                         matInput
-                        [formControlName]="'name'">
-                    <mat-error *ngIf="signUpForm.get('name').hasError('required')">
+                        [formControlName]="'identifiant'">
+                    <mat-error *ngIf="signUpForm.get('identifiant').hasError('required')">
                         Identifiant requis
                     </mat-error>
                 </mat-form-field>
@@ -64,10 +64,10 @@
                 <mat-form-field class="w-full">
                     <mat-label>Mots de passe</mat-label>
                     <input
-                        id="password"
+                        id="motDePasse"
                         matInput
                         type="password"
-                        [formControlName]="'password'"
+                        [formControlName]="'motDePasse'"
                         #passwordField>
                     <button
                         mat-icon-button

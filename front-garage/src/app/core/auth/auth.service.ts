@@ -163,7 +163,11 @@ export class AuthService
      */
     signUp(user: { identifiant: string; mail: string; motDePasse: string}): Observable<any>
     {
-        return this._httpClient.post(baseUrl+'user/inscription', user);
+        const url = baseUrl+'user/inscription';
+        console.log(url);
+        console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+        console.log(user);
+        return this._httpClient.post(url, user);
     }
     confirmCompte(data: {code: string}): Observable<any>{
         return this._httpClient.post(baseUrl+'user/confirmation',data);
