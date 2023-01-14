@@ -58,8 +58,8 @@ router.get('/enCours/:id', (req, res) => {
     });
 });
 
-router.get('/getAll/:idUser', (req, res) => {
-    ReparationsVoiture.find({idUtilisateur:req.params.idUser},(err, docs) => {
+router.get('/historique/:idUser/:idVoiture', (req, res) => {
+    ReparationsVoiture.find({idUtilisateur:req.params.idUser,idUtilisateur:req.params.idUtilisateur},(err, docs) => {
         if (!err) { res.send(docs); }
         else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
     });
