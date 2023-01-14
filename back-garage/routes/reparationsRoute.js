@@ -16,9 +16,10 @@ router.get('/', (req, res) => {
     });
 });
 
-router.post('/insert/:id', (req, res) => {
+router.post('/insert', (req, res) => {
     var rep = new ReparationsVoiture({
-        idVoiture: req.params.id,
+        idVoiture: req.body.id,
+        idUtilisateur: req.body.idUser,
         listeReparation : [],
         dateArrivee:new Date(),
         dateSortie:null,
