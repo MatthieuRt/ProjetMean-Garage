@@ -32,7 +32,7 @@ router.post('/inscription',(request,response)=>{
                 })
                 uuid.save()
                     .then(code=>{
-                        var body = '<h1>Bonjour,</h1><p>Nous avons reçu une demande de création de compte pour cette adresse e-mail.</p><p> Pour compléter la création de votre compte, veuillez entrer le code de confirmation suivant : '+code._id+' sur notre site web.</p> \n'
+                        var body = '<h1>Bonjour,</h1><p>Nous avons reçu une demande de création de compte pour cette adresse e-mail.</p><p> Pour compléter la création de votre compte, veuillez entrer le code de confirmation suivant : '+code.code+' sur notre site web.</p> \n'
                         +'<p>Merci d\'avoir utiliser notre service.</p><p>Cordialement,</p> <p>L\'équipe de notre service</p>';
                         let mailOptions = {
                             to: 'andrianmattax@gmail.com',
@@ -84,32 +84,30 @@ router.post('/confirmation',async (request,response)=>{
     console.log(request.body.code)
     let rep = {}
     try {
-        ConfirmCompte.find({_id : request.body.code},async (err,confirmUser)=>{
-            if(err){
-                rep ={
-                    message : 'KO',
-                    code:404,
-                    value : err
-                }
+        let confirmUser = await ConfirmCompte.findOne({code : request.body.code});
+            if(confirmUser!=null){
+                await Utilisateur.findOneAndUpdate({ _id: confirmUser.userId}, {valid:true},{ new: true })
+                        .then((updatedUser)=>{
+                            ConfirmCompte.deleteOne({_id:confirmUser._id}).exec().then((result) => {
+                                if(result.deletedCount>0){
+                                    console.log("ConfirmCompte supprimé");
+                                }else{
+                                    console.log("ConfirmCompte n'a pas été supprimé");
+                                }
+                            });
+                            
+                            rep = {
+                                message : 'OK',
+                                value : updatedUser,
+                                code : 200
+                            }
+                            console.log(rep)
+                            response.json(rep);
+                        })
             }
-            const updatedUser = await Utilisateur.updateOne(
-                { _id: confirmUser.userId}, 
-                {$set : {valid:true}},(err,up)=>{
-                    if(up){
-                        ConfirmCompte.deleteOne({_id:confirmUser._id})
-                    }
-                }
-            )
-            rep = {
-                message : 'OK',
-                value : updatedUser,
-                code : 200
-            }
-        })
-        
-        response.json(rep);
     } catch (error) {
-        response.json({code : 404,message : error});
+        console.log(error)
+        response.json({code : 404,message:'KO',error : error});
     }
 })
 // connexion utilisateur
