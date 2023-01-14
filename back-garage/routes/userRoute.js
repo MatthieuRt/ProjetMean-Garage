@@ -21,9 +21,10 @@ router.post('/inscription',(request,response)=>{
         }
     });
     //check compte s'il existe déjà
-    Utilisateur.find({mail : user.mail} , (err,userExist)=>{
+    Utilisateur.findOne({mail : user.mail} , (err,userExist)=>{
+        let rep = {};
         //si utilisateur n'existe pas encore
-        if(userExist.length==0){
+        if(userExist==null){
             user.save()
             .then(data=>{
                 const uuid = new ConfirmCompte({
@@ -47,7 +48,7 @@ router.post('/inscription',(request,response)=>{
                                     value : null,
                                     code : 200
                                 }
-                                response.json(rep);
+                                // response.json(rep);
                                 console.log('Email sent: ' + info.response);
                             }
                         });
@@ -60,7 +61,7 @@ router.post('/inscription',(request,response)=>{
         }
         // utilisateur existe déja avec compte déja activé
         else if(userExist.valid){
-            const rep = {
+            rep = {
                 message : 'KO',
                 erreur :'l\'email appartient déjà à un compte existant.',
                 value : null,
@@ -68,13 +69,13 @@ router.post('/inscription',(request,response)=>{
             }
         }
         else{
-            const rep = {
+            rep = {
                 message : 'KO',
                 value :'/confirmation-required',
                 code:404
             }
         }
-
+        response.json(rep);
     })   
     
 })
