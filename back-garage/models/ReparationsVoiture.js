@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 
 const reparationsVoitureSchema = mongoose.Schema({
     idVoiture:String,
-    designation:String,
-    debutReparation: Date, 
-    finReparation: Date,
     listeReparation :[
         {
             idPiece:String,
