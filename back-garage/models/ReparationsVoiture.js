@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const reparationsVoitureSchema = mongoose.Schema({
+    idUtilisateur:String,
     idVoiture:String,
     listeReparation :[
         {
@@ -14,7 +15,7 @@ const reparationsVoitureSchema = mongoose.Schema({
         }
     ],
     dateArrivee:Date,
-    dateSortie:Date
-
+    dateSortie:Date,
+    estDepose:Boolean
 })
 module.exports = mongoose.model('ReparationsVoiture',reparationsVoitureSchema);

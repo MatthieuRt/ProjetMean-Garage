@@ -16,12 +16,14 @@ router.get('/', (req, res) => {
     });
 });
 
-router.post('/insert/:id', (req, res) => {
+router.post('/insert', (req, res) => {
     var rep = new ReparationsVoiture({
-        idVoiture: req.params.id,
+        idVoiture: req.body.id,
+        idUtilisateur: req.body.idUser,
         listeReparation : [],
         dateArrivee:new Date(),
-        dateSortie:null
+        dateSortie:null,
+        estDepose:false
     });
     rep.save((err, doc) => {
         if (!err) { res.send(doc); }
@@ -49,6 +51,18 @@ router.put('/add/:id', (req, res) => {
     });
 });
 
+router.get('/enCours/:id', (req, res) => {
+    ReparationsVoiture.find({idUtilisateur:req.params.id,dateSortie:null,estDepose:true},{listeReparation:1},(err, docs) => {
+        if (!err) { res.send(docs); }
+        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+    });
+});
 
+router.get('/historique/:idUser/:idVoiture', (req, res) => {
+    ReparationsVoiture.find({idUtilisateur:req.params.idUser,idUtilisateur:req.params.idUtilisateur},(err, docs) => {
+        if (!err) { res.send(docs); }
+        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+    });
+});
 
 module.exports = router;
