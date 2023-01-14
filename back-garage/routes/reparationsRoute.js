@@ -52,7 +52,14 @@ router.put('/add/:id', (req, res) => {
 });
 
 router.get('/enCours/:id', (req, res) => {
-    ReparationsVoiture.find({idUtilisateur:req.params.id,dateSortie:null,estDepose:true},(err, docs) => {
+    ReparationsVoiture.find({idUtilisateur:req.params.id,dateSortie:null,estDepose:true},{listeReparation:1},(err, docs) => {
+        if (!err) { res.send(docs); }
+        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+    });
+});
+
+router.get('/getAll/:idUser', (req, res) => {
+    ReparationsVoiture.find({idUtilisateur:req.params.idUser},(err, docs) => {
         if (!err) { res.send(docs); }
         else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
     });
