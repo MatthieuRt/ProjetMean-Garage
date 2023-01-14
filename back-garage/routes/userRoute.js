@@ -9,7 +9,7 @@ const ConfirmCompte = require('../models/ConfirmCompte');
 // inscription de l'utilisateur pour créer un nouveau compte
 router.post('/inscription',(request,response)=>{
     const user = new Utilisateur({
-        identfiant : request.body.identfiant,
+        identifiant : request.body.identifiant,
         motDePasse : request.body.motDePasse,
         mail : request.body.mail,
     })
@@ -32,7 +32,7 @@ router.post('/inscription',(request,response)=>{
                 })
                 uuid.save()
                     .then(code=>{
-                        var body = '<h1>Bonjour,</h1><p>Nous avons reçu une demande de création de compte pour cette adresse e-mail.</p><p> Pour compléter la création de votre compte, veuillez entrer le code de confirmation suivant : '+code._id+'sur notre site web.</p> \n'
+                        var body = '<h1>Bonjour,</h1><p>Nous avons reçu une demande de création de compte pour cette adresse e-mail.</p><p> Pour compléter la création de votre compte, veuillez entrer le code de confirmation suivant : '+code._id+' sur notre site web.</p> \n'
                         +'<p>Merci d\'avoir utiliser notre service.</p><p>Cordialement,</p> <p>L\'équipe de notre service</p>';
                         let mailOptions = {
                             to: 'andrianmattax@gmail.com',
@@ -41,7 +41,7 @@ router.post('/inscription',(request,response)=>{
                         };
                         transporter.sendMail(mailOptions, function(error, info){
                             if (error) {
-                                console.log(error);
+                                Utilisateur.remove({_id : data._id})
                             } else {
                                 const rep = {
                                     message : 'OK',
