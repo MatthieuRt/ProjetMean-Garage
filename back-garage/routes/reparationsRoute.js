@@ -50,6 +50,11 @@ router.put('/add/:id', (req, res) => {
     });
 });
 
-
+router.get('/enCours/:id', (req, res) => {
+    ReparationsVoiture.find({idUtilisateur:req.params.id,dateSortie:null,estDepose:true},(err, docs) => {
+        if (!err) { res.send(docs); }
+        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+    });
+});
 
 module.exports = router;

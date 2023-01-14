@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const reparationsVoitureSchema = mongoose.Schema({
+    idUtilisateur:String,
     idVoiture:String,
     listeReparation :[
         {
