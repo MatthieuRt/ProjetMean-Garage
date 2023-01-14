@@ -122,7 +122,7 @@ router.post('/login',(request,response)=>{
             }
             response.send(rep);
         }
-        else if(user.length==0){
+        else if(user==null){
             const reponse = {
                 message : 'KO',
                 value : 'Votre email ou votre mots de passe est incorrect',
