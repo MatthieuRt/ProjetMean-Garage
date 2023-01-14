@@ -48,7 +48,7 @@ router.put('/add/:id', (req, res) => {
             dateFin:"2023-01-14 13:05:22"
         }],
     };
-    ReparationsVoiture.findByIdAndUpdate(req.params.id, { $set: reparation }, { new: true }, (err, doc) => {
+    ReparationsVoiture.findByIdAndUpdate(req.params.id, { $push: reparation }, { new: true }, (err, doc) => {
         if (!err) { res.send(doc); }
         else { console.log('Error in Employee update : '+JSON.stringify(err,undefined,2)); }
     });
