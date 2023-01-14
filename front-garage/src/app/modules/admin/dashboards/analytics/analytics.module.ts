@@ -13,6 +13,13 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { AnalyticsComponent } from 'app/modules/admin/dashboards/analytics/analytics.component';
 import { analyticsRoutes } from 'app/modules/admin/dashboards/analytics/analytics.routing';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { FuseHighlightModule } from '@fuse/components/highlight';
 
 @NgModule({
     declarations: [
@@ -30,6 +37,13 @@ import { analyticsRoutes } from 'app/modules/admin/dashboards/analytics/analytic
         MatTableModule,
         MatTooltipModule,
         NgApexchartsModule,
+        MatStepperModule,
+        MatRadioModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        FuseHighlightModule,
         SharedModule
     ]
 })
