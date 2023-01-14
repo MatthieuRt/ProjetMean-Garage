@@ -5,6 +5,8 @@ const nodemailer = require('nodemailer');
 
 const Utilisateur = require('../models/Utilisateur');
 const ConfirmCompte = require('../models/ConfirmCompte');
+const DemandeDepotVoiture = require('../models/DemandeDepotVoiture');
+const Voiture = require('../models/Voiture');
 
 // inscription de l'utilisateur pour créer un nouveau compte
 router.post('/inscription',(request,response)=>{
@@ -141,4 +143,28 @@ router.post('/login',(request,response)=>{
         console.log(reponse);
     })
 })
+// //ajout nouvelle voiture
+// router.post('/add/car',async (request,response)=>{
+//     let car = new Voiture({
+//         numero : request.voiture.numero,
+//         modele : request.voiture.modele
+//     })
+//     let demande = new DemandeDepotVoiture({
+//         idUser : request.body.idUser,
+//         voiture : car
+//     })
+//     await Utilisateur.findOne({_id:request.body.idUser})
+//         .then(user=>{
+//             user.listeVoiture.push(car);
+//             Utilisateur.findOneAndUpdate({ _id: user._id}, {listeVoiture: user.listeVoiture})
+//                 .error(err=>{
+//                     console.log('______________________Update liste voiture___________________________')
+//                     console.log(err);
+//                 })
+//                 .then(()=>{
+//                     demande.save();
+//                 })
+
+//         })
+// })
 module.exports = router;
