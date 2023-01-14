@@ -1,33 +1,70 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
-import { ApexOptions } from 'ng-apexcharts';
-import { ProjectService } from 'app/modules/admin/dashboards/project/project.service';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { debounceTime, map, merge, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { fuseAnimations } from '@fuse/animations';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { InventoryBrand, InventoryCategory, InventoryPagination, InventoryProduct, InventoryTag, InventoryVendor } from 'app/modules/admin/apps/ecommerce/inventory/inventory.types';
+import { InventoryService } from 'app/modules/admin/apps/ecommerce/inventory/inventory.service';
 
 @Component({
     selector       : 'project',
     templateUrl    : './project.component.html',
+    styles         : [
+        /* language=SCSS */
+        `
+            .inventory-grid {
+                grid-template-columns: 48px auto 40px;
+
+                @screen sm {
+                    grid-template-columns: 48px auto 112px 72px;
+                }
+
+                @screen md {
+                    grid-template-columns: 48px 112px auto 112px 72px;
+                }
+
+                @screen lg {
+                    grid-template-columns: 48px 112px auto 112px 96px 96px 72px;
+                }
+            }
+        `
+    ],
     encapsulation  : ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations     : fuseAnimations
 })
-export class ProjectComponent implements OnInit, OnDestroy
+export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
 {
-    chartGithubIssues: ApexOptions = {};
-    chartTaskDistribution: ApexOptions = {};
-    chartBudgetDistribution: ApexOptions = {};
-    chartWeeklyExpenses: ApexOptions = {};
-    chartMonthlyExpenses: ApexOptions = {};
-    chartYearlyExpenses: ApexOptions = {};
-    data: any;
-    selectedProject: string = 'ACME Corp. Backend App';
+    @ViewChild(MatPaginator) private _paginator: MatPaginator;
+    @ViewChild(MatSort) private _sort: MatSort;
+
+    products$: Observable<InventoryProduct[]>;
+
+    brands: InventoryBrand[];
+    categories: InventoryCategory[];
+    filteredTags: InventoryTag[];
+    flashMessage: 'success' | 'error' | null = null;
+    isLoading: boolean = false;
+    pagination: InventoryPagination;
+    searchInputControl: UntypedFormControl = new UntypedFormControl();
+    selectedProduct: InventoryProduct | null = null;
+    selectedProductForm: UntypedFormGroup;
+    tags: InventoryTag[];
+    tagsEditMode: boolean = false;
+    vendors: InventoryVendor[];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
      * Constructor
      */
     constructor(
-        private _projectService: ProjectService,
-        private _router: Router
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _fuseConfirmationService: FuseConfirmationService,
+        private _formBuilder: UntypedFormBuilder,
+        private _inventoryService: InventoryService
     )
     {
     }
@@ -41,31 +78,151 @@ export class ProjectComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        // Get the data
-        this._projectService.data$
+        // Create the selected product form
+        this.selectedProductForm = this._formBuilder.group({
+            id               : [''],
+            category         : [''],
+            name             : ['', [Validators.required]],
+            description      : [''],
+            tags             : [[]],
+            sku              : [''],
+            barcode          : [''],
+            brand            : [''],
+            vendor           : [''],
+            stock            : [''],
+            reserved         : [''],
+            cost             : [''],
+            basePrice        : [''],
+            taxPercent       : [''],
+            price            : [''],
+            weight           : [''],
+            thumbnail        : [''],
+            images           : [[]],
+            currentImageIndex: [0], // Image index that is currently being viewed
+            active           : [false]
+        });
+
+        // Get the brands
+        this._inventoryService.brands$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((data) => {
+            .subscribe((brands: InventoryBrand[]) => {
 
-                // Store the data
-                this.data = data;
+                // Update the brands
+                this.brands = brands;
 
-                // Prepare the chart data
-                this._prepareChartData();
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
             });
 
-        // Attach SVG fill fixer to all ApexCharts
-        window['Apex'] = {
-            chart: {
-                events: {
-                    mounted: (chart: any, options?: any): void => {
-                        this._fixSvgFill(chart.el);
-                    },
-                    updated: (chart: any, options?: any): void => {
-                        this._fixSvgFill(chart.el);
-                    }
-                }
-            }
-        };
+        // Get the categories
+        this._inventoryService.categories$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((categories: InventoryCategory[]) => {
+
+                // Update the categories
+                this.categories = categories;
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+
+        // Get the pagination
+        this._inventoryService.pagination$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((pagination: InventoryPagination) => {
+
+                // Update the pagination
+                this.pagination = pagination;
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+
+        // Get the products
+        this.products$ = this._inventoryService.products$;
+
+        // Get the tags
+        this._inventoryService.tags$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((tags: InventoryTag[]) => {
+
+                // Update the tags
+                this.tags = tags;
+                this.filteredTags = tags;
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+
+        // Get the vendors
+        this._inventoryService.vendors$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((vendors: InventoryVendor[]) => {
+
+                // Update the vendors
+                this.vendors = vendors;
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+
+        // Subscribe to search input field value changes
+        this.searchInputControl.valueChanges
+            .pipe(
+                takeUntil(this._unsubscribeAll),
+                debounceTime(300),
+                switchMap((query) => {
+                    this.closeDetails();
+                    this.isLoading = true;
+                    return this._inventoryService.getProducts(0, 10, 'name', 'asc', query);
+                }),
+                map(() => {
+                    this.isLoading = false;
+                })
+            )
+            .subscribe();
+    }
+
+    /**
+     * After view init
+     */
+    ngAfterViewInit(): void
+    {
+        if ( this._sort && this._paginator )
+        {
+            // Set the initial sort
+            this._sort.sort({
+                id          : 'name',
+                start       : 'asc',
+                disableClear: true
+            });
+
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+
+            // If the user changes the sort order...
+            this._sort.sortChange
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe(() => {
+                    // Reset back to the first page
+                    this._paginator.pageIndex = 0;
+
+                    // Close the details
+                    this.closeDetails();
+                });
+
+            // Get products if sort or page changes
+            merge(this._sort.sortChange, this._paginator.page).pipe(
+                switchMap(() => {
+                    this.closeDetails();
+                    this.isLoading = true;
+                    return this._inventoryService.getProducts(this._paginator.pageIndex, this._paginator.pageSize, this._sort.active, this._sort.direction);
+                }),
+                map(() => {
+                    this.isLoading = false;
+                })
+            ).subscribe();
+        }
     }
 
     /**
@@ -83,6 +240,345 @@ export class ProjectComponent implements OnInit, OnDestroy
     // -----------------------------------------------------------------------------------------------------
 
     /**
+     * Toggle product details
+     *
+     * @param productId
+     */
+    toggleDetails(productId: string): void
+    {
+        // If the product is already selected...
+        if ( this.selectedProduct && this.selectedProduct.id === productId )
+        {
+            // Close the details
+            this.closeDetails();
+            return;
+        }
+
+        // Get the product by id
+        this._inventoryService.getProductById(productId)
+            .subscribe((product) => {
+
+                // Set the selected product
+                this.selectedProduct = product;
+
+                // Fill the form
+                this.selectedProductForm.patchValue(product);
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+    }
+
+    /**
+     * Close the details
+     */
+    closeDetails(): void
+    {
+        this.selectedProduct = null;
+    }
+
+    /**
+     * Cycle through images of selected product
+     */
+    cycleImages(forward: boolean = true): void
+    {
+        // Get the image count and current image index
+        const count = this.selectedProductForm.get('images').value.length;
+        const currentIndex = this.selectedProductForm.get('currentImageIndex').value;
+
+        // Calculate the next and previous index
+        const nextIndex = currentIndex + 1 === count ? 0 : currentIndex + 1;
+        const prevIndex = currentIndex - 1 < 0 ? count - 1 : currentIndex - 1;
+
+        // If cycling forward...
+        if ( forward )
+        {
+            this.selectedProductForm.get('currentImageIndex').setValue(nextIndex);
+        }
+        // If cycling backwards...
+        else
+        {
+            this.selectedProductForm.get('currentImageIndex').setValue(prevIndex);
+        }
+    }
+
+    /**
+     * Toggle the tags edit mode
+     */
+    toggleTagsEditMode(): void
+    {
+        this.tagsEditMode = !this.tagsEditMode;
+    }
+
+    /**
+     * Filter tags
+     *
+     * @param event
+     */
+    filterTags(event): void
+    {
+        // Get the value
+        const value = event.target.value.toLowerCase();
+
+        // Filter the tags
+        this.filteredTags = this.tags.filter(tag => tag.title.toLowerCase().includes(value));
+    }
+
+    /**
+     * Filter tags input key down event
+     *
+     * @param event
+     */
+    filterTagsInputKeyDown(event): void
+    {
+        // Return if the pressed key is not 'Enter'
+        if ( event.key !== 'Enter' )
+        {
+            return;
+        }
+
+        // If there is no tag available...
+        if ( this.filteredTags.length === 0 )
+        {
+            // Create the tag
+            this.createTag(event.target.value);
+
+            // Clear the input
+            event.target.value = '';
+
+            // Return
+            return;
+        }
+
+        // If there is a tag...
+        const tag = this.filteredTags[0];
+        const isTagApplied = this.selectedProduct.tags.find(id => id === tag.id);
+
+        // If the found tag is already applied to the product...
+        if ( isTagApplied )
+        {
+            // Remove the tag from the product
+            this.removeTagFromProduct(tag);
+        }
+        else
+        {
+            // Otherwise add the tag to the product
+            this.addTagToProduct(tag);
+        }
+    }
+
+    /**
+     * Create a new tag
+     *
+     * @param title
+     */
+    createTag(title: string): void
+    {
+        const tag = {
+            title
+        };
+
+        // Create tag on the server
+        this._inventoryService.createTag(tag)
+            .subscribe((response) => {
+
+                // Add the tag to the product
+                this.addTagToProduct(response);
+            });
+    }
+
+    /**
+     * Update the tag title
+     *
+     * @param tag
+     * @param event
+     */
+    updateTagTitle(tag: InventoryTag, event): void
+    {
+        // Update the title on the tag
+        tag.title = event.target.value;
+
+        // Update the tag on the server
+        this._inventoryService.updateTag(tag.id, tag)
+            .pipe(debounceTime(300))
+            .subscribe();
+
+        // Mark for check
+        this._changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Delete the tag
+     *
+     * @param tag
+     */
+    deleteTag(tag: InventoryTag): void
+    {
+        // Delete the tag from the server
+        this._inventoryService.deleteTag(tag.id).subscribe();
+
+        // Mark for check
+        this._changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Add tag to the product
+     *
+     * @param tag
+     */
+    addTagToProduct(tag: InventoryTag): void
+    {
+        // Add the tag
+        this.selectedProduct.tags.unshift(tag.id);
+
+        // Update the selected product form
+        this.selectedProductForm.get('tags').patchValue(this.selectedProduct.tags);
+
+        // Mark for check
+        this._changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Remove tag from the product
+     *
+     * @param tag
+     */
+    removeTagFromProduct(tag: InventoryTag): void
+    {
+        // Remove the tag
+        this.selectedProduct.tags.splice(this.selectedProduct.tags.findIndex(item => item === tag.id), 1);
+
+        // Update the selected product form
+        this.selectedProductForm.get('tags').patchValue(this.selectedProduct.tags);
+
+        // Mark for check
+        this._changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Toggle product tag
+     *
+     * @param tag
+     * @param change
+     */
+    toggleProductTag(tag: InventoryTag, change: MatCheckboxChange): void
+    {
+        if ( change.checked )
+        {
+            this.addTagToProduct(tag);
+        }
+        else
+        {
+            this.removeTagFromProduct(tag);
+        }
+    }
+
+    /**
+     * Should the create tag button be visible
+     *
+     * @param inputValue
+     */
+    shouldShowCreateTagButton(inputValue: string): boolean
+    {
+        return !!!(inputValue === '' || this.tags.findIndex(tag => tag.title.toLowerCase() === inputValue.toLowerCase()) > -1);
+    }
+
+    /**
+     * Create product
+     */
+    createProduct(): void
+    {
+        // Create the product
+        this._inventoryService.createProduct().subscribe((newProduct) => {
+
+            // Go to new product
+            this.selectedProduct = newProduct;
+
+            // Fill the form
+            this.selectedProductForm.patchValue(newProduct);
+
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
+    }
+
+    /**
+     * Update the selected product using the form data
+     */
+    updateSelectedProduct(): void
+    {
+        // Get the product object
+        const product = this.selectedProductForm.getRawValue();
+
+        // Remove the currentImageIndex field
+        delete product.currentImageIndex;
+
+        // Update the product on the server
+        this._inventoryService.updateProduct(product.id, product).subscribe(() => {
+
+            // Show a success message
+            this.showFlashMessage('success');
+        });
+    }
+
+    /**
+     * Delete the selected product using the form data
+     */
+    deleteSelectedProduct(): void
+    {
+        // Open the confirmation dialog
+        const confirmation = this._fuseConfirmationService.open({
+            title  : 'Delete product',
+            message: 'Are you sure you want to remove this product? This action cannot be undone!',
+            actions: {
+                confirm: {
+                    label: 'Delete'
+                }
+            }
+        });
+
+        // Subscribe to the confirmation dialog closed action
+        confirmation.afterClosed().subscribe((result) => {
+
+            // If the confirm button pressed...
+            if ( result === 'confirmed' )
+            {
+
+                // Get the product object
+                const product = this.selectedProductForm.getRawValue();
+
+                // Delete the product on the server
+                this._inventoryService.deleteProduct(product.id).subscribe(() => {
+
+                    // Close the details
+                    this.closeDetails();
+                });
+            }
+        });
+    }
+
+    /**
+     * Show flash message
+     */
+    showFlashMessage(type: 'success' | 'error'): void
+    {
+        // Show the message
+        this.flashMessage = type;
+
+        // Mark for check
+        this._changeDetectorRef.markForCheck();
+
+        // Hide it after 3 seconds
+        setTimeout(() => {
+
+            this.flashMessage = null;
+
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        }, 3000);
+    }
+
+    /**
      * Track by function for ngFor loops
      *
      * @param index
@@ -92,342 +588,5 @@ export class ProjectComponent implements OnInit, OnDestroy
     {
         return item.id || index;
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Private methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Fix the SVG fill references. This fix must be applied to all ApexCharts
-     * charts in order to fix 'black color on gradient fills on certain browsers'
-     * issue caused by the '<base>' tag.
-     *
-     * Fix based on https://gist.github.com/Kamshak/c84cdc175209d1a30f711abd6a81d472
-     *
-     * @param element
-     * @private
-     */
-    private _fixSvgFill(element: Element): void
-    {
-        // Current URL
-        const currentURL = this._router.url;
-
-        // 1. Find all elements with 'fill' attribute within the element
-        // 2. Filter out the ones that doesn't have cross reference so we only left with the ones that use the 'url(#id)' syntax
-        // 3. Insert the 'currentURL' at the front of the 'fill' attribute value
-        Array.from(element.querySelectorAll('*[fill]'))
-             .filter(el => el.getAttribute('fill').indexOf('url(') !== -1)
-             .forEach((el) => {
-                 const attrVal = el.getAttribute('fill');
-                 el.setAttribute('fill', `url(${currentURL}${attrVal.slice(attrVal.indexOf('#'))}`);
-             });
-    }
-
-    /**
-     * Prepare the chart data from the data
-     *
-     * @private
-     */
-    private _prepareChartData(): void
-    {
-        // Github issues
-        this.chartGithubIssues = {
-            chart      : {
-                fontFamily: 'inherit',
-                foreColor : 'inherit',
-                height    : '100%',
-                type      : 'line',
-                toolbar   : {
-                    show: false
-                },
-                zoom      : {
-                    enabled: false
-                }
-            },
-            colors     : ['#64748B', '#94A3B8'],
-            dataLabels : {
-                enabled        : true,
-                enabledOnSeries: [0],
-                background     : {
-                    borderWidth: 0
-                }
-            },
-            grid       : {
-                borderColor: 'var(--fuse-border)'
-            },
-            labels     : this.data.githubIssues.labels,
-            legend     : {
-                show: false
-            },
-            plotOptions: {
-                bar: {
-                    columnWidth: '50%'
-                }
-            },
-            series     : this.data.githubIssues.series,
-            states     : {
-                hover: {
-                    filter: {
-                        type : 'darken',
-                        value: 0.75
-                    }
-                }
-            },
-            stroke     : {
-                width: [3, 0]
-            },
-            tooltip    : {
-                followCursor: true,
-                theme       : 'dark'
-            },
-            xaxis      : {
-                axisBorder: {
-                    show: false
-                },
-                axisTicks : {
-                    color: 'var(--fuse-border)'
-                },
-                labels    : {
-                    style: {
-                        colors: 'var(--fuse-text-secondary)'
-                    }
-                },
-                tooltip   : {
-                    enabled: false
-                }
-            },
-            yaxis      : {
-                labels: {
-                    offsetX: -16,
-                    style  : {
-                        colors: 'var(--fuse-text-secondary)'
-                    }
-                }
-            }
-        };
-
-        // Task distribution
-        this.chartTaskDistribution = {
-            chart      : {
-                fontFamily: 'inherit',
-                foreColor : 'inherit',
-                height    : '100%',
-                type      : 'polarArea',
-                toolbar   : {
-                    show: false
-                },
-                zoom      : {
-                    enabled: false
-                }
-            },
-            labels     : this.data.taskDistribution.labels,
-            legend     : {
-                position: 'bottom'
-            },
-            plotOptions: {
-                polarArea: {
-                    spokes: {
-                        connectorColors: 'var(--fuse-border)'
-                    },
-                    rings : {
-                        strokeColor: 'var(--fuse-border)'
-                    }
-                }
-            },
-            series     : this.data.taskDistribution.series,
-            states     : {
-                hover: {
-                    filter: {
-                        type : 'darken',
-                        value: 0.75
-                    }
-                }
-            },
-            stroke     : {
-                width: 2
-            },
-            theme      : {
-                monochrome: {
-                    enabled       : true,
-                    color         : '#93C5FD',
-                    shadeIntensity: 0.75,
-                    shadeTo       : 'dark'
-                }
-            },
-            tooltip    : {
-                followCursor: true,
-                theme       : 'dark'
-            },
-            yaxis      : {
-                labels: {
-                    style: {
-                        colors: 'var(--fuse-text-secondary)'
-                    }
-                }
-            }
-        };
-
-        // Budget distribution
-        this.chartBudgetDistribution = {
-            chart      : {
-                fontFamily: 'inherit',
-                foreColor : 'inherit',
-                height    : '100%',
-                type      : 'radar',
-                sparkline : {
-                    enabled: true
-                }
-            },
-            colors     : ['#818CF8'],
-            dataLabels : {
-                enabled   : true,
-                formatter : (val: number): string | number => `${val}%`,
-                textAnchor: 'start',
-                style     : {
-                    fontSize  : '13px',
-                    fontWeight: 500
-                },
-                background: {
-                    borderWidth: 0,
-                    padding    : 4
-                },
-                offsetY   : -15
-            },
-            markers    : {
-                strokeColors: '#818CF8',
-                strokeWidth : 4
-            },
-            plotOptions: {
-                radar: {
-                    polygons: {
-                        strokeColors   : 'var(--fuse-border)',
-                        connectorColors: 'var(--fuse-border)'
-                    }
-                }
-            },
-            series     : this.data.budgetDistribution.series,
-            stroke     : {
-                width: 2
-            },
-            tooltip    : {
-                theme: 'dark',
-                y    : {
-                    formatter: (val: number): string => `${val}%`
-                }
-            },
-            xaxis      : {
-                labels    : {
-                    show : true,
-                    style: {
-                        fontSize  : '12px',
-                        fontWeight: '500'
-                    }
-                },
-                categories: this.data.budgetDistribution.categories
-            },
-            yaxis      : {
-                max       : (max: number): number => parseInt((max + 10).toFixed(0), 10),
-                tickAmount: 7
-            }
-        };
-
-        // Weekly expenses
-        this.chartWeeklyExpenses = {
-            chart  : {
-                animations: {
-                    enabled: false
-                },
-                fontFamily: 'inherit',
-                foreColor : 'inherit',
-                height    : '100%',
-                type      : 'line',
-                sparkline : {
-                    enabled: true
-                }
-            },
-            colors : ['#22D3EE'],
-            series : this.data.weeklyExpenses.series,
-            stroke : {
-                curve: 'smooth'
-            },
-            tooltip: {
-                theme: 'dark'
-            },
-            xaxis  : {
-                type      : 'category',
-                categories: this.data.weeklyExpenses.labels
-            },
-            yaxis  : {
-                labels: {
-                    formatter: (val): string => `$${val}`
-                }
-            }
-        };
-
-        // Monthly expenses
-        this.chartMonthlyExpenses = {
-            chart  : {
-                animations: {
-                    enabled: false
-                },
-                fontFamily: 'inherit',
-                foreColor : 'inherit',
-                height    : '100%',
-                type      : 'line',
-                sparkline : {
-                    enabled: true
-                }
-            },
-            colors : ['#4ADE80'],
-            series : this.data.monthlyExpenses.series,
-            stroke : {
-                curve: 'smooth'
-            },
-            tooltip: {
-                theme: 'dark'
-            },
-            xaxis  : {
-                type      : 'category',
-                categories: this.data.monthlyExpenses.labels
-            },
-            yaxis  : {
-                labels: {
-                    formatter: (val): string => `$${val}`
-                }
-            }
-        };
-
-        // Yearly expenses
-        this.chartYearlyExpenses = {
-            chart  : {
-                animations: {
-                    enabled: false
-                },
-                fontFamily: 'inherit',
-                foreColor : 'inherit',
-                height    : '100%',
-                type      : 'line',
-                sparkline : {
-                    enabled: true
-                }
-            },
-            colors : ['#FB7185'],
-            series : this.data.yearlyExpenses.series,
-            stroke : {
-                curve: 'smooth'
-            },
-            tooltip: {
-                theme: 'dark'
-            },
-            xaxis  : {
-                type      : 'category',
-                categories: this.data.yearlyExpenses.labels
-            },
-            yaxis  : {
-                labels: {
-                    formatter: (val): string => `$${val}`
-                }
-            }
-        };
-    }
 }
+

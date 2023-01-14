@@ -141,8 +141,16 @@ export class AuthSignInComponent implements OnInit
             }else{
                     this._authService._authenticated = true;
                     sessionStorage.setItem('user',JSON.stringify(response.value));
+                    const utilisateur = response.value;
+                    if(utilisateur.profil==='user'){
+                        this._router.navigateByUrl('/dashboards/project');
+                    }else{
+                        // this._router.navigateByUrl('/dashboards/project')
+                        return;
+                    }
+                    // console.log(response.value)
                     // Navigate to the redirect url
-                    this._router.navigateByUrl('/dashboards/project');
+                    // this._router.navigateByUrl('/dashboards/project');
             }
         };
         this._authService.signIn(this.signInForm.value)

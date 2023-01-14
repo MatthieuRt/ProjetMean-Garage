@@ -16,6 +16,13 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { ProjectComponent } from 'app/modules/admin/dashboards/project/project.component';
 import { projectRoutes } from 'app/modules/admin/dashboards/project/project.routing';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
     declarations: [
@@ -35,7 +42,18 @@ import { projectRoutes } from 'app/modules/admin/dashboards/project/project.rout
         MatTableModule,
         MatTabsModule,
         NgApexchartsModule,
-        TranslocoModule,
+        TranslocoModule,   MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatRippleModule,
+        MatSortModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
         SharedModule
     ]
 })
