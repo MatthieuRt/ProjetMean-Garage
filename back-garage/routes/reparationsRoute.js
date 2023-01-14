@@ -21,7 +21,8 @@ router.post('/insert/:id', (req, res) => {
         idVoiture: req.params.id,
         listeReparation : [],
         dateArrivee:new Date(),
-        dateSortie:null
+        dateSortie:null,
+        estDepose:false
     });
     rep.save((err, doc) => {
         if (!err) { res.send(doc); }

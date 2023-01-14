@@ -14,7 +14,7 @@ const reparationsVoitureSchema = mongoose.Schema({
         }
     ],
     dateArrivee:Date,
-    dateSortie:Date
-
+    dateSortie:Date,
+    estDepose:Boolean
 })
 module.exports = mongoose.model('ReparationsVoiture',reparationsVoitureSchema);
