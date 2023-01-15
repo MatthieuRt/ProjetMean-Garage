@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -8,6 +8,12 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { InventoryBrand, InventoryCategory, InventoryPagination, InventoryProduct, InventoryTag, InventoryVendor } from 'app/modules/admin/apps/ecommerce/inventory/inventory.types';
 import { InventoryService } from 'app/modules/admin/apps/ecommerce/inventory/inventory.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { Note } from '../../apps/notes/notes.types';
+import { NotesDetailsComponent } from '../../apps/notes/details/details.component';
+import { cloneDeep } from 'lodash-es';
+import { DetailComponent } from './detail/detail.component';
 
 @Component({
     selector       : 'project',
@@ -41,21 +47,32 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild(MatPaginator) private _paginator: MatPaginator;
     @ViewChild(MatSort) private _sort: MatSort;
 
-    products$: Observable<InventoryProduct[]>;
-
-    brands: InventoryBrand[];
-    categories: InventoryCategory[];
-    filteredTags: InventoryTag[];
-    flashMessage: 'success' | 'error' | null = null;
-    isLoading: boolean = false;
-    pagination: InventoryPagination;
+    displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'action'];
+    dataSource = new MatTableDataSource<any>();
+   
+    isLoading = true;
+   
+    pageNumber: number = 1;
+    VOForm: FormGroup;
+    isEditableNew: boolean = true;
     searchInputControl: UntypedFormControl = new UntypedFormControl();
     selectedProduct: InventoryProduct | null = null;
-    selectedProductForm: UntypedFormGroup;
-    tags: InventoryTag[];
-    tagsEditMode: boolean = false;
-    vendors: InventoryVendor[];
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+    // data static
+ public ELEMENT_DATA: any[] = [
+  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
+  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
+  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
+  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
+  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
+  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
+  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
+  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
+  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
+  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
+];
+
+
 
     /**
      * Constructor
@@ -63,281 +80,124 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseConfirmationService: FuseConfirmationService,
-        private _formBuilder: UntypedFormBuilder,
-        private _inventoryService: InventoryService
+        private _inventoryService: InventoryService,private fb: FormBuilder,
+        private _formBuilder: FormBuilder,
+        private _matDialog: MatDialog,
     )
     {
     }
+  ngOnDestroy(): void {
+    throw new Error('Method not implemented.');
+  }
+  ngOnInit(): void {
+    this.VOForm = this._formBuilder.group({
+      VORows: this._formBuilder.array([])
+    });
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
+     this.VOForm = this.fb.group({
+              VORows: this.fb.array(this.ELEMENT_DATA.map(val => this.fb.group({
+                position: new FormControl(val.position),
+                name: new FormControl(val.name),
+                weight: new FormControl(val.weight),
+                symbol: new FormControl(val.symbol),
+                action: new FormControl('existingRecord'),
+                isEditable: new FormControl(true),
+                isNewRow: new FormControl(false),
+              })
+              )) //end of fb array
+            }); // end of form group cretation
+    this.isLoading = false;
+    this.dataSource = new MatTableDataSource((this.VOForm.get('VORows') as FormArray).controls);
+    this.dataSource.paginator = this.paginator;
 
-    /**
-     * On init
-     */
-    ngOnInit(): void
-    {
-        // Create the selected product form
-        this.selectedProductForm = this._formBuilder.group({
-            id               : [''],
-            modele         : [''],
-            matriculation             : ['', [Validators.required]],
+    const filterPredicate = this.dataSource.filterPredicate;
+      this.dataSource.filterPredicate = (data: AbstractControl, filter) => {
+        return filterPredicate.call(this.dataSource, data.value, filter);
+      }
 
-        });
+      //Custom filter according to name column
+    // this.dataSource.filterPredicate = (data: {name: string}, filterValue: string) =>
+    //   data.name.trim().toLowerCase().indexOf(filterValue) !== -1;
+  }
 
-        // Get the brands
-        this._inventoryService.brands$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((brands: InventoryBrand[]) => {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.paginatorList = document.getElementsByClassName('mat-paginator-range-label');
 
-                // Update the brands
-                this.brands = brands;
+   this.onPaginateChange(this.paginator, this.paginatorList);
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+   this.paginator.page.subscribe(() => { // this is page change event
+     this.onPaginateChange(this.paginator, this.paginatorList);
+   });
+  }
+  
+   applyFilter(event: Event) {
+    //  debugger;
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
-        // Get the categories
-        this._inventoryService.categories$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((categories: InventoryCategory[]) => {
 
-                // Update the categories
-                this.categories = categories;
+  // this function will enabled the select field for editd
+  EditSVO(VOFormElement, i) {
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+    // VOFormElement.get('VORows').at(i).get('name').disabled(false)
+    VOFormElement.get('VORows').at(i).get('isEditable').patchValue(false);
+    // this.isEditableNew = true;
 
-        // Get the pagination
-        this._inventoryService.pagination$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((pagination: InventoryPagination) => {
+  }
 
-                // Update the pagination
-                this.pagination = pagination;
+  // On click of correct button in table (after click on edit) this method will call
+  SaveVO(VOFormElement, i) {
+    // alert('SaveVO')
+    VOFormElement.get('VORows').at(i).get('isEditable').patchValue(true);
+  }
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+  // On click of cancel button in the table (after click on edit) this method will call and reset the previous data
+  CancelSVO(VOFormElement, i) {
+    VOFormElement.get('VORows').at(i).get('isEditable').patchValue(true);
+  }
 
-        // Get the products
-        this.products$ = this._inventoryService.products$;
 
-        // Get the tags
-        this._inventoryService.tags$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((tags: InventoryTag[]) => {
+paginatorList: HTMLCollectionOf<Element>;
+idx: number;
+onPaginateChange(paginator: MatPaginator, list: HTMLCollectionOf<Element>) {
+     setTimeout((idx) => {
+         let from = (paginator.pageSize * paginator.pageIndex) + 1;
 
-                // Update the tags
-                this.tags = tags;
-                this.filteredTags = tags;
+         let to = (paginator.length < paginator.pageSize * (paginator.pageIndex + 1))
+             ? paginator.length
+             : paginator.pageSize * (paginator.pageIndex + 1);
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+         let toFrom = (paginator.length == 0) ? 0 : `${from} - ${to}`;
+         let pageNumber = (paginator.length == 0) ? `0 of 0` : `${paginator.pageIndex + 1} of ${paginator.getNumberOfPages()}`;
+         let rows = `Page ${pageNumber} (${toFrom} of ${paginator.length})`;
 
-        // Get the vendors
-        this._inventoryService.vendors$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((vendors: InventoryVendor[]) => {
+         if (list.length >= 1)
+             list[0].innerHTML = rows; 
 
-                // Update the vendors
-                this.vendors = vendors;
+     }, 0, paginator.pageIndex);
+}
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
 
-        // Subscribe to search input field value changes
-        this.searchInputControl.valueChanges
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                debounceTime(300),
-                switchMap((query) => {
-                    this.closeDetails();
-                    this.isLoading = true;
-                    return this._inventoryService.getProducts(0, 10, 'name', 'asc', query);
-                }),
-                map(() => {
-                    this.isLoading = false;
-                })
-            )
-            .subscribe();
-    }
+  initiateVOForm(): FormGroup {
+    return this.fb.group({
 
-    /**
-     * After view init
-     */
-    ngAfterViewInit(): void
-    {
-        if ( this._sort && this._paginator )
-        {
-            // Set the initial sort
-            this._sort.sort({
-                id          : 'name',
-                start       : 'asc',
-                disableClear: true
-            });
-
-            // Mark for check
-            this._changeDetectorRef.markForCheck();
-
-            // If the user changes the sort order...
-            this._sort.sortChange
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe(() => {
-                    // Reset back to the first page
-                    this._paginator.pageIndex = 0;
-
-                    // Close the details
-                    this.closeDetails();
-                });
-
-            // Get products if sort or page changes
-            merge(this._sort.sortChange, this._paginator.page).pipe(
-                switchMap(() => {
-                    this.closeDetails();
-                    this.isLoading = true;
-                    return this._inventoryService.getProducts(this._paginator.pageIndex, this._paginator.pageSize, this._sort.active, this._sort.direction);
-                }),
-                map(() => {
-                    this.isLoading = false;
-                })
-            ).subscribe();
-        }
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Toggle product details
-     *
-     * @param productId
-     */
-    toggleDetails(productId: string): void
-    {
-        // If the product is already selected...
-        if ( this.selectedProduct && this.selectedProduct.id === productId )
-        {
-            // Close the details
-            this.closeDetails();
-            return;
-        }
-
-        // Get the product by id
-        this._inventoryService.getProductById(productId)
-            .subscribe((product) => {
-
-                // Set the selected product
-                this.selectedProduct = product;
-
-                // Fill the form
-                this.selectedProductForm.patchValue(product);
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-    }
-
-    /**
-     * Close the details
-     */
-    closeDetails(): void
-    {
-        this.selectedProduct = null;
-    }
-
-    /**
-     * Cycle through images of selected product
-     */
-    cycleImages(forward: boolean = true): void
-    {
-        // Get the image count and current image index
-        const count = this.selectedProductForm.get('images').value.length;
-        const currentIndex = this.selectedProductForm.get('currentImageIndex').value;
-
-        // Calculate the next and previous index
-        const nextIndex = currentIndex + 1 === count ? 0 : currentIndex + 1;
-        const prevIndex = currentIndex - 1 < 0 ? count - 1 : currentIndex - 1;
-
-        // If cycling forward...
-        if ( forward )
-        {
-            this.selectedProductForm.get('currentImageIndex').setValue(nextIndex);
-        }
-        // If cycling backwards...
-        else
-        {
-            this.selectedProductForm.get('currentImageIndex').setValue(prevIndex);
-        }
-    }
-
-    /**
-     * Toggle the tags edit mode
-     */
-    toggleTagsEditMode(): void
-    {
-        this.tagsEditMode = !this.tagsEditMode;
-    }
-
-    /**
-     * Filter tags
-     *
-     * @param event
-     */
-    filterTags(event): void
-    {
-        // Get the value
-        const value = event.target.value.toLowerCase();
-
-        // Filter the tags
-        this.filteredTags = this.tags.filter(tag => tag.title.toLowerCase().includes(value));
-    }
-
-    /**
-     * Show flash message
-     */
-    showFlashMessage(type: 'success' | 'error'): void
-    {
-        // Show the message
-        this.flashMessage = type;
-
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-
-        // Hide it after 3 seconds
-        setTimeout(() => {
-
-            this.flashMessage = null;
-
-            // Mark for check
-            this._changeDetectorRef.markForCheck();
-        }, 3000);
-    }
-
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
-    trackByFn(index: number, item: any): any
-    {
-        return item.id || index;
-    }
+      position: new FormControl(234),
+                name: new FormControl(''),
+                weight: new FormControl(''),
+                symbol: new FormControl(''),
+                action: new FormControl('newRecord'),
+                isEditable: new FormControl(false),
+                isNewRow: new FormControl(true),
+    });
+  }
+  openNoteDialog(index:any): void
+  {
+      this._matDialog.open(DetailComponent, {
+          autoFocus: false,
+      });
+  }
 }
 
