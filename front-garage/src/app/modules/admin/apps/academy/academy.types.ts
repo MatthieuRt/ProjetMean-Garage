@@ -27,3 +27,14 @@ export interface Course
         completed?: number;
     };
 }
+
+export interface ListeReparation
+{
+    idPiece?: string;
+    prix?: string;
+    avancement?: string;
+    estPaye?:boolean,
+    datePaiement?:Date,
+    dateDebut?:Date,
+    dateFin?:Date
+}

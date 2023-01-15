@@ -107,3 +107,5 @@ export class AcademyCourseResolver implements Resolve<any>
                    );
     }
 }
+
+

@@ -4,7 +4,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
-import { Category, Course } from 'app/modules/admin/apps/academy/academy.types';
+import { Category, Course, ListeReparation } from 'app/modules/admin/apps/academy/academy.types';
 
 @Component({
     selector       : 'academy-list',
@@ -14,6 +14,7 @@ import { Category, Course } from 'app/modules/admin/apps/academy/academy.types';
 })
 export class AcademyListComponent implements OnInit, OnDestroy
 {
+    
     categories: Category[];
     courses: Course[];
     filteredCourses: Course[];
@@ -26,6 +27,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
         query$        : new BehaviorSubject(''),
         hideCompleted$: new BehaviorSubject(false)
     };
+    listereparations: ListeReparation[];
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -50,12 +52,20 @@ export class AcademyListComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        const onSucessConf = (response)=>{
+            
+              this.listereparations = response as ListeReparation[];
+            console.log(this.listereparations)
+          }
+        
+          this._academyService.getAllReparation().subscribe(onSucessConf);
+
         // Get the categories
         this._academyService.categories$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((categories: Category[]) => {
                 this.categories = categories;
-
+                
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });

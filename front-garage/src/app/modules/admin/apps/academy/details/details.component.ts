@@ -15,6 +15,7 @@ import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
 export class AcademyDetailsComponent implements OnInit, OnDestroy
 {
     @ViewChild('courseSteps', {static: true}) courseSteps: MatTabGroup;
+    listeReparations:any;
     categories: Category[];
     course: Course;
     currentStep: number = 0;
