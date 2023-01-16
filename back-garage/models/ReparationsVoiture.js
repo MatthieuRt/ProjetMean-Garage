@@ -16,6 +16,10 @@ const reparationsVoitureSchema = mongoose.Schema({
     ],
     dateArrivee:Date,
     dateSortie:Date,
-    estDepose:Boolean
+    estDepose:Boolean,
+    etat:{
+        type:String,
+        default:"Non traité"
+    }
 })
 module.exports = mongoose.model('ReparationsVoiture',reparationsVoitureSchema);

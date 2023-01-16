@@ -36,6 +36,15 @@ export interface ListeReparation
     estPaye?:boolean,
     datePaiement?:Date,
     dateDebut?:Date,
-    dateFin?:Date,
-    etat?:String
+    dateFin?:Date
 }
+
+export interface ReparationsVoitures
+{
+    idVoiture?: string,
+    listeReparations?: ListeReparation[],
+    dateArrivee?: Date,
+    dateSortie?: Date
+}
+
+

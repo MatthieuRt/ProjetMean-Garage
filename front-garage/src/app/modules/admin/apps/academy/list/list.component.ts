@@ -4,18 +4,17 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
-import { Category, Course, ListeReparation } from 'app/modules/admin/apps/academy/academy.types';
+import { Category, Course, ListeReparation, ReparationsVoitures } from 'app/modules/admin/apps/academy/academy.types';
 
 @Component({
-    selector       : 'academy-list',
-    templateUrl    : './list.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'academy-list',
+    templateUrl: './list.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AcademyListComponent implements OnInit, OnDestroy
-{
+export class AcademyListComponent implements OnInit, OnDestroy {
     isLoading: boolean = true;
-    
+
     categories: Category[];
     courses: Course[];
     filteredCourses: Course[];
@@ -24,13 +23,14 @@ export class AcademyListComponent implements OnInit, OnDestroy
         query$: BehaviorSubject<string>;
         hideCompleted$: BehaviorSubject<boolean>;
     } = {
-        categorySlug$ : new BehaviorSubject('all'),
-        query$        : new BehaviorSubject(''),
-        hideCompleted$: new BehaviorSubject(false)
-    };
-    listereparations: ListeReparation[];
-    filteredListeReparations: ListeReparation[];
-    voiture : any;
+            categorySlug$: new BehaviorSubject('all'),
+            query$: new BehaviorSubject(''),
+            hideCompleted$: new BehaviorSubject(false)
+        };
+    listereparations: any;
+    filteredListeReparations: any;
+    voiture: any;
+    listeVoitures: any;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -42,8 +42,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
         private _academyService: AcademyService
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -53,15 +52,30 @@ export class AcademyListComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
-        
+    ngOnInit(): void {
+        this._academyService.getAllReparation().pipe(takeUntil(this._unsubscribeAll)).subscribe((res: ReparationsVoitures) => {
+            this.voiture = res;
+        });
+
+        this.listeVoitures = [{ "id": "1", "modele": "Nissan Qashqai" }, { "id": "2", "modele": "Renault Express" }]
+
+
+
         this._academyService.getAllReparation()
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((response: ListeReparation[]) => {
-                
+            .subscribe((response) => {
+
                 this.isLoading = false;
                 this.listereparations = this.filteredListeReparations = response;
+
+                for (let i = 0; i < this.listereparations.length; i++) {
+                    for (let j = 0; j < this.listeVoitures.length; j++) {
+                        if (this.listereparations[i].idVoiture === this.listeVoitures[j].id) {
+                            this.listereparations[i].modele = this.listeVoitures[j].modele;
+                        }
+                    }
+                }
+
                 this._changeDetectorRef.markForCheck();
             });
 
@@ -70,7 +84,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((categories: Category[]) => {
                 this.categories = categories;
-                
+
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -93,26 +107,22 @@ export class AcademyListComponent implements OnInit, OnDestroy
                 //this.filteredCourses = this.courses;
                 this.filteredListeReparations = this.listereparations;
                 // Filter by category
-                if ( categorySlug !== 'all' )
-                {
+                if (categorySlug !== 'all') {
                     //this.filteredCourses = this.filteredCourses.filter(course => course.category === categorySlug);
                     this.filteredListeReparations = this.filteredListeReparations.filter(course => course.etat === categorySlug);
                 }
 
                 // Filter by search query
-                if ( query !== '' )
-                {
+                if (query !== '') {
                     /*this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
                         || course.description.toLowerCase().includes(query.toLowerCase())
                         || course.category.toLowerCase().includes(query.toLowerCase()));*/
-                    this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
-                    || course.description.toLowerCase().includes(query.toLowerCase())
-                    || course.category.toLowerCase().includes(query.toLowerCase()));
+                        this.filteredListeReparations = this.filteredListeReparations.filter(course => course.modele.toLowerCase().includes(query.toLowerCase())
+                        );
                 }
 
                 // Filter by completed
-                if ( hideCompleted )
-                {
+                if (hideCompleted) {
                     this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
                 }
             });
@@ -121,8 +131,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -137,8 +146,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
      *
      * @param query
      */
-    filterByQuery(query: string): void
-    {
+    filterByQuery(query: string): void {
         this.filters.query$.next(query);
     }
 
@@ -147,8 +155,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
      *
      * @param change
      */
-    filterByCategory(change: MatSelectChange): void
-    {
+    filterByCategory(change: MatSelectChange): void {
         this.filters.categorySlug$.next(change.value);
     }
 
@@ -157,8 +164,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
      *
      * @param change
      */
-    toggleCompleted(change: MatSlideToggleChange): void
-    {
+    toggleCompleted(change: MatSlideToggleChange): void {
         this.filters.hideCompleted$.next(change.checked);
     }
 
@@ -168,8 +174,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 }
