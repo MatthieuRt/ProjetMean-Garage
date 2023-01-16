@@ -14,6 +14,7 @@ import { Category, Course, ListeReparation } from 'app/modules/admin/apps/academ
 })
 export class AcademyListComponent implements OnInit, OnDestroy
 {
+    isLoading: boolean = true;
     
     categories: Category[];
     courses: Course[];
@@ -28,6 +29,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
         hideCompleted$: new BehaviorSubject(false)
     };
     listereparations: ListeReparation[];
+    filteredListeReparations: ListeReparation[];
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -52,13 +54,14 @@ export class AcademyListComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        const onSucessConf = (response)=>{
-            
-              this.listereparations = response as ListeReparation[];
-            console.log(this.listereparations)
-          }
-        
-          this._academyService.getAllReparation().subscribe(onSucessConf);
+        this._academyService.getAllReparation()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((response: ListeReparation[]) => {
+                
+                this.isLoading = false;
+                this.listereparations = this.filteredListeReparations = response;
+                this._changeDetectorRef.markForCheck();
+            });
 
         // Get the categories
         this._academyService.categories$

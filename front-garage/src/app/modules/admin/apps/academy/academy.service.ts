@@ -12,6 +12,7 @@ export class AcademyService
     private _categories: BehaviorSubject<Category[] | null> = new BehaviorSubject(null);
     private _course: BehaviorSubject<Course | null> = new BehaviorSubject(null);
     private _courses: BehaviorSubject<Course[] | null> = new BehaviorSubject(null);
+    private _listeReparations: BehaviorSubject<ListeReparation[] | null> = new BehaviorSubject(null);
 
     /**
      * Constructor
@@ -46,6 +47,11 @@ export class AcademyService
     get course$(): Observable<Course>
     {
         return this._course.asObservable();
+    }
+
+    get listereparations$() : Observable<ListeReparation[]>
+    {
+        return this._listeReparations.asObservable();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -104,5 +110,10 @@ export class AcademyService
 
     getAllReparation(){
         return this._httpClient.get("http://localhost:9000/reparation");
+        /*return this._httpClient.get<ListeReparation[]>('http://localhost:9000/reparation').pipe(
+            tap((response: any) => {
+                this._listeReparations.next(response);   
+            })
+        );*/
     }
 }
