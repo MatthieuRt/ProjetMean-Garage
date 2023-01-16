@@ -44,7 +44,8 @@ export interface ReparationsVoitures
     idVoiture?: string,
     listeReparations?: ListeReparation[],
     dateArrivee?: Date,
-    dateSortie?: Date
+    dateSortie?: Date,
+    etat?: String
 }
 
 

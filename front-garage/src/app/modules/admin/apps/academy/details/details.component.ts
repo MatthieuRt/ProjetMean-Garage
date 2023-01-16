@@ -3,7 +3,7 @@ import { DOCUMENT } from '@angular/common';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Category, Course } from 'app/modules/admin/apps/academy/academy.types';
+import { Category, Course, ListeReparation,ReparationsVoitures } from 'app/modules/admin/apps/academy/academy.types';
 import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
 
 @Component({
@@ -22,6 +22,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    reparation : any;
 
     /**
      * Constructor
@@ -58,7 +59,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
             });
 
         // Get the course
-        this._academyService.course$
+        /*this._academyService.course$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((course: Course) => {
 
@@ -67,6 +68,20 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
 
                 // Go to step
                 this.goToStep(course.progress.currentStep);
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });*/
+
+            this._academyService.reparation$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((course: any) => {
+                console.log(course)
+                // Get the course
+                this.reparation = course[0];
+
+                // Go to step
+                
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();

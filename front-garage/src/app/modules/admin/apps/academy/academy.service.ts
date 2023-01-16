@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { Category, Course, ListeReparation } from 'app/modules/admin/apps/academy/academy.types';
+import { Category, Course, ListeReparation, ReparationsVoitures } from 'app/modules/admin/apps/academy/academy.types';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +13,7 @@ export class AcademyService
     private _course: BehaviorSubject<Course | null> = new BehaviorSubject(null);
     private _courses: BehaviorSubject<Course[] | null> = new BehaviorSubject(null);
     private _listeReparations: BehaviorSubject<ListeReparation[] | null> = new BehaviorSubject(null);
+    private reparation: Observable<any>;
 
     /**
      * Constructor
@@ -52,6 +53,11 @@ export class AcademyService
     get listereparations$() : Observable<ListeReparation[]>
     {
         return this._listeReparations.asObservable();
+    }
+
+    get reparation$() : Observable<any>
+    {
+        return this.reparation;
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -113,6 +119,8 @@ export class AcademyService
     }
 
     getReparationById(id: String){
+        this.reparation = this._httpClient.get("http://localhost:9000/reparation/get/"+id);
         return this._httpClient.get("http://localhost:9000/reparation/get/"+id);
+        
     }
 }

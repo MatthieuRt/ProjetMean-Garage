@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Category, Course } from 'app/modules/admin/apps/academy/academy.types';
+import { Category, Course, ListeReparation, ReparationsVoitures } from 'app/modules/admin/apps/academy/academy.types';
 import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
 
 @Injectable({
@@ -85,7 +85,7 @@ export class AcademyCourseResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course>
+    /*resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course>
     {
         return this._academyService.getCourseById(route.paramMap.get('id'))
                    .pipe(
@@ -105,7 +105,31 @@ export class AcademyCourseResolver implements Resolve<any>
                            return throwError(error);
                        })
                    );
+    }*/
+
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
+    {
+        return this._academyService.getReparationById(route.paramMap.get('id'))
+                   .pipe(
+                       // Error here means the requested task is not available
+                       catchError((error) => {
+
+                           // Log the error
+                           console.error(error);
+
+                           // Get the parent url
+                           const parentUrl = state.url.split('/').slice(0, -1).join('/');
+
+                           // Navigate to there
+                           this._router.navigateByUrl(parentUrl);
+
+                           // Throw an error
+                           return throwError(error);
+                       })
+                   );
     }
+
 }
 
 
