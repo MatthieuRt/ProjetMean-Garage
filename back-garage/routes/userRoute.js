@@ -143,28 +143,50 @@ router.post('/login',(request,response)=>{
         console.log(reponse);
     })
 })
-// //ajout nouvelle voiture
-// router.post('/add/car',async (request,response)=>{
-//     let car = new Voiture({
-//         numero : request.voiture.numero,
-//         modele : request.voiture.modele
-//     })
-//     let demande = new DemandeDepotVoiture({
-//         idUser : request.body.idUser,
-//         voiture : car
-//     })
-//     await Utilisateur.findOne({_id:request.body.idUser})
-//         .then(user=>{
-//             user.listeVoiture.push(car);
-//             Utilisateur.findOneAndUpdate({ _id: user._id}, {listeVoiture: user.listeVoiture})
-//                 .error(err=>{
-//                     console.log('______________________Update liste voiture___________________________')
-//                     console.log(err);
-//                 })
-//                 .then(()=>{
-//                     demande.save();
-//                 })
-
-//         })
-// })
+// ajout nouvelle voiture
+router.post('/add/car',async (request,response)=>{
+    let car = {
+        numero : request.body.numero,
+        modele : request.body.modele
+    }
+    // let demande = new DemandeDepotVoiture({
+    //     idUser : request.body.idUser,
+    //     voiture : car
+    // })
+    await Utilisateur.findOne({_id:request.body.idUser})
+        .then(user=>{
+            // user.listeVoiture.push(car);
+            let exist = user.listeVoiture.find(voiture => voiture.numero ===car.numero);
+            if(!exist){
+                user.listeVoiture.push(car);
+                Utilisateur.findOneAndUpdate({ _id: user._id}, {listeVoiture: user.listeVoiture})
+                    .then((data)=>{
+                        const rep = {
+                            message  : 'OK',
+                            code :200
+                        }
+                        console.log('______________________Update liste voiture SUCCES___________________________')
+                        console.log(data);
+                        response.json(rep);
+                    })
+                    .catch(err=>{
+                        console.log('______________________Update liste voiture ERREUR___________________________')
+                        console.log(err);
+                        const rep = {
+                            message  : 'KO',
+                            code :404,
+                            value : err 
+                        }
+                        response.json(rep);
+                    })
+            }else{
+                const rep = {
+                    message  : 'KO',
+                    code :404,
+                    value : "Voiture déja existante." 
+                }
+                response.json(rep);
+            }
+        })
+})
 module.exports = router;

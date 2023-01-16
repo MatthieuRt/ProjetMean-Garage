@@ -17,8 +17,8 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link : '/dashboards/project'
             },
             {
-                id   : 'dashboards.deposition',
-                title: 'Déposé une voiture',
+                id   : 'dashboards.ajout',
+                title: 'Ajouter une voiture',
                 type : 'basic',
                 icon : 'heroicons_solid:view-grid-add',
                 link : '/dashboards/analytics'

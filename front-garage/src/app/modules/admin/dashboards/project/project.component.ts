@@ -70,6 +70,11 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
   {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
   {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
   {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
+  {position: 6, name: 'Naina', weight: 12.0107, symbol: 'C'},
+  {position: 7, name: 'Matthieu', weight: 14.0067, symbol: 'N'},
+  {position: 8, name: 'ADP', weight: 15.9994, symbol: 'O'},
+  {position: 9, name: 'AAA', weight: 18.9984, symbol: 'F'},
+  {position: 10, name: 'VVV', weight: 20.1797, symbol: 'Ne'},
 ];
 
 
@@ -87,49 +92,17 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
     {
     }
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
   }
   ngOnInit(): void {
-    this.VOForm = this._formBuilder.group({
-      VORows: this._formBuilder.array([])
-    });
-
-     this.VOForm = this.fb.group({
-              VORows: this.fb.array(this.ELEMENT_DATA.map(val => this.fb.group({
-                position: new FormControl(val.position),
-                name: new FormControl(val.name),
-                weight: new FormControl(val.weight),
-                symbol: new FormControl(val.symbol),
-                action: new FormControl('existingRecord'),
-                isEditable: new FormControl(true),
-                isNewRow: new FormControl(false),
-              })
-              )) //end of fb array
-            }); // end of form group cretation
     this.isLoading = false;
-    this.dataSource = new MatTableDataSource((this.VOForm.get('VORows') as FormArray).controls);
-    this.dataSource.paginator = this.paginator;
-
-    const filterPredicate = this.dataSource.filterPredicate;
-      this.dataSource.filterPredicate = (data: AbstractControl, filter) => {
-        return filterPredicate.call(this.dataSource, data.value, filter);
-      }
-
-      //Custom filter according to name column
-    // this.dataSource.filterPredicate = (data: {name: string}, filterValue: string) =>
-    //   data.name.trim().toLowerCase().indexOf(filterValue) !== -1;
   }
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   ngAfterViewInit() {
+    this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.paginator = this.paginator;
-    this.paginatorList = document.getElementsByClassName('mat-paginator-range-label');
+    console.log(this.dataSource);
 
-   this.onPaginateChange(this.paginator, this.paginatorList);
-
-   this.paginator.page.subscribe(() => { // this is page change event
-     this.onPaginateChange(this.paginator, this.paginatorList);
-   });
   }
   
    applyFilter(event: Event) {
@@ -137,50 +110,6 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-
-
-  // this function will enabled the select field for editd
-  EditSVO(VOFormElement, i) {
-
-    // VOFormElement.get('VORows').at(i).get('name').disabled(false)
-    VOFormElement.get('VORows').at(i).get('isEditable').patchValue(false);
-    // this.isEditableNew = true;
-
-  }
-
-  // On click of correct button in table (after click on edit) this method will call
-  SaveVO(VOFormElement, i) {
-    // alert('SaveVO')
-    VOFormElement.get('VORows').at(i).get('isEditable').patchValue(true);
-  }
-
-  // On click of cancel button in the table (after click on edit) this method will call and reset the previous data
-  CancelSVO(VOFormElement, i) {
-    VOFormElement.get('VORows').at(i).get('isEditable').patchValue(true);
-  }
-
-
-paginatorList: HTMLCollectionOf<Element>;
-idx: number;
-onPaginateChange(paginator: MatPaginator, list: HTMLCollectionOf<Element>) {
-     setTimeout((idx) => {
-         let from = (paginator.pageSize * paginator.pageIndex) + 1;
-
-         let to = (paginator.length < paginator.pageSize * (paginator.pageIndex + 1))
-             ? paginator.length
-             : paginator.pageSize * (paginator.pageIndex + 1);
-
-         let toFrom = (paginator.length == 0) ? 0 : `${from} - ${to}`;
-         let pageNumber = (paginator.length == 0) ? `0 of 0` : `${paginator.pageIndex + 1} of ${paginator.getNumberOfPages()}`;
-         let rows = `Page ${pageNumber} (${toFrom} of ${paginator.length})`;
-
-         if (list.length >= 1)
-             list[0].innerHTML = rows; 
-
-     }, 0, paginator.pageIndex);
-}
-
-
   initiateVOForm(): FormGroup {
     return this.fb.group({
 

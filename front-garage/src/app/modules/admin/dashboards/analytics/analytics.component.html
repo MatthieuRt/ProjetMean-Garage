@@ -46,18 +46,35 @@
         
         <div class="flex-auto p-6 sm:p-10">
             <div class="mt-12">
-                <div class="text-2xl font-semibold tracking-tight leading-6">Déposition de voiture</div>
+                <div class="text-2xl font-semibold tracking-tight leading-6">Ajouter une nouvelle voiture</div>
                 <div class="font-medium tracking-tight text-secondary">Confier votre voiture dans les mains de nos spécialistes</div>
             </div>
             <div class="max-w-3xl">
-
-                <form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
+                <fuse-alert
+                class="mt-8 -mb-4"
+                *ngIf="showAlert"
+                [appearance]="'outline'"
+                [showIcon]="false"
+                [type]="alert.type"
+                [@shake]="alert.type === 'error'">
+                {{alert.message}}
+            </fuse-alert>
+                <form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"
+                [formGroup]="ajoutForm"
+                #ajoutNgForm="ngForm"
+                >
                     <div class="flex flex-col gt-xs:flex-row">
                         <mat-form-field
                             [ngClass]="formFieldHelpers"
                             class="flex-auto gt-xs:pr-3">
                             <mat-label>Modèle de la voiture</mat-label>
-                            <input matInput>
+                            <input 
+                                matInput
+                                [formControlName]="'modele'"
+                            >
+                            <mat-error *ngIf="ajoutForm.get('modele').hasError('required')">
+                                Le modèle du vehicule est  obligatoire
+                            </mat-error>
                             <mat-icon
                                 class="icon-size-5"
                                 matSuffix
@@ -72,19 +89,32 @@
                             <textarea
                                 matInput
                                 [rows]="3"
-                                matTextareaAutosize></textarea>
+                                matTextareaAutosize
+                                [formControlName]="'numero'"
+                                ></textarea>
+                            <mat-error *ngIf="ajoutForm.get('numero').hasError('required')">
+                                Numéro d'Immatriculation obligatoire
+                            </mat-error>
                             <mat-icon
                                 class="icon-size-5"
                                 matSuffix
-                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                [svgIcon]="'pin'"></mat-icon>
                         </mat-form-field>
                     </div>
                     <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
                         <button
-                            class="px-6 ml-3"
+                            class="fuse-mat-button-large w-full mt-6"
                             mat-flat-button
-                            [color]="'primary'">
-                            Save
+                            [color]="'primary'"
+                            [disabled]="ajoutForm.disabled"
+                            (click)="ajouterVoiture()">
+                            <span *ngIf="!ajoutForm.disabled">
+                                Sauvegarder
+                            </span>
+                            <mat-progress-spinner
+                                *ngIf="ajoutForm.disabled"
+                                [diameter]="24"
+                                [mode]="'indeterminate'"></mat-progress-spinner>
                         </button>
                     </div>
                 </form>       

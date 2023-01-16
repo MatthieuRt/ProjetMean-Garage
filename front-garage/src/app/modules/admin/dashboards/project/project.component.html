@@ -130,20 +130,13 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="grid">
-                            <ng-container *ngIf="selectedProduct?.id === product.id">
-                                <ng-container *ngTemplateOutlet="rowDetailsTemplate; context: {$implicit: product}"></ng-container>
-                            </ng-container>
-                        </div>
                     </ng-container>
-            </div>
-
-            <mat-paginator
+                    <mat-paginator
                 class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
-                [ngClass]="{'pointer-events-none': isLoading}"
-                [length]=" dataSource.data.length"
-                [pageSizeOptions]="[5, 10, 25, 100]"
-                [showFirstLastButtons]="true"></mat-paginator>
+                [pageSize]="4"
+                #paginator
+                showFirstLastButtons></mat-paginator>
+            </div>
       </div>
 
     </div>

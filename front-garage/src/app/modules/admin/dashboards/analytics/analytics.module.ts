@@ -20,10 +20,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FuseHighlightModule } from '@fuse/components/highlight';
+import { UtilisateurSerice } from 'app/service/utilisateur.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ConfirmAjoutComponent } from './confirm-ajout/confirm-ajout.component';
 
 @NgModule({
     declarations: [
-        AnalyticsComponent
+        AnalyticsComponent,
+        ConfirmAjoutComponent
     ],
     imports     : [
         RouterModule.forChild(analyticsRoutes),
@@ -44,7 +48,11 @@ import { FuseHighlightModule } from '@fuse/components/highlight';
         MatInputModule,
         MatSelectModule,
         FuseHighlightModule,
+        MatProgressSpinnerModule,
         SharedModule
+    ],
+    providers: [
+        UtilisateurSerice
     ]
 })
 export class AnalyticsModule

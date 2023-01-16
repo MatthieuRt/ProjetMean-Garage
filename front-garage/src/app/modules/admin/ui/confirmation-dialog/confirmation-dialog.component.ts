@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-
+// ng g c ./modules/admin/dashboards/analytics/confirmAjout
 @Component({
     selector       : 'confirmation',
     templateUrl    : './confirmation-dialog.component.html',
