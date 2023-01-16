@@ -43,19 +43,7 @@
                         </ng-container>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field
-                    class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4"
-                    [floatLabel]="'always'">
-                    <mat-icon
-                        matPrefix
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                    <input
-                        (input)="filterByQuery(query.value)"
-                        placeholder="Search by title or description"
-                        matInput
-                        #query>
-                </mat-form-field>
+                
                 <mat-slide-toggle
                     class="mt-8 sm:mt-0 sm:ml-auto"
                     [color]="'primary'"
@@ -261,7 +249,7 @@
                                 <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
                                     <a
                                         mat-stroked-button
-                                        [routerLink]="[liste.id]">
+                                        [routerLink]="[liste._id]">
                                         <span class="inline-flex items-center">
 
                                             

@@ -107,10 +107,7 @@
                     {{course.title}}
                 </h2>
             </div>
-            <mat-progress-bar
-                class="hidden lg:block flex-0 h-0.5 w-full"
-                [value]="100 * (currentStep + 1) / course.totalSteps"></mat-progress-bar>
-
+            
             <!-- Main -->
             <div
                 class="flex-auto overflow-y-auto"
@@ -161,67 +158,11 @@
                     </ng-container>
                 </mat-tab-group>
 
-                <!-- Navigation - Desktop -->
-                <div class="z-10 sticky hidden lg:flex bottom-4 p-4">
-                    <div class="flex items-center justify-center mx-auto p-2 rounded-full shadow-lg bg-primary">
-                        <button
-                            class="flex-0"
-                            mat-flat-button
-                            [color]="'primary'"
-                            (click)="goToPreviousStep()">
-                            <mat-icon
-                                class="mr-2"
-                                [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
-                            <span class="mr-1">Prev</span>
-                        </button>
-                        <div class="flex items-center justify-center mx-2.5 font-medium leading-5 text-on-primary">
-                            <span>{{currentStep + 1}}</span>
-                            <span class="mx-0.5 text-hint">/</span>
-                            <span>{{course.totalSteps}}</span>
-                        </div>
-                        <button
-                            class="flex-0"
-                            mat-flat-button
-                            [color]="'primary'"
-                            (click)="goToNextStep()">
-                            <span class="ml-1">Next</span>
-                            <mat-icon
-                                class="ml-2"
-                                [svgIcon]="'heroicons_outline:arrow-narrow-right'"></mat-icon>
-                        </button>
-                    </div>
-                </div>
+                
 
             </div>
 
-            <!-- Progress & Navigation - Mobile -->
-            <div class="lg:hidden flex items-center p-4 border-t bg-card">
-                <button
-                    mat-icon-button
-                    (click)="matDrawer.toggle()">
-                    <mat-icon [svgIcon]="'heroicons_outline:view-list'"></mat-icon>
-                </button>
-                <div class="flex items-center justify-center ml-1 lg:ml-2 font-medium leading-5">
-                    <span>{{currentStep + 1}}</span>
-                    <span class="mx-0.5 text-hint">/</span>
-                    <span>{{course.totalSteps}}</span>
-                </div>
-                <mat-progress-bar
-                    class="flex-auto ml-6 rounded-full"
-                    [value]="100 * (currentStep + 1) / course.totalSteps"></mat-progress-bar>
-                <button
-                    class="ml-4"
-                    mat-icon-button
-                    (click)="goToPreviousStep()">
-                    <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
-                </button>
-                <button
-                    class="ml-0.5"
-                    mat-icon-button
-                    (click)="goToNextStep()">
-                    <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-right'"></mat-icon>
-                </button>
-            </div>
+            
 
         </mat-drawer-content>
 

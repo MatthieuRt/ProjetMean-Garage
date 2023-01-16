@@ -83,4 +83,11 @@ router.get('/historique/:idUser/:idVoiture', (req, res) => {
     });
 });
 
+router.get('/get/:id',(req,res)=>{
+    ReparationsVoiture.find({_id:req.params.id},(err, docs) => {
+        if (!err) { res.send(docs); }
+        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+    });
+});
+
 module.exports = router;

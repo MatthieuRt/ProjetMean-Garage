@@ -110,10 +110,9 @@ export class AcademyService
 
     getAllReparation(){
         return this._httpClient.get("http://localhost:9000/reparation");
-        /*return this._httpClient.get<ListeReparation[]>('http://localhost:9000/reparation').pipe(
-            tap((response: any) => {
-                this._listeReparations.next(response);   
-            })
-        );*/
+    }
+
+    getReparationById(id: String){
+        return this._httpClient.get("http://localhost:9000/reparation/get/"+id);
     }
 }
