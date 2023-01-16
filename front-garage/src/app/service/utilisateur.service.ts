@@ -8,6 +8,7 @@ import { baseUrl } from 'environments/environment';
 export class UtilisateurSerice
 {
     private url = baseUrl+'user/';
+    private urlReparation = baseUrl+'reparation/';
     public listVoiture:any;
     constructor(
         private _httpClient: HttpClient,
@@ -21,5 +22,8 @@ export class UtilisateurSerice
     getListVoiture(idUser): Observable<any>{
         console.log(idUser)
         return this._httpClient.get(this.url+'car/'+idUser);
+    }
+    depotVoiture(data:any): Observable<any>{
+        return this._httpClient.post(this.urlReparation+'/insert',data);
     }
 }

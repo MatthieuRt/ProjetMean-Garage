@@ -57,7 +57,8 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
     VOForm: FormGroup;
     isEditableNew: boolean = true;
     searchInputControl: UntypedFormControl = new UntypedFormControl();
-    depotForm: UntypedFormGroup;
+    depotForm: FormGroup;
+    dialogRep :UntypedFormGroup;
 
     // data static
  public ELEMENT_DATA: any[] = [
@@ -147,6 +148,7 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
       });
   }
   initDepotForm(indexVoiture){
+    let user = JSON.parse(sessionStorage.getItem('user'));
     this.depotForm = this._formBuilder.group({
       title      : 'Déposé votre voiture',
       message    : '<span class="font-medium">Vous allez déposé la voiture :'+this._utilisateurServ.listVoiture[indexVoiture].numero+' !</span>',
@@ -160,13 +162,41 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
               show : true,
               label: 'OK',
               color: 'warn',
-              action : ()=>{
-                
+              action : () =>{
+                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                const data = {
+                  idVoiture: this._utilisateurServ.listVoiture[indexVoiture]._id,
+                  idUser: user._id
+                }
+                const onSuccess = (response:any)=>{
+                  console.log('mandeeeeeeeeeee')
+                  console.log(response)
+                  if(response.message=='OK'){
+                      this.dialogResponse('Déposition de votre voiture','Félicitation votre voiture à été déposer avec success');
+                  }else{
+                    this.dialogResponse('Une Erreur est survenue!',response.value,true);
+                  }
+                }
+                this._utilisateurServ.depotVoiture(data).subscribe(onSuccess);
               }
           }),
       }),
       dismissible: true
-  });
+    });
+  }
+  dialogResponse(titre,message,isError=false){
+    let icone = 'heroicons_outline:check';
+    if(isError) icone = 'heroicons_outline:exclamation';
+    this.depotForm = this._formBuilder.group({
+      title      : titre,
+      message    : '<span class="font-medium">'+message+' !</span>',
+      icon       : this._formBuilder.group({
+          show : true,
+          name : icone,
+          color: 'success'
+      }),
+      dismissible: true
+    });
   }
 }
 

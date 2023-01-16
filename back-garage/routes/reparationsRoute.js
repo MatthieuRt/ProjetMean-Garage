@@ -42,6 +42,8 @@ router.post('/insert', (req, res) => {
             } 
             console.log('Erreur : ' + err) 
         }
+        console.log('_______________________Depot voiture_____________________________');
+        console.log(rep);
         res.json(rep); 
 
     });
