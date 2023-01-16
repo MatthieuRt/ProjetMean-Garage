@@ -14,6 +14,7 @@ import { Note } from '../../apps/notes/notes.types';
 import { NotesDetailsComponent } from '../../apps/notes/details/details.component';
 import { cloneDeep } from 'lodash-es';
 import { DetailComponent } from './detail/detail.component';
+import { UtilisateurSerice } from 'app/service/utilisateur.service';
 
 @Component({
     selector       : 'project',
@@ -47,7 +48,7 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild(MatPaginator) private _paginator: MatPaginator;
     @ViewChild(MatSort) private _sort: MatSort;
 
-    displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'action'];
+    displayedColumns: string[] = ['modele', 'numero', 'dateAjout', 'action'];
     dataSource = new MatTableDataSource<any>();
    
     isLoading = true;
@@ -56,7 +57,7 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
     VOForm: FormGroup;
     isEditableNew: boolean = true;
     searchInputControl: UntypedFormControl = new UntypedFormControl();
-    selectedProduct: InventoryProduct | null = null;
+    depotForm: UntypedFormGroup;
 
     // data static
  public ELEMENT_DATA: any[] = [
@@ -88,6 +89,7 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
         private _inventoryService: InventoryService,private fb: FormBuilder,
         private _formBuilder: FormBuilder,
         private _matDialog: MatDialog,
+        public _utilisateurServ : UtilisateurSerice,
     )
     {
     }
@@ -99,9 +101,17 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   ngAfterViewInit() {
-    this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-    this.dataSource.paginator = this.paginator;
-    console.log(this.dataSource);
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    const onSuccess = (resp:any)=>{
+      if(resp.message==='OK'){
+          this._utilisateurServ.listVoiture = resp.value;
+          this.dataSource = new MatTableDataSource(this._utilisateurServ.listVoiture);
+          this.dataSource.paginator = this.paginator;
+          console.log(this.dataSource);
+      }
+    } 
+    this._utilisateurServ.getListVoiture(user._id).subscribe(onSuccess);
+ 
 
   }
   
@@ -127,6 +137,36 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
       this._matDialog.open(DetailComponent, {
           autoFocus: false,
       });
+  }
+  openDepotDialog(index): void
+  {
+      this.initDepotForm(index);
+      const dialogRef = this._fuseConfirmationService.open(this.depotForm.value);
+      dialogRef.afterClosed().subscribe((result) => {
+          console.log(result);
+      });
+  }
+  initDepotForm(indexVoiture){
+    this.depotForm = this._formBuilder.group({
+      title      : 'Déposé votre voiture',
+      message    : '<span class="font-medium">Vous allez déposé la voiture :'+this._utilisateurServ.listVoiture[indexVoiture].numero+' !</span>',
+      icon       : this._formBuilder.group({
+          show : true,
+          name : 'heroicons_outline:check',
+          color: 'success'
+      }),
+      actions    : this._formBuilder.group({
+          confirm: this._formBuilder.group({
+              show : true,
+              label: 'OK',
+              color: 'warn',
+              action : ()=>{
+                
+              }
+          }),
+      }),
+      dismissible: true
+  });
   }
 }
 

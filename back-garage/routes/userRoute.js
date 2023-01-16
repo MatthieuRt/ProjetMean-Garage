@@ -147,7 +147,8 @@ router.post('/login',(request,response)=>{
 router.post('/add/car',async (request,response)=>{
     let car = {
         numero : request.body.numero,
-        modele : request.body.modele
+        modele : request.body.modele,
+        dateAjout: request.body.dateAjout
     }
     // let demande = new DemandeDepotVoiture({
     //     idUser : request.body.idUser,
@@ -188,5 +189,25 @@ router.post('/add/car',async (request,response)=>{
                 response.json(rep);
             }
         })
+})
+//liste voiture
+router.get('/car/:idUser',(request,response)=>{
+    Utilisateur.findOne({_id : request.params.idUser},(err,user)=>{
+        if(err){
+            const rep = {
+                message : 'KO',
+                code : 404,
+                value :  err
+            }
+            response.send(rep);
+        }
+        console.log(user)
+        const reponse = {
+            message : 'OK',
+            value : user.listeVoiture,
+            code : 200
+        }
+        response.json(reponse)
+    })
 })
 module.exports = router;

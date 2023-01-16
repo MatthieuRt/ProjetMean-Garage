@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { UtilisateurSerice } from 'app/service/utilisateur.service';
 
 @Component({
     selector     : 'auth-sign-in',
@@ -31,6 +32,7 @@ export class AuthSignInComponent implements OnInit
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
         private _router: Router,
+        private _utilisateurServ : UtilisateurSerice
     )
     {
     }
@@ -140,7 +142,8 @@ export class AuthSignInComponent implements OnInit
                  this.showAlert = true;
             }else{
                     this._authService._authenticated = true;
-                    sessionStorage.setItem('user',JSON.stringify(response.value));
+                    let user= response.value;
+                    sessionStorage.setItem('user',JSON.stringify(user));
                     const utilisateur = response.value;
                     if(utilisateur.profil==='user'){
                         this._router.navigateByUrl('/dashboards/project');

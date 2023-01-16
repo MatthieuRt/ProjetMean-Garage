@@ -117,7 +117,8 @@ export class AnalyticsComponent implements OnInit, OnDestroy
         const data = {
             idUser : user._id,
             modele : this.ajoutForm.get('modele').value , 
-            numero : this.ajoutForm.get('numero').value
+            numero : this.ajoutForm.get('numero').value,
+            dateAjout : new Date()
         }
         console.log(data);
         this._utilisateurServ.ajouterVoiture(data).subscribe(onSuccess);

@@ -27,7 +27,7 @@ router.post('/insert', (req, res) => {
     });
     rep.save((err, doc) => {
         if (!err) { res.send(doc); }
-        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)) }
+        else { console.log('Erreur : ' + err) }
     });
 });
 

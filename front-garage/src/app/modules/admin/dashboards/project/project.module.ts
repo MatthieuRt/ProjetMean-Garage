@@ -24,6 +24,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DetailComponent } from './detail/detail.component';
+import { UtilisateurSerice } from 'app/service/utilisateur.service';
 
 @NgModule({
     declarations: [
@@ -57,7 +58,7 @@ import { DetailComponent } from './detail/detail.component';
         MatSlideToggleModule,
         MatTooltipModule,
         SharedModule
-    ]
+    ],
 })
 export class ProjectModule
 {
