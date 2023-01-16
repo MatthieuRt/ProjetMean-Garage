@@ -36,5 +36,6 @@ export interface ListeReparation
     estPaye?:boolean,
     datePaiement?:Date,
     dateDebut?:Date,
-    dateFin?:Date
+    dateFin?:Date,
+    etat?:String
 }

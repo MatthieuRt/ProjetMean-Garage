@@ -30,6 +30,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
     };
     listereparations: ListeReparation[];
     filteredListeReparations: ListeReparation[];
+    voiture : any;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -54,6 +55,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        
         this._academyService.getAllReparation()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response: ListeReparation[]) => {
@@ -88,20 +90,24 @@ export class AcademyListComponent implements OnInit, OnDestroy
             .subscribe(([categorySlug, query, hideCompleted]) => {
 
                 // Reset the filtered courses
-                this.filteredCourses = this.courses;
-
+                //this.filteredCourses = this.courses;
+                this.filteredListeReparations = this.listereparations;
                 // Filter by category
                 if ( categorySlug !== 'all' )
                 {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.category === categorySlug);
+                    //this.filteredCourses = this.filteredCourses.filter(course => course.category === categorySlug);
+                    this.filteredListeReparations = this.filteredListeReparations.filter(course => course.etat === categorySlug);
                 }
 
                 // Filter by search query
                 if ( query !== '' )
                 {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
+                    /*this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
                         || course.description.toLowerCase().includes(query.toLowerCase())
-                        || course.category.toLowerCase().includes(query.toLowerCase()));
+                        || course.category.toLowerCase().includes(query.toLowerCase()));*/
+                    this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
+                    || course.description.toLowerCase().includes(query.toLowerCase())
+                    || course.category.toLowerCase().includes(query.toLowerCase()));
                 }
 
                 // Filter by completed
