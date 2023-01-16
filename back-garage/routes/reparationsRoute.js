@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 
 router.post('/insert', (req, res) => {
     var rep = new ReparationsVoiture({
-        idVoiture: req.body.id,
+        idVoiture: req.body.idVoiture,
         idUtilisateur: req.body.idUser,
         listeReparation : [],
         dateArrivee:new Date(),
@@ -26,8 +26,24 @@ router.post('/insert', (req, res) => {
         estDepose:false
     });
     rep.save((err, doc) => {
-        if (!err) { res.send(doc); }
-        else { console.log('Erreur : ' + err) }
+        let rep = {}
+        if (!err) {
+            rep = {
+                message : 'OK',
+                code :200,
+                value : doc
+            }
+        }
+        else {
+            rep = {
+                message : 'KO',
+                code :404,
+                value : err
+            } 
+            console.log('Erreur : ' + err) 
+        }
+        res.json(rep); 
+
     });
 });
 
