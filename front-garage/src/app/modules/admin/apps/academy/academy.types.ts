@@ -31,6 +31,7 @@ export interface Course
 export interface ListeReparation
 {
     idPiece?: string;
+    piece?: Piece,
     prix?: string;
     avancement?: string;
     estPaye?:boolean,
@@ -42,10 +43,25 @@ export interface ListeReparation
 export interface ReparationsVoitures
 {
     idVoiture?: string,
+    voiture?: Voiture,
     listeReparations?: ListeReparation[],
     dateArrivee?: Date,
     dateSortie?: Date,
     etat?: String
+}
+
+export interface Voiture 
+{
+    id?:string,
+    modele?:string,
+    numero?:string
+}
+
+export interface Piece 
+{
+    id?:string,
+    designation?:string,
+    prix?:number
 }
 
 
