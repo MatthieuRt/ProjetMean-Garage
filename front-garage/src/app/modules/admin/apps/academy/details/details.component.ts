@@ -22,7 +22,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    reparation : ReparationsVoitures;
+    reparation : any;
     listeVoitures : Voiture[];
 
     /**
@@ -81,13 +81,13 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
                 // Get the course
                 this.reparation = course[0];
 
-                console.log("_____"+course);
+                console.log("_____"+course[0].listeReparation);
                 this.listeVoitures = [{ "id": "1", "modele": "Nissan Qashqai" }, { "id": "2", "modele": "Renault Express" }]
                 for( let i=0; i < this.listeVoitures.length; i++){
                     if(this.listeVoitures[i].id==this.reparation.idVoiture)this.reparation.voiture = this.listeVoitures[i];
                 }
 
-                this.reparation.listeReparations.forEach(rep => {
+                this.reparation.listeReparation.forEach(rep => {
                     if (!rep.piece){
                       this._academyService.getPieceById(rep.idPiece).subscribe(piece => {
                         rep.piece = piece;

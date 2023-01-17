@@ -108,7 +108,7 @@ export class AcademyCourseResolver implements Resolve<any>
     }*/
 
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ReparationsVoitures>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
         return this._academyService.getReparationById(route.paramMap.get('id'))
                    .pipe(

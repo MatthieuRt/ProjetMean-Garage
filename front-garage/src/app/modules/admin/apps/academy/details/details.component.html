@@ -17,14 +17,23 @@
                 <!-- Course category -->
 
                 <!-- Course title & description -->
+                
                 <div class="mt-3 text-2xl font-semibold">{{reparation?.voiture.modele}}</div>
                 <div class="text-secondary">{{reparation?.voiture.numero}}</div>
                 <!-- Course time -->
-                <div class="mt-6 flex items-center leading-5 text-md text-secondary">
-                    <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
-                    <div class="ml-1.5">Date arrivée : <p>{{ reparation?.dateArrivee | date:'dd/MM/yyyy HH:mm:ss'}}</p>
+                <ng-container *ngIf="reparation?.dateArrivee; else noArrivee">
+                    <div class="mt-6 flex items-center leading-5 text-md text-secondary">
+                        <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                        <div class="ml-1.5">Date arrivée : <p>{{ reparation?.dateArrivee | date:'dd/MM/yyyy HH:mm:ss'}}</p>
+                        </div>
                     </div>
-                </div>
+                </ng-container>
+                <ng-template #noArrivee>
+                    <div class="mt-6 flex items-center leading-5 text-md text-secondary">
+                        <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                        <div class="ml-1.5">Pas encore receptionnée</div>
+                    </div>
+                </ng-template>
                 <ng-container *ngIf="reparation?.dateSortie; else noSortie">
                     <div class="mt-6 flex items-center leading-5 text-md text-secondary">
                         <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
@@ -80,7 +89,8 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <ng-container *ngFor="let liste as reparation?.listeReparation">
+                                            <ng-container *ngIf="reparation?.listeReparation.length>0; else noSortie">
+                                                <ng-container *ngFor="let liste of reparation?.listeReparation">
                                                 <tr>
                                                     <th scope="row">1</th>
                                                     <td>{{liste?.idPiece}}</td>
@@ -88,6 +98,12 @@
                                                     <td>{{liste?.prix}}</td>
                                                 </tr>
                                             </ng-container>
+                                            </ng-container>
+                                            <ng-template #noSortie>
+                                                
+                                                    <p>Pas de réparation</p>
+                                                
+                                            </ng-template>
                                         </tbody>
                                     </table>
                                 </div>
