@@ -13,7 +13,7 @@ export class AcademyService
     private _course: BehaviorSubject<Course | null> = new BehaviorSubject(null);
     private _courses: BehaviorSubject<Course[] | null> = new BehaviorSubject(null);
     private _listeReparations: BehaviorSubject<ListeReparation[] | null> = new BehaviorSubject(null);
-    private reparation: Observable<any>;
+    private reparation: Observable<ReparationsVoitures>;
 
     /**
      * Constructor

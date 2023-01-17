@@ -22,7 +22,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    reparation : any;
+    reparation : ReparationsVoitures;
 
     /**
      * Constructor
@@ -75,7 +75,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
 
             this._academyService.reparation$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((course: any) => {
+            .subscribe((course: ReparationsVoitures) => {
                 console.log(course)
                 // Get the course
                 this.reparation = course[0];
