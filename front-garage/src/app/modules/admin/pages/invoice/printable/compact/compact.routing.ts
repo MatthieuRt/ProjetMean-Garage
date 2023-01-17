@@ -5,5 +5,9 @@ export const compactRoutes: Route[] = [
     {
         path     : '',
         component: CompactComponent
+    },
+    {
+        path     : ':id',
+        component: CompactComponent
     }
 ];
