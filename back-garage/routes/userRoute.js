@@ -50,7 +50,7 @@ router.post('/inscription',(request,response)=>{
                                     value : null,
                                     code : 200
                                 }
-                                // response.json(rep);
+                                response.json(rep);
                                 console.log('Email sent: ' + info.response);
                             }
                         });
@@ -58,6 +58,12 @@ router.post('/inscription',(request,response)=>{
                 
             })
             .catch(err=>{
+                const rep ={
+                    message : 'KO',
+                    value : err,
+                    code :404
+                }
+                response.json(rep);
                 console.log(err)
             })
         }
