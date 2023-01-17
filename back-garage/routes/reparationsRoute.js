@@ -25,28 +25,27 @@ router.post('/insert', (req, res) => {
         dateSortie:null,
         estDepose:false
     });
-    rep.save((err, doc) => {
-        let rep = {}
-        if (!err) {
-            rep = {
-                message : 'OK',
-                code :200,
-                value : doc
-            }
-        }
-        else {
-            rep = {
-                message : 'KO',
-                code :404,
-                value : err
-            } 
-            console.log('Erreur : ' + err) 
-        }
-        console.log('_______________________Depot voiture_____________________________');
-        console.log(rep);
-        res.json(rep); 
-
-    });
+    rep.save()
+            .then(success=> {
+                let rep = {
+                    message : 'OK',
+                    code :200,
+                    value : success
+                }
+                console.log('_______________________Depot voiture SUCCES_____________________________');
+                console.log(rep);
+                res.json(rep); 
+            })
+            .catch(erreur=>{
+                let rep = {
+                    message : 'KO',
+                    code :404,
+                    value : erreur
+                } 
+                console.log('_______________________Depot voiture ERREUR_____________________________');
+                res.json(rep); 
+                console.log('Erreur : ' + err) 
+            })
 });
 
 router.put('/add/:id', (req, res) => {
