@@ -26,13 +26,34 @@ router.post('/insert', (req, res) => {
         estDepose:false
     });
     rep.save()
-            .then(success=> {
+            .then(async success=> {
                 let rep = {
                     message : 'OK',
                     code :200,
                     value : success
                 }
                 console.log('_______________________Depot voiture SUCCES_____________________________');
+                console.log(success);
+
+                const utilisateur = await Utilisateur.findById(success.idUtilisateur);
+                console.log('**************************************************')
+                console.log(utilisateur);
+                console.log('**************************************************')
+
+                const voitureToUpdate=  utilisateur.listeVoiture.find(voiture => voiture._id==success.idVoiture);
+                voitureToUpdate.enCoursDepot = false;
+                utilisateur.save()
+                    .catch(diso=>{
+                        console.log('___________________UPDATE enCoursDepot ERREUR___________________');
+                        let rep = {
+                            message : 'KO',
+                            code :404,
+                            err :'erreur de changement d\' en cours de dépot',
+                            value : diso
+                        } 
+                        res.json(rep); 
+                        console.log('Erreur : ' + diso) 
+                    })
                 console.log(rep);
                 res.json(rep); 
             })
@@ -44,7 +65,7 @@ router.post('/insert', (req, res) => {
                 } 
                 console.log('_______________________Depot voiture ERREUR_____________________________');
                 res.json(rep); 
-                console.log('Erreur : ' + err) 
+                console.log('Erreur : ' + erreur) 
             })
 });
 

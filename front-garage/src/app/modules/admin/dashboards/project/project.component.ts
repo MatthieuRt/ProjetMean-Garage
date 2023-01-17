@@ -171,14 +171,18 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
   }
   dialogResponse(titre,message,isError=false){
     let icone = 'heroicons_outline:check';
-    if(isError) icone = 'heroicons_outline:exclamation';
+    let couleur = 'success';
+    if(isError){
+      icone = 'heroicons_outline:exclamation';
+      couleur = 'warn';
+    }
     this.dialogRep = this._formBuilder.group({
       title      : titre,
       message    : '<span class="font-medium">'+message+' !</span>',
       icon       : this._formBuilder.group({
           show : true,
           name : icone,
-          color: 'success'
+          color: couleur
       }),
       dismissible: true
     });
@@ -200,7 +204,7 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
             await this.refreshListeVoiture();
             this.dialogResponse('Déposition de votre voiture','Félicitation votre voiture à été déposer avec success');
         }else{
-          this.dialogResponse('Une Erreur est survenue!',response.value,true);
+          this.dialogResponse('Une Erreur est survenue!',JSON.stringify(response.value),true);
         }
       }
       this._utilisateurServ.depotVoiture(data).subscribe(onSuccess);

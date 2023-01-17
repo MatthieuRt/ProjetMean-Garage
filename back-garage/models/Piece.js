@@ -2,6 +2,6 @@ const mongoose = require('mongoose');
 const Voiture = require('./Piece');
 const pieceSchema = mongoose.Schema({
     designation:String,
-    prix:number
+    prix:Number
 })
-module.exports = mongoose.model('Piece',userSchema);
+module.exports = mongoose.model('Piece',pieceSchema);

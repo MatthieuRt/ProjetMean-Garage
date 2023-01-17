@@ -84,7 +84,7 @@
 
                             <!-- Details button -->
                             <div>
-                                <button
+                                <button *ngIf="car.enCoursDepot;else otherView"
                                     class="min-w-10 min-h-7 h-7 px-2 leading-6"
                                     mat-stroked-button
                                     (click)="openDepotDialog(i)">
@@ -92,6 +92,11 @@
                                         class="icon-size-5"
                                         [svgIcon]="'heroicons_solid:inbox-in'"></mat-icon>
                                 </button>
+                                <ng-template #otherView>
+                                    <mat-icon
+                                    class="icon-size-5"
+                                    [svgIcon]="'heroicons_solid:lock-closed'"></mat-icon>
+                                </ng-template>
                             </div>
                         </div>
                     </ng-container>

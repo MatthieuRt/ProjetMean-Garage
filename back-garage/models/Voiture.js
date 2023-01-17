@@ -5,6 +5,10 @@ const Voiture = mongoose.Schema({
     modele :String,
     dateAjout : {
         type :Date,
+    },
+    enCoursDepot : {
+        type : Boolean,
+        default :true
     }
 })
 module.exports = Voiture;
