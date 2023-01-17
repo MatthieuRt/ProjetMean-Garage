@@ -102,6 +102,9 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   ngAfterViewInit() {
+    this.refreshListeVoiture();
+  }
+  refreshListeVoiture(){
     const user = JSON.parse(sessionStorage.getItem('user'));
     const onSuccess = (resp:any)=>{
       if(resp.message==='OK'){
@@ -112,11 +115,8 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
       }
     } 
     this._utilisateurServ.getListVoiture(user._id).subscribe(onSuccess);
- 
-
   }
-  
-   applyFilter(event: Event) {
+  applyFilter(event: Event) {
     //  debugger;
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -172,7 +172,7 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
   dialogResponse(titre,message,isError=false){
     let icone = 'heroicons_outline:check';
     if(isError) icone = 'heroicons_outline:exclamation';
-    this.depotForm = this._formBuilder.group({
+    this.dialogRep = this._formBuilder.group({
       title      : titre,
       message    : '<span class="font-medium">'+message+' !</span>',
       icon       : this._formBuilder.group({
@@ -182,6 +182,10 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
       }),
       dismissible: true
     });
+    const dialogRef = this._fuseConfirmationService.open(this.dialogRep.value);
+      dialogRef.afterClosed().subscribe((result) => {
+          console.log("Reponse déposition : "+result);
+      })
   }
   depotVoiture(indexVoiture){
     let user = JSON.parse(sessionStorage.getItem('user'));
@@ -189,10 +193,11 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
         idVoiture: this._utilisateurServ.listVoiture[indexVoiture]._id,
         idUser: user._id
       }
-      const onSuccess = (response:any)=>{
+      const onSuccess = async (response:any)=>{
         console.log('mandeeeeeeeeeee')
         console.log(response)
         if(response.message=='OK'){
+            await this.refreshListeVoiture();
             this.dialogResponse('Déposition de votre voiture','Félicitation votre voiture à été déposer avec success');
         }else{
           this.dialogResponse('Une Erreur est survenue!',response.value,true);
