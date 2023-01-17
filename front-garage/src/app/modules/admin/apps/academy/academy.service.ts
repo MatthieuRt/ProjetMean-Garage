@@ -121,6 +121,9 @@ export class AcademyService
     getReparationById(id: String){
         this.reparation = this._httpClient.get("http://localhost:9000/reparation/get/"+id);
         return this._httpClient.get("http://localhost:9000/reparation/get/"+id);
-        
+    }
+
+    getPieceById(id: String){
+        return this._httpClient.get("http://localhost:9000/piece/"+id);
     }
 }

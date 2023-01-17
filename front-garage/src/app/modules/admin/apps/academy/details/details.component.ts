@@ -3,7 +3,7 @@ import { DOCUMENT } from '@angular/common';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Category, Course, ListeReparation,ReparationsVoitures, Voiture } from 'app/modules/admin/apps/academy/academy.types';
+import { Category, Course, ListeReparation,ReparationsVoitures, Voiture, Piece } from 'app/modules/admin/apps/academy/academy.types';
 import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     drawerOpened: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     reparation : ReparationsVoitures;
-    listeVoitures : Voiture[]
+    listeVoitures : Voiture[];
 
     /**
      * Constructor
@@ -76,18 +76,24 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
 
             this._academyService.reparation$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((course: ReparationsVoitures) => {
+            .subscribe((course: any) => {
                 console.log(course)
                 // Get the course
                 this.reparation = course[0];
 
-                
+                console.log("_____"+course);
                 this.listeVoitures = [{ "id": "1", "modele": "Nissan Qashqai" }, { "id": "2", "modele": "Renault Express" }]
                 for( let i=0; i < this.listeVoitures.length; i++){
                     if(this.listeVoitures[i].id==this.reparation.idVoiture)this.reparation.voiture = this.listeVoitures[i];
                 }
 
-                // Go to step
+                this.reparation.listeReparations.forEach(rep => {
+                    if (!rep.piece){
+                      this._academyService.getPieceById(rep.idPiece).subscribe(piece => {
+                        rep.piece = piece;
+                      });
+                    }
+                  });
                 
 
                 // Mark for check
@@ -147,9 +153,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
         this._changeDetectorRef.markForCheck();
     }
 
-    isDate(date: any): boolean {
-        return date instanceof Date;
-      }
+
 
     /**
      * Go to previous step
