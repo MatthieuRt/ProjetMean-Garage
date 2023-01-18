@@ -17,7 +17,7 @@
                 <!-- Course category -->
 
                 <!-- Course title & description -->
-                <a href="http://localhost:4200/pages/invoice/printable/compact?id=4">Facture</a>
+                <a [routerLink]="'/pages/invoice/printable/compact/' + reparation?._id">Facture</a>
                 <div class="mt-3 text-2xl font-semibold">{{reparation?.voiture.modele}}</div>
                 <div class="text-secondary">{{reparation?.voiture.numero}}</div>
                 <!-- Course time -->
