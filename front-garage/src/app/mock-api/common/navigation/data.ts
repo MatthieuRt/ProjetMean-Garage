@@ -29,14 +29,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type : 'basic',
                 icon : 'heroicons_outline:cash',
                 link : '/dashboards/finance'
-            },
+            },*/
             {
-                id   : 'dashboards.crypto',
-                title: 'Crypto',
+                id   : 'dashboards.diagnostic',
+                title: 'Diagnostiqué',
                 type : 'basic',
-                icon : 'heroicons_outline:currency-dollar',
+                icon : 'fact_check',
                 link : '/dashboards/crypto'
-            }*/
+            }
         ]
     },
     {

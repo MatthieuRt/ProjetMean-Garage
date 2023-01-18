@@ -15,6 +15,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { CryptoComponent } from 'app/modules/admin/dashboards/crypto/crypto.component';
 import { cryptoRoutes } from 'app/modules/admin/dashboards/crypto/crypto.routing';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
     declarations: [
@@ -34,7 +36,9 @@ import { cryptoRoutes } from 'app/modules/admin/dashboards/crypto/crypto.routing
         MatTableModule,
         MatTabsModule,
         NgApexchartsModule,
-        SharedModule
+        DragDropModule,
+        SharedModule,
+        MarkdownModule.forRoot()
     ]
 })
 export class CryptoModule
