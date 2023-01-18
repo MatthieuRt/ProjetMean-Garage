@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <!-- Watchlist -->
-                <div class="flex flex-col flex-0">
+                <div class="flex flex-col flex-0  overflow-y-auto">
                     <div #activeList="cdkDropList"
                         class="box-list"
                         cdkDropList
@@ -40,21 +40,44 @@
                         <div
                             class="flex flex-0 items-center p-5 border-b"
                             *ngFor="let customer of activeCustomers">
-                            <div class="flex flex-col flex-auto pr-6" cdkDrag>
-                                <div class="flex items-baseline">
-                                    <div class="mr-1 font-medium text-md text-secondary"> {{customer.name}}</div>
-                                    <div class="font-medium text-sm text-hint uppercase tracking-wider">({{customer.age}})</div>
-                                </div>
-                                <div class="flex items-end mt-2">
-                                    <div class="min-w-20 font-mono text-2xl tracking-tighter leading-none">
-                                        1678 USD
-                                    </div>
-                                </div>
-                            </div>
+                                <div class="font-medium leading-5 truncate">{{customer.name}}<mat-icon
+                                    class="icon-size-7 text-hint"
+                                    [svgIcon]="'feather:settings'">
+                                </mat-icon></div>
                         </div>
                     </div>
                 </div>
-
+                <a
+                class="z-20 flex items-center py-5 px-8 cursor-pointer border-b"
+                [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': true,
+                            'bg-primary-50 dark:bg-hover': true}"
+                >
+                <div class="relative flex flex-0 items-center justify-center w-10 h-10">
+                    
+                    <ng-container *ngIf="!true">
+                        <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                            chat.contact.name.charAt(0)}
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="min-w-0 ml-4">
+                    <div class="font-medium leading-5 truncate">Naina Matthieu</div>
+                    <div
+                        class="leading-5 truncate text-secondary"
+                        [class.text-primary]="1> 0"
+                        [class.dark:text-primary-500]="1 > 0">
+                        Mande ve lty leiz??
+                    </div>
+                </div>
+                <div class="flex flex-col items-end self-start ml-auto pl-2">
+                     <ng-container>
+                        <mat-icon
+                            class="icon-size-5 text-hint"
+                            [svgIcon]="'heroicons_solid:volume-off'"></mat-icon>
+                    </ng-container>
+                </div>
+                
+            </a>
                 <!-- Buy / Sell -->
                 <div class="flex flex-col flex-auto shrink-0 pt-6 bg-gray-50 dark:bg-transparent">
 
