@@ -29,55 +29,41 @@
                     </div>
                 </div>
                 <!-- Watchlist -->
-                <div class="flex flex-col flex-0  overflow-y-auto">
-                    <div #activeList="cdkDropList"
-                        class="box-list"
-                        cdkDropList
-                        cdkDropListOrientation="vertical"
-                        [cdkDropListData]="activeCustomers"
-                        [cdkDropListConnectedTo]="[inactiveList]"
-                        (cdkDropListDropped)="drop($event)">
-                        <div
-                            class="flex flex-0 items-center p-5 border-b"
-                            *ngFor="let customer of activeCustomers">
-                                <div class="font-medium leading-5 truncate">{{customer.name}}<mat-icon
-                                    class="icon-size-7 text-hint"
-                                    [svgIcon]="'feather:settings'">
-                                </mat-icon></div>
-                        </div>
-                    </div>
-                </div>
-                <a
-                class="z-20 flex items-center py-5 px-8 cursor-pointer border-b"
-                [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': true,
-                            'bg-primary-50 dark:bg-hover': true}"
+                <div class="flex flex-col flex-0  overflow-y-auto"
+                #activeList="cdkDropList"
+                cdkDropList
+                cdkDropListOrientation="vertical"
+                [cdkDropListData]="activeCustomers"
+                [cdkDropListConnectedTo]="[inactiveList]"
+                (cdkDropListDropped)="drop($event)"
+                style="min-height: 75%;background-color: #f8fafc;"
                 >
-                <div class="relative flex flex-0 items-center justify-center w-10 h-10">
-                    
-                    <ng-container *ngIf="!true">
-                        <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                            chat.contact.name.charAt(0)}
-                        </div>
-                    </ng-container>
+                        <a
+                            class="z-20 flex items-center py-5 px-8 cursor-pointer border-b"
+                            [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': true,
+                                        'bg-primary-50 dark:bg-hover': true}"
+                            [ng-reflect-ng-disabled]="true"
+                            *ngFor="let customer of activeCustomers"
+                            cdkDrag
+                            >
+                            <div class="min-w-0 ml-4">
+                                <div class="font-medium leading-5 truncate">{{customer.name}}</div>
+                                <div
+                                    class="leading-5 truncate text-secondary"
+                                    [class.text-primary]="1> 0"
+                                    [class.dark:text-primary-500]="1 > 0">
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end self-start ml-auto pl-2">
+                                <ng-container>
+                                    <mat-icon
+                                        class="icon-size-5 text-hint"
+                                        [svgIcon]="'feather:settings'"></mat-icon>
+                                </ng-container>
+                            </div>
+                            
+                        </a>
                 </div>
-                <div class="min-w-0 ml-4">
-                    <div class="font-medium leading-5 truncate">Naina Matthieu</div>
-                    <div
-                        class="leading-5 truncate text-secondary"
-                        [class.text-primary]="1> 0"
-                        [class.dark:text-primary-500]="1 > 0">
-                        Mande ve lty leiz??
-                    </div>
-                </div>
-                <div class="flex flex-col items-end self-start ml-auto pl-2">
-                     <ng-container>
-                        <mat-icon
-                            class="icon-size-5 text-hint"
-                            [svgIcon]="'heroicons_solid:volume-off'"></mat-icon>
-                    </ng-container>
-                </div>
-                
-            </a>
                 <!-- Buy / Sell -->
                 <div class="flex flex-col flex-auto shrink-0 pt-6 bg-gray-50 dark:bg-transparent">
 
@@ -98,7 +84,7 @@
         </mat-drawer>
 
         <!-- Content -->
-        <mat-drawer-content class="flex flex-col">
+        <mat-drawer-content class="flex flex-col" >
 
             <!-- BTC Price -->
             <div class="flex flex-col flex-auto min-h-full bg-card dark:bg-default">
@@ -118,51 +104,56 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex-auto overflow-y-auto" cdkScrollable>
-
+                <!-- Main -->
+                <div class="flex-auto overflow-y-auto" cdkScrollable
+                    #inactiveList="cdkDropList"
+                    class="box-list"
+                    cdkDropList
+                    cdkDropListOrientation="vertical"
+                    [cdkDropListData]="inactiveCustomers"
+                    [cdkDropListConnectedTo]="[activeList]"
+                    (cdkDropListDropped)="drop($event)"
+                    style="width: 100%;"
+                >
+    
                     <!-- Steps -->
-                    <div #inactiveList="cdkDropList"
-                        class="box-list"
-                        cdkDropList
-                        cdkDropListOrientation="vertical"
-                        [cdkDropListData]="inactiveCustomers"
-                        [cdkDropListConnectedTo]="[activeList]"
-                        (cdkDropListDropped)="drop($event)">
-
-                        <mat-tab-group class="fuse-mat-no-header" [animationDuration]="'200'">
-                            <ng-container>
-                                <mat-tab>
-                                    <ng-template matTabContent>
-                                        <div
-                                            class="prose prose-sm max-w-3xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">#</th>
-                                                        <th scope="col">Nom</th>
-                                                        <th scope="col">Age</th>
-                                                        <th scope="col">Prix</th>
+                    <mat-tab-group class="fuse-mat-no-header" [animationDuration]="'200'" style="width:100%">
+                        <ng-container>
+                            <mat-tab>
+                                <ng-template matTabContent>
+                                    <div
+                                        class="prose prose-sm max-w-3xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card">
+                                        <table class="table" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Nom</th>
+                                                    <th scope="col">Age</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container *ngIf="inactiveCustomers.length>0; else noSortie">
+                                                    <tr *ngFor="let customer of inactiveCustomers;let i =index" cdkDrag>
+                                                        <th scope="row">1</th>
+                                                        <td>{{customer?.name}}</td>
+                                                        <td>{{customer?.age}}</td>
                                                     </tr>
-                                                </thead>
-                                                <tbody>
-                                                        <tr class="drag-box" *ngFor="let customer of inactiveCustomers;let i =index" cdkDrag>
-                                                            <th scope="row">{{i+1}}</th>
-                                                            <td>{{customer?.name}}</td>
-                                                            <td>{{customer?.age}}</td>
-                                                            <td>1665$</td>
-                                                        </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </ng-template>
-                                </mat-tab>
-                            </ng-container>
-                        </mat-tab-group>
-                        
-                    </div>
-
+                                                </ng-container>
+                                                <ng-template #noSortie>
+                                                    
+                                                        <p>Pas de réparation</p>
+                                                    
+                                                </ng-template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ng-template>
+                            </mat-tab>
+                        </ng-container>
+                    </mat-tab-group>
                 </div>
             </div>
+
         </mat-drawer-content>
 
     </mat-drawer-container>
