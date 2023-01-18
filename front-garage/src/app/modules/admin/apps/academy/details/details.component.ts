@@ -6,6 +6,7 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Category, Course, ListeReparation,ReparationsVoitures, Voiture, Piece } from 'app/modules/admin/apps/academy/academy.types';
 import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
 
+
 @Component({
     selector       : 'academy-details',
     templateUrl    : './details.component.html',
@@ -60,13 +61,16 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
                     if(this.listeVoitures[i].id==this.reparation.idVoiture)this.reparation.voiture = this.listeVoitures[i];
                 }
 
-                this.reparation.listeReparation.forEach(rep => {
-                    if (!rep.piece){
-                      this._academyService.getPieceById(rep.idPiece).subscribe(piece => {
-                        rep.piece = piece;
-                      });
+                for(let i = 0; i < this.reparation.listeReparation.length; i++){
+                    if (!this.reparation.listeReparation[i].piece){
+                        
+                    this._academyService.getPieceById(this.reparation.listeReparation[i].idPiece).subscribe(piece => {
+                    this.reparation.listeReparation[i].piece = piece[0];
+                    this._changeDetectorRef.markForCheck();
+                    });
                     }
-                  });
+                    this._changeDetectorRef.markForCheck();
+                    }
                 
 
                 // Mark for check
