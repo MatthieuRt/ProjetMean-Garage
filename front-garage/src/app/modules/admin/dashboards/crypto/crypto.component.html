@@ -42,7 +42,8 @@
                 >
 
                     <ng-container *ngIf="selectedVoiture!==undefined">
-                        <a
+                        <ng-container *ngIf="reparation.length>0; else noReparation">
+                            <a
                             class="z-20 flex items-center py-5 px-8 cursor-pointer border-b"
                             [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': true,
                                         'bg-primary-50 dark:bg-hover': true}"
@@ -50,8 +51,27 @@
                             *ngFor="let customer of reparation"
                             cdkDrag
                             >
+                                <div class="min-w-0 ml-4">
+                                    <div class="font-medium leading-5 truncate">{{customer.name}}</div>
+                                    <div
+                                        class="leading-5 truncate text-secondary"
+                                        [class.text-primary]="1> 0"
+                                        [class.dark:text-primary-500]="1 > 0">
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-end self-start ml-auto pl-2">
+                                    <ng-container>
+                                        <mat-icon
+                                            class="icon-size-5 text-hint"
+                                            [svgIcon]="'feather:settings'"></mat-icon>
+                                    </ng-container>
+                                </div>
+                            
+                            </a>
+                        </ng-container>
+                        <ng-template #noReparation >
                             <div class="min-w-0 ml-4">
-                                <div class="font-medium leading-5 truncate">{{customer.name}}</div>
+                                <div class="font-medium leading-5 truncate">Pas encore de réparation</div>
                                 <div
                                     class="leading-5 truncate text-secondary"
                                     [class.text-primary]="1> 0"
@@ -62,11 +82,10 @@
                                 <ng-container>
                                     <mat-icon
                                         class="icon-size-5 text-hint"
-                                        [svgIcon]="'feather:settings'"></mat-icon>
+                                        [svgIcon]="'heroicons_outline:x'"></mat-icon>
                                 </ng-container>
                             </div>
-                            
-                        </a>
+                        </ng-template>
                     </ng-container>
                         
                 </div>

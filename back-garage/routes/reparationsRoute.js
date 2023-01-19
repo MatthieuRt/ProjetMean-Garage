@@ -98,8 +98,24 @@ router.get('/enCours/:id', (req, res) => {
 
 router.get('/historique/:idUser/:idVoiture', (req, res) => {
     ReparationsVoiture.find({idUtilisateur:req.params.idUser,idUtilisateur:req.params.idUtilisateur},(err, docs) => {
-        if (!err) { res.send(docs); }
-        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+        let response = {}
+        if (!err) {
+            response = {
+                message : 'OK',
+                value : docs,
+                code : 200
+            }
+            res.json(response)
+        }
+        else {
+            console.log('Erreur : ' + JSON.stringify(err, undefined, 2));
+            response = {
+                message : 'KO',
+                code : 404,
+                value :  err
+            }
+            res.json(response); 
+        }
     });
 });
 

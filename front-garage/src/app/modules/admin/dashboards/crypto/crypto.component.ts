@@ -63,16 +63,7 @@ export class CryptoComponent implements OnInit, OnDestroy
         this._unsubscribeAll.complete();
     }
     // code 
-    reparation = [
-        {
-            'name': 'John',
-            'age' : 14
-        },
-        {
-            'name': 'Waston',
-            'age' : 17
-        },      
-    ];
+     reparation = [];
     
       reparationToAdd = [
         {
@@ -140,6 +131,12 @@ export class CryptoComponent implements OnInit, OnDestroy
         console.log(this.selectedVoiture)
         const onSuccess = (response:any)=>{
             console.log(response);
+            if(response.message==='OK'){
+               this.reparation = response.value
+            }else{
+
+            }
+            
         }
         this._cryptoService.getHistoriqueReparation(this.user._id,idVoiture).subscribe(onSuccess);
     }

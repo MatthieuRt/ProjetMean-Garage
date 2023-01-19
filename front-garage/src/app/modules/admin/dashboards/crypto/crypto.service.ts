@@ -48,4 +48,8 @@ export class CryptoService
         let url = baseUrl+'reparation/historique/'+idUser+"/"+idCar;
         return this._httpClient.get(url);
     }
+    getPieceById(idPiece): Observable<any>{
+        let url = baseUrl+'piece/'+idPiece
+        return this._httpClient.get(url);
+    }
 }
