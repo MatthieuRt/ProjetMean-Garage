@@ -15,6 +15,7 @@ import { NotesDetailsComponent } from '../../apps/notes/details/details.componen
 import { cloneDeep } from 'lodash-es';
 import { UtilisateurSerice } from 'app/service/utilisateur.service';
 import { DetailComponent } from './detail/detail.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector       : 'project',
@@ -90,7 +91,7 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
         private _inventoryService: InventoryService,private fb: FormBuilder,
         private _formBuilder: FormBuilder,
         private _matDialog: MatDialog,
-        public _utilisateurServ : UtilisateurSerice,
+        public _utilisateurServ : UtilisateurSerice,private router: Router
     )
     {
     }
@@ -208,6 +209,10 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
         }
       }
       this._utilisateurServ.depotVoiture(data).subscribe(onSuccess);
+  }
+  onSelect(id) {
+    let voiture = {'_id' : id }
+    this.router.navigate(['/demande-paiement', voiture._id]);
   }
 }
 

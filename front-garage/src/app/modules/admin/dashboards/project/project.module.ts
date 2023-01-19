@@ -32,7 +32,7 @@ import { DetailComponent } from './detail/detail.component';
     declarations: [
         ProjectComponent,
         DetailComponent,
-        DemandePaiementComponent
+        DemandePaiementComponent,
     ],
     imports     : [
         RouterModule.forChild(projectRoutes),
