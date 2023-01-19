@@ -48,7 +48,7 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild(MatPaginator) private _paginator: MatPaginator;
     @ViewChild(MatSort) private _sort: MatSort;
 
-    displayedColumns: string[] = ['modele', 'numero', 'dateAjout', 'action'];
+    displayedColumns: string[] = ['modele', 'numero', 'dateAjout', 'action','paiement'];
     dataSource = new MatTableDataSource<any>();
    
     isLoading = true;
