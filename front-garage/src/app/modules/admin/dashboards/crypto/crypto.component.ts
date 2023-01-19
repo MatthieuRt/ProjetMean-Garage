@@ -26,6 +26,7 @@ export class CryptoComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     listVoiture :any;
     selectedVoiture : any = undefined;
+    user:any;
     /**
      * Constructor
      */
@@ -48,6 +49,7 @@ export class CryptoComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         let user = JSON.parse(sessionStorage.getItem('user'));
+        this.user = user;
         this.listVoiture = user.listeVoiture;
     }
 
@@ -136,6 +138,10 @@ export class CryptoComponent implements OnInit, OnDestroy
         let idVoiture = event.value;
         this.selectedVoiture = this.listVoiture.find(voiture => voiture._id ===idVoiture);
         console.log(this.selectedVoiture)
+        const onSuccess = (response:any)=>{
+            console.log(response);
+        }
+        this._cryptoService.getHistoriqueReparation(this.user._id,idVoiture).subscribe(onSuccess);
     }
 
 }
