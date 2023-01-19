@@ -19,7 +19,7 @@ export const appRoutes: Route[] = [
     // path. Below is another redirection for that path to redirect the user to the desired
     // location. This is a small convenience to keep all main routes together here on this file.
     {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'dashboards/project'},
-    {path: 'demande-paiement/:id',component: DemandePaiementComponent},  
+    // {path: 'demande-paiement/:id',component: DemandePaiementComponent},  
     // Auth routes for guests
     {
         path: '',

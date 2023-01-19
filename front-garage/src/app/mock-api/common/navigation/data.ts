@@ -38,8 +38,8 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link : '/dashboards/finance'
             },*/
             {
-                id   : 'dashboards.diagnostic',
-                title: 'Diagnostiqué',
+                id   : 'dashboards.demande-paiement',
+                title: 'Payé',
                 type : 'basic',
                 icon : 'fact_check',
                 link : '/dashboards/crypto'

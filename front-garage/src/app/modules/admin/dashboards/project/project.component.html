@@ -55,10 +55,6 @@
                         [mat-sort-header]="'action'">
                         Déposé
                     </div>
-                    <div
-                        class="hidden lg:block">
-                        Paiement
-                    </div>
                 </div>
                 <!-- Rows -->
                     <ng-container *ngFor="let car of _utilisateurServ.listVoiture;let i = index">
@@ -98,18 +94,6 @@
                                     class="icon-size-5"
                                     [svgIcon]="'heroicons_solid:lock-closed'"></mat-icon>
                                 </ng-template>
-                            </div>
-                            <!-- Vers Paiement -->
-                            <div>
-                                <button
-                                    class="min-w-10 min-h-7 h-7 px-2 leading-6"
-                                    mat-stroked-button
-                                    (click)="onSelect(1)"
-                                    >
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_outline:credit-card'"></mat-icon>
-                                </button>
                             </div>
                         </div>
                     </ng-container>
