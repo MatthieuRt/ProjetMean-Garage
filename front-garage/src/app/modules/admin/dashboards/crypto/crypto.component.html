@@ -1,16 +1,18 @@
 <markdown [data]="markdown"></markdown>
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
-
+   
     <mat-drawer-container class="flex-auto h-full">
-
         <!-- Drawer -->
+
         <mat-drawer
             class="w-80"
             [autoFocus]="false"
             [mode]="drawerMode"
             [opened]="drawerOpened"
-            #matDrawer>
-
+            #matDrawer
+         
+        >
+            <!-- Paiement -->
             <div class="flex flex-col flex-auto h-full dark:bg-default">
                 <div class="flex flex-wrap items-center pl-4 pr-6 py-3 md:pl-6 border-b">
                     <button
@@ -33,17 +35,19 @@
                 #activeList="cdkDropList"
                 cdkDropList
                 cdkDropListOrientation="vertical"
-                [cdkDropListData]="activeCustomers"
+                [cdkDropListData]="reparation"
                 [cdkDropListConnectedTo]="[inactiveList]"
                 (cdkDropListDropped)="drop($event)"
-                style="min-height: 75%;background-color: #f8fafc;"
+                style="min-height: 55%;background-color: #f8fafc;"
                 >
+
+                    <ng-container *ngIf="selectedVoiture!==undefined">
                         <a
                             class="z-20 flex items-center py-5 px-8 cursor-pointer border-b"
                             [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': true,
                                         'bg-primary-50 dark:bg-hover': true}"
                             [ng-reflect-ng-disabled]="true"
-                            *ngFor="let customer of activeCustomers"
+                            *ngFor="let customer of reparation"
                             cdkDrag
                             >
                             <div class="min-w-0 ml-4">
@@ -63,24 +67,36 @@
                             </div>
                             
                         </a>
+                    </ng-container>
+                        
                 </div>
-                <!-- Buy / Sell -->
+                <!-- Choix vehicule -->
                 <div class="flex flex-col flex-auto shrink-0 pt-6 bg-gray-50 dark:bg-transparent">
-
-                    <!-- Action -->
+                  
                     <div class="flex flex-col px-6 pb-2">
-
+                        <div class="flex items-end mt-1">
+                            <div class="font-medium tracking-tight text-secondary">Veuillez choisir le vehicule pour régler un paiement.</div>
+                        </div>
+                            <mat-form-field>
+                                <span
+                                    class="flex items-center justify-center"
+                                    matPrefix>
+                                    <ng-container>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:download'"></mat-icon>
+                                    </ng-container>
+                                </span>
+                                <mat-select name="select_Vehicule" (selectionChange)="choisirVehicule($event)">
+                                    <mat-option *ngFor="let vehicule of listVoiture" [value]="vehicule._id">{{vehicule.modele}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
                     </div>
-
-                    <!-- Wallet -->
-                    <div class="flex flex-col px-6 pb-2">
-                       
-                    </div>
-
                 </div>
+                <!-- Fin choix vehicule -->
 
             </div>
-
+            <!-- Fin Paiement -->
         </mat-drawer>
 
         <!-- Content -->
@@ -110,7 +126,7 @@
                     class="box-list"
                     cdkDropList
                     cdkDropListOrientation="vertical"
-                    [cdkDropListData]="inactiveCustomers"
+                    [cdkDropListData]="reparationToAdd"
                     [cdkDropListConnectedTo]="[activeList]"
                     (cdkDropListDropped)="drop($event)"
                     style="width: 100%;"
@@ -127,25 +143,45 @@
                                             <thead>
                                                 <tr>
                                                     <th scope="col">#</th>
-                                                    <th scope="col">Nom</th>
-                                                    <th scope="col">Age</th>
+                                                    <th scope="col">Désignation</th>
+                                                    <th scope="col">Prix</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <ng-container *ngIf="inactiveCustomers.length>0; else noSortie">
-                                                    <tr *ngFor="let customer of inactiveCustomers;let i =index" cdkDrag>
-                                                        <th scope="row">1</th>
-                                                        <td>{{customer?.name}}</td>
-                                                        <td>{{customer?.age}}</td>
-                                                    </tr>
+                                                <ng-container *ngIf="selectedVoiture!==undefined;else noSelected">
+                                                    <ng-container *ngIf="reparationToAdd.length>0; else noSortie">
+                                                        <tr *ngFor="let customer of reparationToAdd;let i =index" cdkDrag>
+                                                            <th scope="row">1</th>
+                                                            <td>{{customer?.name}}</td>
+                                                            <td>{{customer?.age}}</td>
+                                                        </tr>
+                                                    </ng-container>
+                                                    <ng-template #noSortie>
+                                                        
+                                                            <p>Pas de réparation</p>
+                                                        
+                                                    </ng-template>
                                                 </ng-container>
-                                                <ng-template #noSortie>
-                                                    
-                                                        <p>Pas de réparation</p>
-                                                    
-                                                </ng-template>
+                                                <ng-template #noSelected>
+                                                        
+                                                    <p>Vous n'avez pas encore choisi un vehicule</p>
+                                                
+                                            </ng-template>
                                             </tbody>
                                         </table>
+                                        <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
+                                            <button
+                                                class="ml-4"
+                                                mat-flat-button
+                                                style="background-color: #59df10d4;"
+                                                (click)="confirmeDemandePaiement()">
+                                                <mat-icon [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                                                <span class="ml-2 mr-1">Validé</span>
+                                                <mat-progress-spinner
+                                                    [diameter]="24"
+                                                    [mode]="'indeterminate'"></mat-progress-spinner>
+                                            </button>
+                                        </div>
                                     </div>
                                 </ng-template>
                             </mat-tab>

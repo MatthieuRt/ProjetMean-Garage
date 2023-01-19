@@ -5,6 +5,7 @@ import { ApexOptions, ChartComponent } from 'ng-apexcharts';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { CryptoService } from 'app/modules/admin/dashboards/crypto/crypto.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector       : 'crypto',
@@ -23,14 +24,17 @@ export class CryptoComponent implements OnInit, OnDestroy
     drawerOpened: boolean = true;
     watchlistChartOptions: ApexOptions = {};
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
+    listVoiture :any;
+    selectCarForm: UntypedFormGroup;
+    selectedVoiture : any = undefined;
     /**
      * Constructor
      */
     constructor(
         private _cryptoService: CryptoService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseMediaWatcherService: FuseMediaWatcherService
+        private _fuseMediaWatcherService: FuseMediaWatcherService,
+        private _formBuilder: UntypedFormBuilder,
     )
     {
     }
@@ -44,6 +48,12 @@ export class CryptoComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        let user = JSON.parse(sessionStorage.getItem('user'));
+        this.listVoiture = user.listeVoiture;
+        this.selectCarForm = this._formBuilder.group({
+           formSelect :  new FormControl('', Validators.required)
+        }
+    );
     }
 
     /**
@@ -55,10 +65,8 @@ export class CryptoComponent implements OnInit, OnDestroy
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
-
-    
     // code 
-    activeCustomers = [
+    reparation = [
         {
             'name': 'John',
             'age' : 14
@@ -69,7 +77,7 @@ export class CryptoComponent implements OnInit, OnDestroy
         },      
     ];
     
-      inactiveCustomers = [
+      reparationToAdd = [
         {
             'name': 'Adam',
             'age' : 14
@@ -103,12 +111,12 @@ export class CryptoComponent implements OnInit, OnDestroy
         }
     
         this.pre = `
-    activeCustomers:
-    ${JSON.stringify(this.activeCustomers, null, ' ')}
-    
-    inactiveCustomers:
-    ${JSON.stringify(this.inactiveCustomers, null, ' ')}`;
-      }
+        reparation:
+        ${JSON.stringify(this.reparation, null, ' ')}
+
+        reparationToAdd:
+        ${JSON.stringify(this.reparationToAdd, null, ' ')}`;
+    }
     
     public markdown = `
     # Material Design: Angular 7, drag-and-drop list
@@ -119,10 +127,18 @@ export class CryptoComponent implements OnInit, OnDestroy
     
     `;
     
-      pre = `
-    activeCustomers:
-    ${JSON.stringify(this.activeCustomers, null, ' ')}
-    
-    inactiveCustomers:
-    ${JSON.stringify(this.inactiveCustomers, null, ' ')}`;
+    pre = `
+        reparation:
+        ${JSON.stringify(this.reparation, null, ' ')}
+        
+        reparationToAdd:
+        ${JSON.stringify(this.reparationToAdd, null, ' ')}`;
+
+    confirmeDemandePaiement(){
+
+    }
+    choisirVehicule(event){
+        let idVoiture = event.value;
+    }
+
 }
