@@ -25,7 +25,6 @@ export class CryptoComponent implements OnInit, OnDestroy
     watchlistChartOptions: ApexOptions = {};
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     listVoiture :any;
-    selectCarForm: UntypedFormGroup;
     selectedVoiture : any = undefined;
     /**
      * Constructor
@@ -50,10 +49,6 @@ export class CryptoComponent implements OnInit, OnDestroy
     {
         let user = JSON.parse(sessionStorage.getItem('user'));
         this.listVoiture = user.listeVoiture;
-        this.selectCarForm = this._formBuilder.group({
-           formSelect :  new FormControl('', Validators.required)
-        }
-    );
     }
 
     /**
@@ -139,6 +134,8 @@ export class CryptoComponent implements OnInit, OnDestroy
     }
     choisirVehicule(event){
         let idVoiture = event.value;
+        this.selectedVoiture = this.listVoiture.find(voiture => voiture._id ===idVoiture);
+        console.log(this.selectedVoiture)
     }
 
 }
