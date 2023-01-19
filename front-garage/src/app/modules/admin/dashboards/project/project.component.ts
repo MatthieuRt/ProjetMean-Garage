@@ -13,8 +13,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Note } from '../../apps/notes/notes.types';
 import { NotesDetailsComponent } from '../../apps/notes/details/details.component';
 import { cloneDeep } from 'lodash-es';
-import { DetailComponent } from './detail/detail.component';
 import { UtilisateurSerice } from 'app/service/utilisateur.service';
+import { DetailComponent } from './detail/detail.component';
 
 @Component({
     selector       : 'project',

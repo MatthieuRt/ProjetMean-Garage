@@ -23,13 +23,16 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DemandePaiementComponent } from './demande-paiement/demande-paiement.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MarkdownModule } from 'ngx-markdown';
 import { DetailComponent } from './detail/detail.component';
-import { UtilisateurSerice } from 'app/service/utilisateur.service';
 
 @NgModule({
     declarations: [
         ProjectComponent,
-        DetailComponent
+        DetailComponent,
+        DemandePaiementComponent
     ],
     imports     : [
         RouterModule.forChild(projectRoutes),
@@ -57,7 +60,9 @@ import { UtilisateurSerice } from 'app/service/utilisateur.service';
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        SharedModule
+        DragDropModule,
+        SharedModule,
+        MarkdownModule.forRoot()
     ],
 })
 export class ProjectModule
