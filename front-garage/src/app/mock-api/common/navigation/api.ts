@@ -38,14 +38,13 @@ export class NavigationMockApi
         this._fuseMockApiService
             .onGet('api/common/navigation')
             .reply(() => {
-                console.log(sessionStorage.getItem("user"));
                 
                 // Fill compact navigation children using the default navigation
                 this._compactNavigation.forEach((compactNavItem) => {
                     this._defaultNavigation.forEach((defaultNavItem) => {
                         if ( defaultNavItem.id === compactNavItem.id )
                         {
-                            console.log("--------------"+defaultNavItem.id);
+                            //console.log("--------------"+defaultNavItem.id);
                             compactNavItem.children = cloneDeep(defaultNavItem.children);
                         }
                     });
