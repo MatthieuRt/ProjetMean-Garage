@@ -17,6 +17,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link : '/dashboards/project'
             },
             {
+                id   : 'apps.academy',
+                title: 'Réparations',
+                type : 'basic',
+                icon : 'feather:tool',
+                link : '/apps/academy'
+            },
+            {
                 id   : 'dashboards.ajout',
                 title: 'Ajouter une voiture',
                 type : 'basic',
@@ -46,13 +53,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type    : 'group',
         icon    : 'heroicons_outline:home',
         children: [
-            {
+            /*{
                 id   : 'apps.academy',
                 title: 'Academy',
                 type : 'basic',
                 icon : 'heroicons_outline:academic-cap',
                 link : '/apps/academy'
-            },
+            },*/
             {
                 id   : 'apps.chat',
                 title: 'Chat',

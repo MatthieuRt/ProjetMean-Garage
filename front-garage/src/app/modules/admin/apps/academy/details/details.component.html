@@ -17,7 +17,7 @@
                 <!-- Course category -->
 
                 <!-- Course title & description -->
-                <a [routerLink]="'/pages/invoice/printable/compact/' + reparation?._id">Facture</a>
+
                 <div class="mt-3 text-2xl font-semibold">{{reparation?.voiture.modele}}</div>
                 <div class="text-secondary">{{reparation?.voiture.numero}}</div>
                 <!-- Course time -->
@@ -50,7 +50,9 @@
             </div>
 
             <!-- Steps -->
-
+            <br><br>
+            <button style="margin-left:20px"mat-stroked-button color="primary" [routerLink]="'/pages/invoice/printable/compact/' + reparation?._id" ><mat-icon svgIcon="heroicons_outline:document"></mat-icon>
+                <p>Voir la facture</p></button>
 
         </mat-drawer>
 
@@ -96,7 +98,7 @@
                                                     <th scope="row">1</th>
                                                     <td>{{liste?.piece?.designation}}</td>
                                                     <td>{{liste?.avacement}}</td>
-                                                    <td>{{liste?.prix}}</td>
+                                                    <td>{{liste?.prix}} MGA</td>
                                                     <td>{{liste?.estPaye ? 'Payé' : 'Non payé'}}</td>
                                                 </tr>
                                             </ng-container>

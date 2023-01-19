@@ -16,12 +16,12 @@
 
         <!-- @formatter:on -->
         <div class="z-10 relative flex flex-col items-center">
-            <h2 class="text-xl font-semibold">FUSE ACADEMY</h2>
+            <h2 class="text-xl font-semibold">AUTO GARAGE</h2>
             <div class="mt-1 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight text-center">
-                What do you want to learn to2days? 
+                Liste des réparations
             </div>
             <div class="max-w-2xl mt-6 sm:text-2xl text-center tracking-tight text-secondary">
-                Our courses will step you through the process of a building small applications, or adding new features to existing applications.
+                
                 
             </div>
         </div>
@@ -41,7 +41,7 @@
                             <mat-select
                                 [value]="'all'"
                                 (selectionChange)="filterByCategory($event)">
-                                <mat-option [value]="'all'">All</mat-option>
+                                <mat-option [value]="'all'">Tout</mat-option>
                                 <mat-option [value]="'En cours'">En cours</mat-option>
                                 <mat-option [value]="'Terminé'">Terminé</mat-option>
                             </mat-select>
@@ -88,19 +88,20 @@
                                     <mat-icon
                                         class="icon-size-5 text-hint"
                                         [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                                        <div class="ml-1.5">Arrivée le {{liste.dateArrivee | date:'dd/MM/yyyy HH:mm:ss'}}</div>
                                     <div class="ml-1.5"></div>
                                 </div>
                                 <!-- Course completion -->
                                 <div class="flex items-center mt-2 leading-5 text-md text-secondary">
                                     <mat-icon
                                         class="icon-size-5 text-hint"
-                                        [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
+                                        [svgIcon]="'heroicons_solid:clock'"></mat-icon>
                                     <ng-container *ngIf="liste.dateSortie == NULL">
                                         <div class="ml-1.5">En cours</div>
                                     </ng-container>
                                     <ng-container *ngIf="liste.dateSortie">
                                         <div class="ml-1.5">
-                                            <span>Terminé le {{liste.dateSortie}}</span>
+                                            <span>Terminé le {{liste.dateSortie | date:'dd/MM/yyyy HH:mm:ss'}}</span>
                                         </div>
                                     </ng-container>
                                 </div>
