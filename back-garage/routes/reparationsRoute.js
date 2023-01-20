@@ -85,6 +85,7 @@ router.put('/add/:id', (req, res) => {
             idPiece:req.body.idPiece,
             prix:req.body.prix,
             avancement:req.body.avancement,
+            description:req.body.description,
             estPaye:false,
             datePaiement:null,
             dateDebut:req.body.dateDebut,
