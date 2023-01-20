@@ -35,24 +35,24 @@
                 #activeList="cdkDropList"
                 cdkDropList
                 cdkDropListOrientation="vertical"
-                [cdkDropListData]="reparation"
+                [cdkDropListData]="reparationUser"
                 [cdkDropListConnectedTo]="[inactiveList]"
                 (cdkDropListDropped)="drop($event)"
                 style="min-height: 55%;background-color: #f8fafc;"
                 >
 
-                    <ng-container *ngIf="selectedVoiture!==undefined">
-                        <ng-container *ngIf="reparation.length>0; else noReparation">
+                    <ng-container *ngIf="selectedVoiture!==undefined && selectedDateReparation!==undefined">
+                        <ng-container *ngIf="reparationUser.length>0; else noreparationUser">
                             <a
                             class="z-20 flex items-center py-5 px-8 cursor-pointer border-b"
                             [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': true,
                                         'bg-primary-50 dark:bg-hover': true}"
                             [ng-reflect-ng-disabled]="true"
-                            *ngFor="let customer of reparation"
+                            *ngFor="let rep of reparationUser"
                             cdkDrag
                             >
                                 <div class="min-w-0 ml-4">
-                                    <div class="font-medium leading-5 truncate">{{customer.name}}</div>
+                                    <div class="font-medium leading-5 truncate">{{rep.name}}</div>
                                     <div
                                         class="leading-5 truncate text-secondary"
                                         [class.text-primary]="1> 0"
@@ -69,7 +69,7 @@
                             
                             </a>
                         </ng-container>
-                        <ng-template #noReparation >
+                        <ng-template #noreparationUser >
                             <div class="min-w-0 ml-4">
                                 <div class="font-medium leading-5 truncate">Pas encore de réparation</div>
                                 <div
@@ -90,7 +90,7 @@
                         
                 </div>
                 <!-- Choix vehicule -->
-                <div class="flex flex-col flex-auto shrink-0 pt-6 bg-gray-50 dark:bg-transparent">
+                <div class="flex flex-col flex-auto shrink-0 pt-6 bg-gray-50 dark:bg-transparent" *ngIf="selectedVoiture===undefined">
                   
                     <div class="flex flex-col px-6 pb-2">
                         <div class="flex items-end mt-1">
@@ -113,7 +113,30 @@
                     </div>
                 </div>
                 <!-- Fin choix vehicule -->
-
+                <!--Choix réparation  -->
+                <div class="flex flex-col flex-auto shrink-0 pt-6 bg-gray-50 dark:bg-transparent" *ngIf="selectedVoiture!==undefined">
+                  
+                    <div class="flex flex-col px-6 pb-2">
+                        <div class="flex items-end mt-1">
+                            <div class="font-medium tracking-tight text-secondary">Veuillez choisir la réparation.</div>
+                        </div>
+                            <mat-form-field>
+                                <span
+                                    class="flex items-center justify-center"
+                                    matPrefix>
+                                    <ng-container>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                                    </ng-container>
+                                </span>
+                                <mat-select name="select_Vehicule" (selectionChange)="choisirReparation($event)">
+                                    <mat-option *ngFor="let date of reparationVoitureUser;let i=index" value="{{i}}">a débuté le : {{date.dateArrivee  | date:'medium'}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                    </div>
+                </div>
+                <!-- Fin réparation -->
             </div>
             <!-- Fin Paiement -->
         </mat-drawer>
@@ -167,7 +190,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <ng-container *ngIf="selectedVoiture!==undefined;else noSelected">
+                                                <ng-container *ngIf="selectedVoiture!==undefined && selectedDateReparation!==undefined;else noSelected">
                                                     <ng-container *ngIf="reparationToAdd.length>0; else noSortie">
                                                         <tr *ngFor="let customer of reparationToAdd;let i =index" cdkDrag>
                                                             <th scope="row">1</th>
@@ -182,10 +205,14 @@
                                                     </ng-template>
                                                 </ng-container>
                                                 <ng-template #noSelected>
-                                                        
-                                                    <p>Vous n'avez pas encore choisi un vehicule</p>
-                                                
-                                            </ng-template>
+                                                        <ng-container *ngIf="selectedVoiture!==undefined && selectedDateReparation==undefined; else noVehicule">
+                                                                <p>Veuillez choisir la date de début des réparations</p>
+                                                        </ng-container>
+                                                        <ng-template #noVehicule>
+                                                                <p >Vous n'avez pas encore choisi un vehicule</p>
+                                                        </ng-template>
+                                                   
+                                                </ng-template>
                                             </tbody>
                                         </table>
                                         <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">

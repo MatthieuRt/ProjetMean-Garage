@@ -52,4 +52,5 @@ export class CryptoService
         let url = baseUrl+'piece/'+idPiece
         return this._httpClient.get(url);
     }
+
 }

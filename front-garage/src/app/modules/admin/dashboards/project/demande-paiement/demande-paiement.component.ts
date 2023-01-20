@@ -8,7 +8,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 @Component({
   selector: 'app-demande-paiement',
   templateUrl: './demande-paiement.component.html',
-  styleUrls: ['./demande-paiement.component.scss']
+
 })
 export class DemandePaiementComponent  implements OnInit, OnDestroy {
 

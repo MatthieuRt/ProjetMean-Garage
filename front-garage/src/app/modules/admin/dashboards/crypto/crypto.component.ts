@@ -26,7 +26,9 @@ export class CryptoComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     listVoiture :any;
     selectedVoiture : any = undefined;
+    selectedDateReparation:any = undefined;
     user:any;
+    reparationVoitureUser :any; //Objet réparation de l'utilisateur globalement (conforme à la base reparationVoiture)
     /**
      * Constructor
      */
@@ -63,7 +65,7 @@ export class CryptoComponent implements OnInit, OnDestroy
         this._unsubscribeAll.complete();
     }
     // code 
-     reparation = [];
+     reparationUser = []; // liste réparation de l'utilisateur (conforme à la base reparationVoiture[i].reparation)
     
       reparationToAdd = [
         {
@@ -100,7 +102,7 @@ export class CryptoComponent implements OnInit, OnDestroy
     
         this.pre = `
         reparation:
-        ${JSON.stringify(this.reparation, null, ' ')}
+        ${JSON.stringify(this.reparationUser, null, ' ')}
 
         reparationToAdd:
         ${JSON.stringify(this.reparationToAdd, null, ' ')}`;
@@ -117,7 +119,7 @@ export class CryptoComponent implements OnInit, OnDestroy
     
     pre = `
         reparation:
-        ${JSON.stringify(this.reparation, null, ' ')}
+        ${JSON.stringify(this.reparationUser, null, ' ')}
         
         reparationToAdd:
         ${JSON.stringify(this.reparationToAdd, null, ' ')}`;
@@ -132,7 +134,7 @@ export class CryptoComponent implements OnInit, OnDestroy
         const onSuccess = (response:any)=>{
             console.log(response);
             if(response.message==='OK'){
-               this.reparation = response.value
+               this.reparationVoitureUser = response.value;
             }else{
 
             }
@@ -140,5 +142,19 @@ export class CryptoComponent implements OnInit, OnDestroy
         }
         this._cryptoService.getHistoriqueReparation(this.user._id,idVoiture).subscribe(onSuccess);
     }
-
+    choisirReparation(event){
+        let index =event.value;
+        this.selectedDateReparation = true;
+        let depannage = this.reparationVoitureUser[index];
+        depannage.listeReparation.forEach(repar => {
+            let idPiece = repar.idPiece;
+            const onSuccess = (response:any)=>{
+                // repar.designationPiece = response
+                console.log('_________________PIECE____________________')
+                console.log(response)
+            }
+            this._cryptoService.getPieceById(idPiece).subscribe(onSuccess);
+            
+        });
+    }
 }
