@@ -52,11 +52,17 @@
                             cdkDrag
                             >
                                 <div class="min-w-0 ml-4">
-                                    <div class="font-medium leading-5 truncate">{{rep.name}}</div>
+                                    <div class="font-medium leading-5 truncate">{{rep?.piece.designation}}</div>
                                     <div
                                         class="leading-5 truncate text-secondary"
                                         [class.text-primary]="1> 0"
                                         [class.dark:text-primary-500]="1 > 0">
+                                        Prix de la pièce : {{rep.piece.prix}}Ar
+                                    </div>
+                                    <div
+                                        class="leading-5  tracking-tight text-secondary"
+                                        [class.dark:text-primary-500]="1 > 0">
+                                        Prix total : {{rep.prix}}Ar
                                     </div>
                                 </div>
                                 <div class="flex flex-col items-end self-start ml-auto pl-2">
@@ -186,16 +192,20 @@
                                                 <tr>
                                                     <th scope="col">#</th>
                                                     <th scope="col">Désignation</th>
-                                                    <th scope="col">Prix</th>
+                                                    <th scope="col">Pièce</th>
+                                                    <th scope="col">Total</th>
+                                                    <th scope="col"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <ng-container *ngIf="selectedVoiture!==undefined && selectedDateReparation!==undefined;else noSelected">
                                                     <ng-container *ngIf="reparationToAdd.length>0; else noSortie">
-                                                        <tr *ngFor="let customer of reparationToAdd;let i =index" cdkDrag>
+                                                        <tr *ngFor="let rep of reparationToAdd;let i =index" cdkDrag>
                                                             <th scope="row">1</th>
-                                                            <td>{{customer?.name}}</td>
-                                                            <td>{{customer?.age}}</td>
+                                                            <td>{{rep?.piece.designation}}</td>
+                                                            <td>{{rep.piece.prix}}Ar</td>
+                                                            <td>{{rep.prix}}Ar</td>
+                                                            <td><mat-icon svgIcon="mat_solid:delete_forever"></mat-icon></td>
                                                         </tr>
                                                     </ng-container>
                                                     <ng-template #noSortie>

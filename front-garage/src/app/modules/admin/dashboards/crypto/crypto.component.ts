@@ -6,6 +6,7 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { CryptoService } from 'app/modules/admin/dashboards/crypto/crypto.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ListeReparation } from './modele';
 
 @Component({
     selector       : 'crypto',
@@ -67,20 +68,7 @@ export class CryptoComponent implements OnInit, OnDestroy
     // code 
      reparationUser = []; // liste réparation de l'utilisateur (conforme à la base reparationVoiture[i].reparation)
     
-      reparationToAdd = [
-        {
-            'name': 'Adam',
-            'age' : 14
-        },
-        {
-            'name': 'Jack',
-            'age' : 11
-        },
-        {
-            'name': 'Katherin',
-            'age' : 12
-        },
-      ];
+      reparationToAdd: ListeReparation[] = [];
     
       drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
@@ -142,19 +130,23 @@ export class CryptoComponent implements OnInit, OnDestroy
         }
         this._cryptoService.getHistoriqueReparation(this.user._id,idVoiture).subscribe(onSuccess);
     }
-    choisirReparation(event){
+    async choisirReparation(event){
         let index =event.value;
         this.selectedDateReparation = true;
-        let depannage = this.reparationVoitureUser[index];
-        depannage.listeReparation.forEach(repar => {
+        // let depannage = this.reparationVoitureUser[index];
+        await  this.reparationVoitureUser[index].listeReparation.forEach(repar => {
             let idPiece = repar.idPiece;
+            repar.piece = {};
             const onSuccess = (response:any)=>{
                 // repar.designationPiece = response
-                console.log('_________________PIECE____________________')
-                console.log(response)
+                // console.log('_________________PIECE____________________')
+                // console.log(response)
+                repar.piece = response[0];
             }
             this._cryptoService.getPieceById(idPiece).subscribe(onSuccess);
-            
         });
+        this.reparationUser = this.reparationVoitureUser[index].listeReparation;
+        console.log('_______________Reparation___________________');
+        console.log(this.reparationUser)
     }
 }
