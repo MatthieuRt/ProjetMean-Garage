@@ -60,6 +60,7 @@ export class AcademyListComponent implements OnInit, OnDestroy {
 
         let user = sessionStorage.getItem("user");
         let jsonObject = JSON.parse(user);
+        
         this.listeVoitures = jsonObject.listeVoiture
 
         /*this._academyService.getAllReparation()

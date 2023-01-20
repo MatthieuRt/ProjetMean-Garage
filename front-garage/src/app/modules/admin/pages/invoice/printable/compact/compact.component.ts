@@ -33,8 +33,6 @@ export class CompactComponent {
         });
 
         
-        
-
         this._academyService.getReparationById(this.id).subscribe((response) => {
             this.reparation = response[0];
 
