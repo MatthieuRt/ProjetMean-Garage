@@ -61,7 +61,7 @@
                         </mat-form-field>
                         
                     </div>
-            <ng-container *ngIf="this.filteredCourses.length; else noCourses">
+            <ng-container *ngIf="this.filteredCourses.length>0; else noCourses">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 sm:mt-10">
                     <ng-container *ngFor="let liste of filteredListeReparations; trackBy: trackByFn">
                         <!-- Course -->
@@ -140,7 +140,7 @@
                     <mat-icon
                         class="icon-size-24"
                         [svgIcon]="'heroicons_outline:document-search'"></mat-icon>
-                    <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">No courses found!</div>
+                    <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">Pas de réparations disponible !</div>
                 </div>
             </ng-template>
         </div>
