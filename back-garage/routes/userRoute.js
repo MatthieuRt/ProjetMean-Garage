@@ -145,8 +145,8 @@ router.post('/login',(request,response)=>{
             code : 200
         }
         response.json(reponse)
-        console.log('----------------------------------------------------')
-        console.log(reponse);
+        // console.log('----------------------------------------------------')
+        // console.log(reponse);
     })
 })
 // ajout nouvelle voiture

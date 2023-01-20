@@ -97,7 +97,7 @@ router.get('/enCours/:id', (req, res) => {
 });
 
 router.get('/historique/:idUser/:idVoiture', (req, res) => {
-    ReparationsVoiture.find({idUtilisateur:req.params.idUser,idUtilisateur:req.params.idUtilisateur},(err, docs) => {
+    ReparationsVoiture.find({idUtilisateur:req.params.idUser,idVoiture:req.params.idVoiture},(err, docs) => {
         let response = {}
         if (!err) {
             response = {
@@ -105,6 +105,8 @@ router.get('/historique/:idUser/:idVoiture', (req, res) => {
                 value : docs,
                 code : 200
             }
+            console.log('usssssssss')
+            console.log(docs);
             res.json(response)
         }
         else {
