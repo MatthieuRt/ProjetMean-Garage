@@ -149,4 +149,9 @@ export class CryptoComponent implements OnInit, OnDestroy
         console.log('_______________Reparation___________________');
         console.log(this.reparationUser)
     }
+    deleteReparationToAdd(index){
+        let reparation = this.reparationToAdd[index];
+        this.reparationUser.push(reparation);
+        this.reparationToAdd.splice(index,1);
+    }
 }

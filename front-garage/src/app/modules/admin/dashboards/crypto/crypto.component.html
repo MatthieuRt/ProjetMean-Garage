@@ -205,7 +205,14 @@
                                                             <td>{{rep?.piece.designation}}</td>
                                                             <td>{{rep.piece.prix}}Ar</td>
                                                             <td>{{rep.prix}}Ar</td>
-                                                            <td><mat-icon svgIcon="mat_solid:delete_forever"></mat-icon></td>
+                                                            <td><button
+                                                                class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                                                                mat-stroked-button
+                                                                (click)="deleteReparationToAdd(i)">
+                                                                <mat-icon
+                                                                    class="icon-size-5"
+                                                                    [svgIcon]="'mat_solid:delete_forever'"></mat-icon>
+                                                            </button>
                                                         </tr>
                                                     </ng-container>
                                                     <ng-template #noSortie>
