@@ -16,6 +16,14 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/:idUser', (req, res) => {
+    ReparationsVoiture.find({idUtilisateur:req.params.idUser},(err, docs) => {
+        if (!err) { res.send(docs); }
+        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+    });
+});
+
+
 router.post('/insert', (req, res) => {
     var rep = new ReparationsVoiture({
         idVoiture: req.body.idVoiture,

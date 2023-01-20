@@ -5,6 +5,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
 import { Category, Course, ListeReparation, ReparationsVoitures } from 'app/modules/admin/apps/academy/academy.types';
+import { JsonPipe } from '@angular/common';
 
 @Component({
     selector: 'academy-list',
@@ -57,11 +58,11 @@ export class AcademyListComponent implements OnInit, OnDestroy {
             this.voiture = res;
         });
 
-        this.listeVoitures = [{ "id": "1", "modele": "Nissan Qashqai" }, { "id": "2", "modele": "Renault Express" }]
+        let user = sessionStorage.getItem("user");
+        let jsonObject = JSON.parse(user);
+        this.listeVoitures = jsonObject.listeVoiture
 
-
-
-        this._academyService.getAllReparation()
+        /*this._academyService.getAllReparation()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response) => {
 
@@ -75,9 +76,30 @@ export class AcademyListComponent implements OnInit, OnDestroy {
                         }
                     }
                 }
-                
-                for (let i = 0; i < this.listereparations.length; i++){
-                    if(!this.listereparations[i].modele)this.listereparations[i].modele="";
+
+                for (let i = 0; i < this.listereparations.length; i++) {
+                    if (!this.listereparations[i].modele) this.listereparations[i].modele = "";
+                }
+                this._changeDetectorRef.markForCheck();
+            });*/
+
+            this._academyService.getAllReparationByUser(jsonObject._id)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((response) => {
+
+                this.isLoading = false;
+                this.listereparations = this.filteredListeReparations = response;
+
+                for (let i = 0; i < this.listereparations.length; i++) {
+                    for (let j = 0; j < this.listeVoitures.length; j++) {
+                        if (this.listereparations[i].idVoiture == this.listeVoitures[j].id) {
+                            this.listereparations[i].modele = this.listeVoitures[j].modele;
+                        }
+                    }
+                }
+
+                for (let i = 0; i < this.listereparations.length; i++) {
+                    if (!this.listereparations[i].modele) this.listereparations[i].modele = "";
                 }
                 this._changeDetectorRef.markForCheck();
             });
@@ -120,8 +142,8 @@ export class AcademyListComponent implements OnInit, OnDestroy {
                     /*this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
                         || course.description.toLowerCase().includes(query.toLowerCase())
                         || course.category.toLowerCase().includes(query.toLowerCase()));*/
-                        this.filteredListeReparations = this.filteredListeReparations.filter(course => course.modele.toLowerCase().includes(query.toLowerCase())
-                        );
+                    this.filteredListeReparations = this.filteredListeReparations.filter(course => course.modele.toLowerCase().includes(query.toLowerCase())
+                    );
                 }
 
                 // Filter by completed

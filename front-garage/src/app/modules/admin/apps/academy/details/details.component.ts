@@ -3,25 +3,24 @@ import { DOCUMENT } from '@angular/common';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Category, Course, ListeReparation,ReparationsVoitures, Voiture, Piece } from 'app/modules/admin/apps/academy/academy.types';
+import { Category, Course, ListeReparation, ReparationsVoitures, Voiture, Piece } from 'app/modules/admin/apps/academy/academy.types';
 import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
 
 
 @Component({
-    selector       : 'academy-details',
-    templateUrl    : './details.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'academy-details',
+    templateUrl: './details.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AcademyDetailsComponent implements OnInit, OnDestroy
-{
-    @ViewChild('courseSteps', {static: true}) courseSteps: MatTabGroup;
-    listeReparations:any;
+export class AcademyDetailsComponent implements OnInit, OnDestroy {
+    @ViewChild('courseSteps', { static: true }) courseSteps: MatTabGroup;
+    listeReparations: any;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    reparation : any;
-    listeVoitures : Voiture[];
+    reparation: any;
+    listeVoitures: Voiture[];
 
     /**
      * Constructor
@@ -32,8 +31,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _elementRef: ElementRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -43,48 +41,49 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
-       
+    ngOnInit(): void {
 
-       
-            this._academyService.reparation$
+
+
+        this._academyService.reparation$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((course: any) => {
                 console.log(course)
                 // Get the course
                 this.reparation = course[0];
 
-                console.log("_____"+course[0].listeReparation);
-                this.listeVoitures = [{ "id": "1", "modele": "Nissan Qashqai" }, { "id": "2", "modele": "Renault Express" }]
-                for( let i=0; i < this.listeVoitures.length; i++){
-                    if(this.listeVoitures[i].id==this.reparation.idVoiture)this.reparation.voiture = this.listeVoitures[i];
+                let user = sessionStorage.getItem("user");
+                let jsonObject = JSON.parse(user);
+
+
+                this.listeVoitures = jsonObject.listeVoiture;
+                for (let i = 0; i < this.listeVoitures.length; i++) {
+                    if (this.listeVoitures[i].id == this.reparation.idVoiture) this.reparation.voiture = this.listeVoitures[i];
                 }
 
-                for(let i = 0; i < this.reparation.listeReparation.length; i++){
-                    if (!this.reparation.listeReparation[i].piece){
-                        
-                    this._academyService.getPieceById(this.reparation.listeReparation[i].idPiece).subscribe(piece => {
-                    this.reparation.listeReparation[i].piece = piece[0];
-                    this._changeDetectorRef.markForCheck();
-                    });
+                for (let i = 0; i < this.reparation.listeReparation.length; i++) {
+                    if (!this.reparation.listeReparation[i].piece) {
+
+                        this._academyService.getPieceById(this.reparation.listeReparation[i].idPiece).subscribe(piece => {
+                            this.reparation.listeReparation[i].piece = piece[0];
+                            this._changeDetectorRef.markForCheck();
+                        });
                     }
                     this._changeDetectorRef.markForCheck();
-                    }
-                
+                }
+
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
 
-        
+
     }
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -94,13 +93,13 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
-    
 
 
 
-   
 
-    
+
+
+
 
     /**
      * Track by function for ngFor loops
@@ -108,8 +107,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 
@@ -126,5 +124,5 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
      *
      * @private
      */
-    
+
 }

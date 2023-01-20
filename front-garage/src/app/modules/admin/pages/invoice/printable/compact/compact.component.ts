@@ -32,10 +32,15 @@ export class CompactComponent {
 
         });
 
+        
+        
+
         this._academyService.getReparationById(this.id).subscribe((response) => {
             this.reparation = response[0];
 
-            const listeVoitures = [{ "id": "1", "modele": "Nissan Qashqai" }, { "id": "2", "modele": "Renault Express" }]
+            let user = sessionStorage.getItem("user");
+            let jsonObject = JSON.parse(user);
+            const listeVoitures = jsonObject.listeVoiture;
             for (let i = 0; i < listeVoitures.length; i++) {
                 if (listeVoitures[i].id == this.reparation.idVoiture) {
                     this.reparation.modele = listeVoitures[i].modele;
