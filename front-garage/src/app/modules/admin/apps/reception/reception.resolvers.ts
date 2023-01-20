@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Category, Course, ListeReparation, ReparationsVoitures } from 'app/modules/admin/apps/academy/academy.types';
-import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
+import { Category, Course } from 'app/modules/admin/apps/reception/reception.types';
+import { ReceptionService } from 'app/modules/admin/apps/reception/reception.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AcademyCategoriesResolver implements Resolve<any>
+export class ReceptionCategoriesResolver implements Resolve<any>
 {
     /**
      * Constructor
      */
-    constructor(private _academyService: AcademyService)
+    constructor(private _receptionService: ReceptionService)
     {
     }
 
@@ -28,19 +28,19 @@ export class AcademyCategoriesResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Category[]>
     {
-        return this._academyService.getCategories();
+        return this._receptionService.getCategories();
     }
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class AcademyCoursesResolver implements Resolve<any>
+export class ReceptionCoursesResolver implements Resolve<any>
 {
     /**
      * Constructor
      */
-    constructor(private _academyService: AcademyService)
+    constructor(private _receptionService: ReceptionService)
     {
     }
 
@@ -56,22 +56,21 @@ export class AcademyCoursesResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course[]>
     {
-        
-        return this._academyService.getCourses();
+        return this._receptionService.getCourses();
     }
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class AcademyCourseResolver implements Resolve<any>
+export class ReceptionCourseResolver implements Resolve<any>
 {
     /**
      * Constructor
      */
     constructor(
         private _router: Router,
-        private _academyService: AcademyService
+        private _receptionService: ReceptionService
     )
     {
     }
@@ -86,32 +85,9 @@ export class AcademyCourseResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    /*resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course>
     {
-        return this._academyService.getCourseById(route.paramMap.get('id'))
-                   .pipe(
-                       // Error here means the requested task is not available
-                       catchError((error) => {
-
-                           // Log the error
-                           console.error(error);
-
-                           // Get the parent url
-                           const parentUrl = state.url.split('/').slice(0, -1).join('/');
-
-                           // Navigate to there
-                           this._router.navigateByUrl(parentUrl);
-
-                           // Throw an error
-                           return throwError(error);
-                       })
-                   );
-    }*/
-
-
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
-    {
-        return this._academyService.getReparationById(route.paramMap.get('id'))
+        return this._receptionService.getCourseById(route.paramMap.get('id'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {
@@ -130,7 +106,4 @@ export class AcademyCourseResolver implements Resolve<any>
                        })
                    );
     }
-
 }
-
-

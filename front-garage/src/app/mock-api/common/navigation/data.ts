@@ -53,13 +53,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type    : 'group',
         icon    : 'heroicons_outline:home',
         children: [
-            /*{
-                id   : 'apps.academy',
-                title: 'Academy',
+            {
+                id   : 'apps.reception',
+                title: 'Reception',
                 type : 'basic',
                 icon : 'heroicons_outline:academic-cap',
-                link : '/apps/academy'
-            },*/
+                link : '/apps/reception'
+            },
             {
                 id   : 'apps.chat',
                 title: 'Chat',
