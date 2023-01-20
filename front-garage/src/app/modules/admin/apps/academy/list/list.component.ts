@@ -63,7 +63,8 @@ export class AcademyListComponent implements OnInit, OnDestroy {
         
         this.listeVoitures = jsonObject.listeVoiture
 
-        /*this._academyService.getAllReparation()
+        if(jsonObject.profil=="responsable_atelier"||jsonObject.profil=="responsable_financier"){
+            this._academyService.getAllReparation()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response) => {
 
@@ -82,8 +83,8 @@ export class AcademyListComponent implements OnInit, OnDestroy {
                     if (!this.listereparations[i].modele) this.listereparations[i].modele = "";
                 }
                 this._changeDetectorRef.markForCheck();
-            });*/
-
+            });
+        }else if(jsonObject.profil=="user"){
             this._academyService.getAllReparationByUser(jsonObject._id)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response) => {
@@ -104,6 +105,10 @@ export class AcademyListComponent implements OnInit, OnDestroy {
                 }
                 this._changeDetectorRef.markForCheck();
             });
+        }
+        /**/
+
+            
 
         // Get the categories
         this._academyService.categories$
