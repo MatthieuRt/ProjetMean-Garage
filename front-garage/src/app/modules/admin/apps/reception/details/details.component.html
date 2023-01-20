@@ -34,7 +34,22 @@
                                                 
                                                 class="flex-auto gt-xs:pr-3">
                                                 <mat-label>Pièce :</mat-label>
-                                                <input matInput>
+                                                <mat-select>
+                                                    <mat-option>
+                                                        Un
+                                                    </mat-option>
+                                                    <mat-option>
+                                                        Deux
+                                                    </mat-option>
+                                                    <mat-option>
+                                                        Trois
+                                                    </mat-option>
+                                                  </mat-select>
+                                                  <!-- <mat-select [(value)]="selectedOption">
+    <mat-option *ngFor="let option of options" [value]="option.value">
+      {{ option.name }}
+    </mat-option>
+  </mat-select>-->
                                                 <mat-icon
                                                     class="icon-size-5"
                                                     matSuffix
@@ -54,7 +69,7 @@
                                                 
                                                 class="flex-auto gt-xs:pl-3">
                                                 <mat-label>Date début</mat-label>
-                                                <input matInput>
+                                                <input matInput type="date">
                                                 <mat-icon
                                                     class="icon-size-5"
                                                     matSuffix
