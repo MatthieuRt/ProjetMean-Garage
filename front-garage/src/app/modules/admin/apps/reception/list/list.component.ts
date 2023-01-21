@@ -66,7 +66,7 @@ export class ReceptionListComponent implements OnInit, OnDestroy
             this._receptionService.getNonReceptionne()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((liste: any) => {
-                console.log("-----------"+liste[0].idUtilisateur);
+                this.filteredListeReparations = this.listeReparations = liste;
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();

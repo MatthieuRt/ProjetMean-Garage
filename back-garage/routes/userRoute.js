@@ -216,4 +216,12 @@ router.get('/car/:idUser',(request,response)=>{
         response.json(reponse)
     })
 })
+
+//all cars
+router.get('/car',(req,res)=>{
+    Utilisateur.find({},{listeVoiture:1},(err, docs) => {
+        if (!err) { res.send(docs); }
+        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+    });
+})
 module.exports = router;

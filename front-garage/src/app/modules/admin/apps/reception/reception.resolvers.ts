@@ -85,9 +85,9 @@ export class ReceptionCourseResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
-        return this._receptionService.getCourseById(route.paramMap.get('id'))
+         return this._receptionService.getReparationById(route.paramMap.get('id'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {
@@ -105,5 +105,25 @@ export class ReceptionCourseResolver implements Resolve<any>
                            return throwError(error);
                        })
                    );
+        /*return this._receptionService.getCourseById(route.paramMap.get('id'))
+                   .pipe(
+                       // Error here means the requested task is not available
+                       catchError((error) => {
+
+                           // Log the error
+                           console.error(error);
+
+                           // Get the parent url
+                           const parentUrl = state.url.split('/').slice(0, -1).join('/');
+
+                           // Navigate to there
+                           this._router.navigateByUrl(parentUrl);
+
+                           // Throw an error
+                           return throwError(error);
+                       })
+                   );*/
     }
+
+    
 }

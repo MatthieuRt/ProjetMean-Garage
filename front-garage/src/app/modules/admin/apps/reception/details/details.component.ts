@@ -21,6 +21,7 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    reparation: any;
 
     /**
      * Constructor
@@ -44,29 +45,14 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        // Get the categories
-        this._receptionService.categories$
+        
+
+
+            this._receptionService.reparation$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((categories: Category[]) => {
-
-                // Get the categories
-                this.categories = categories;
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-
-        // Get the course
-        this._receptionService.course$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((course: Course) => {
-
-                // Get the course
-                this.course = course;
-
-                // Go to step
-                this.goToStep(course.progress.currentStep);
-
+            .subscribe((reparation: any) => {
+                this.reparation = reparation;
+                console.log(reparation);
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -112,53 +98,9 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
      *
      * @param step
      */
-    goToStep(step: number): void
-    {
-        // Set the current step
-        this.currentStep = step;
+   
 
-        // Go to the step
-        this.courseSteps.selectedIndex = this.currentStep;
-
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-    }
-
-    /**
-     * Go to previous step
-     */
-    goToPreviousStep(): void
-    {
-        // Return if we already on the first step
-        if ( this.currentStep === 0 )
-        {
-            return;
-        }
-
-        // Go to step
-        this.goToStep(this.currentStep - 1);
-
-        // Scroll the current step selector from sidenav into view
-        this._scrollCurrentStepElementIntoView();
-    }
-
-    /**
-     * Go to next step
-     */
-    goToNextStep(): void
-    {
-        // Return if we already on the last step
-        if ( this.currentStep === this.course.totalSteps - 1 )
-        {
-            return;
-        }
-
-        // Go to step
-        this.goToStep(this.currentStep + 1);
-
-        // Scroll the current step selector from sidenav into view
-        this._scrollCurrentStepElementIntoView();
-    }
+    
 
     /**
      * Track by function for ngFor loops

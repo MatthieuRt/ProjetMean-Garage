@@ -12,6 +12,7 @@ export class ReceptionService
     private _categories: BehaviorSubject<Category[] | null> = new BehaviorSubject(null);
     private _course: BehaviorSubject<Course | null> = new BehaviorSubject(null);
     private _courses: BehaviorSubject<Course[] | null> = new BehaviorSubject(null);
+    private _reparation: any;
 
     /**
      * Constructor
@@ -27,6 +28,11 @@ export class ReceptionService
     /**
      * Getter for categories
      */
+    get reparation$(): Observable<any>
+    {
+        return this._reparation
+    }
+
     get categories$(): Observable<Category[]>
     {
         return this._categories.asObservable();
@@ -105,5 +111,10 @@ export class ReceptionService
     getNonReceptionne(){
         const body = { };
         return this._httpClient.post("http://localhost:9000/reparation/depose",body);
+    }
+
+    getReparationById(id: String){
+        this._reparation = this._httpClient.get("http://localhost:9000/reparation/get/"+id);
+        return this._httpClient.get("http://localhost:9000/reparation/get/"+id);
     }
 }

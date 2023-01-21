@@ -23,8 +23,8 @@
                 </a>
                 
                 <!-- Course title & description -->
-                <div class="mt-3 text-2xl font-semibold">{{course.title}}</div>
-                <div class="text-secondary">{{course.description}}</div>
+                <div class="mt-3 text-2xl font-semibold">{{reparation?.title}}</div>
+                <div class="text-secondary">{{reparation?.description}}</div>
                 
             </div>
 
@@ -88,7 +88,7 @@
                                             <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
                                                 <a
                                                     mat-stroked-button
-                                                    [routerLink]="[course.id]">
+                                                    >
                                                     <span class="inline-flex items-center">
             
                                                        
@@ -123,7 +123,7 @@
                     <mat-icon [svgIcon]="'heroicons_outline:arrow-sm-left'"></mat-icon>
                 </a>
                 <h2 class="ml-2.5 text-md sm:text-xl font-medium tracking-tight truncate">
-                    {{course.title}}
+                    {{reparation?.title}}
                 </h2>
             </div>
 
@@ -137,7 +137,7 @@
                     class="fuse-mat-no-header"
                     [animationDuration]="'200'"
                     #courseSteps>
-                    <ng-container *ngFor="let step of course.steps; trackBy: trackByFn">
+                    <ng-container >
                         <mat-tab>
                             <ng-template matTabContent>
                                 <div
@@ -178,34 +178,6 @@
 
             </div>
 
-            <!-- Progress & Navigation - Mobile -->
-            <div class="lg:hidden flex items-center p-4 border-t bg-card">
-                <button
-                    mat-icon-button
-                    (click)="matDrawer.toggle()">
-                    <mat-icon [svgIcon]="'heroicons_outline:view-list'"></mat-icon>
-                </button>
-                <div class="flex items-center justify-center ml-1 lg:ml-2 font-medium leading-5">
-                    <span>{{currentStep + 1}}</span>
-                    <span class="mx-0.5 text-hint">/</span>
-                    <span>{{course.totalSteps}}</span>
-                </div>
-                <mat-progress-bar
-                    class="flex-auto ml-6 rounded-full"
-                    [value]="100 * (currentStep + 1) / course.totalSteps"></mat-progress-bar>
-                <button
-                    class="ml-4"
-                    mat-icon-button
-                    (click)="goToPreviousStep()">
-                    <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
-                </button>
-                <button
-                    class="ml-0.5"
-                    mat-icon-button
-                    (click)="goToNextStep()">
-                    <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-right'"></mat-icon>
-                </button>
-            </div>
 
         </mat-drawer-content>
 
