@@ -27,6 +27,9 @@ export class ReceptionListComponent implements OnInit, OnDestroy
         hideCompleted$: new BehaviorSubject(false)
     };
 
+    filteredListeReparations: any;
+    listeReparations: any;
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -55,6 +58,15 @@ export class ReceptionListComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((categories: Category[]) => {
                 this.categories = categories;
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+
+            this._receptionService.getNonReceptionne()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((liste: any) => {
+                console.log("-----------"+liste[0].idUtilisateur);
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();

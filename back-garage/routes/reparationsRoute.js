@@ -137,4 +137,11 @@ router.get('/get/:id',(req,res)=>{
     });
 });
 
+router.post('/depose',(req,res)=>{
+    ReparationsVoiture.find({estDepose:false},(err, docs) => {
+        if (!err) { res.send(docs); }
+        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+    });
+});
+
 module.exports = router;

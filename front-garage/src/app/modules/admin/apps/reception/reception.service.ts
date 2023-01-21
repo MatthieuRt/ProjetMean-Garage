@@ -101,4 +101,9 @@ export class ReceptionService
             })
         );
     }
+
+    getNonReceptionne(){
+        const body = { };
+        return this._httpClient.post("http://localhost:9000/reparation/depose",body);
+    }
 }
