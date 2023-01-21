@@ -7,6 +7,9 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
+import { Observable, of } from 'rxjs';
+import { from } from 'rxjs';
+import { async } from '@angular/core/testing';
 
 @Component({
     selector     : 'classy-layout',
@@ -19,6 +22,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     navigation: Navigation;
     user: User;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    sessionValue: any;
 
     /**
      * Constructor
@@ -55,6 +59,9 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        
+        let json = JSON.parse(sessionStorage.getItem('user'))
+        this.sessionValue = json;
         // Subscribe to navigation data
         this._navigationService.navigation$
             .pipe(takeUntil(this._unsubscribeAll))
