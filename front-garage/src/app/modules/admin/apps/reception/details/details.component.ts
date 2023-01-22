@@ -5,6 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Category, Course } from 'app/modules/admin/apps/reception/reception.types';
 import { ReceptionService } from 'app/modules/admin/apps/reception/reception.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector       : 'reception-details',
@@ -15,6 +16,9 @@ import { ReceptionService } from 'app/modules/admin/apps/reception/reception.ser
 export class ReceptionDetailsComponent implements OnInit, OnDestroy
 {
     @ViewChild('courseSteps', {static: true}) courseSteps: MatTabGroup;
+    @ViewChild('descriptionInput') descriptionInput: ElementRef;
+    @ViewChild('prixInput') prixInput: ElementRef;
+
     categories: Category[];
     course: Course;
     currentStep: number = 0;
@@ -22,6 +26,9 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
     drawerOpened: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     reparation: any;
+    options : any;
+    selectedOption : FormControl;
+    listeReparations = [];
 
     /**
      * Constructor
@@ -46,8 +53,6 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         
-
-
             this._receptionService.reparation$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((reparation: any) => {
@@ -56,6 +61,18 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+
+            this._receptionService.getPieces().pipe(takeUntil(this._unsubscribeAll)).subscribe((piece:any)=>{
+                this.options = piece;
+                this.selectedOption = this.options[0]._id;
+                this._changeDetectorRef.markForCheck();
+            });
+        this.options = [
+            { value: 'option1', name: 'Option 1' },
+            { value: 'option2', name: 'Option 2' },
+            { value: 'option3', name: 'Option 3' },
+          ];
+        this.selectedOption = this.options[0].value;
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
@@ -142,4 +159,18 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
             }
         });
     }
+
+    addReparation():void{
+        let item = {
+            piece: this.selectedOption,
+            description: this.descriptionInput.nativeElement.value,
+            prix: this.prixInput.nativeElement.value
+        }
+        this.listeReparations.push(item);
+    }
+
+    deleteItem(index: number) {
+        this.listeReparations.splice(index, 1);
+    }
+
 }

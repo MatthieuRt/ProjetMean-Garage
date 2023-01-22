@@ -13,5 +13,12 @@ router.get('/:idPiece', (req, res) => {
     });
 });
 
+router.get('/',(req,res)=>{
+    Piece.find((err,docs)=>{
+        if (!err) { res.send(docs); }
+        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+    });
+});
+
 module.exports = router;
 

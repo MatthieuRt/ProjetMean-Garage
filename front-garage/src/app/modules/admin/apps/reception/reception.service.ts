@@ -117,4 +117,10 @@ export class ReceptionService
         this._reparation = this._httpClient.get("http://localhost:9000/reparation/get/"+id);
         return this._httpClient.get("http://localhost:9000/reparation/get/"+id);
     }
+
+    getPieces() {
+        return this._httpClient.get("http://localhost:9000/piece").pipe(
+            map(response => response as any)
+        );
+    }
 }

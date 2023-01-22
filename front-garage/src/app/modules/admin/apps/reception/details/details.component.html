@@ -3,111 +3,67 @@
     <mat-drawer-container class="flex-auto h-full">
 
         <!-- Drawer -->
-        <mat-drawer
-            class="w-90 dark:bg-gray-900"
-            [autoFocus]="false"
-            [mode]="drawerMode"
-            [opened]="drawerOpened"
+        <mat-drawer class="w-90 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
             #matDrawer>
             <div class="flex flex-col items-start p-8 border-b">
                 <!-- Back to courses -->
-                <a
-                    class="inline-flex items-center leading-6 text-primary hover:underline"
-                    [routerLink]="['..']">
+                <a class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['..']">
                     <span class="inline-flex items-center">
-                        <mat-icon
-                            class="icon-size-5 text-current"
+                        <mat-icon class="icon-size-5 text-current"
                             [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
                         <span class="ml-1.5 font-medium leading-5">Retour</span>
                     </span>
                 </a>
-                
+
                 <!-- Course title & description -->
                 <div class="mt-3 text-2xl font-semibold">{{reparation?.title}}</div>
                 <div class="text-secondary">{{reparation?.description}}</div>
-                
+
             </div>
 
             <form class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
-                                        <div class="flex flex-col gt-xs:flex-row">
-                                            <mat-form-field
-                                                
-                                                class="flex-auto gt-xs:pr-3">
-                                                <mat-label>Pièce :</mat-label>
-                                                <mat-select>
-                                                    <mat-option>
-                                                        Un
-                                                    </mat-option>
-                                                    <mat-option>
-                                                        Deux
-                                                    </mat-option>
-                                                    <mat-option>
-                                                        Trois
-                                                    </mat-option>
-                                                  </mat-select>
-                                                  <!-- <mat-select [(value)]="selectedOption">
-    <mat-option *ngFor="let option of options" [value]="option.value">
-      {{ option.name }}
-    </mat-option>
-  </mat-select>-->
-                                                <mat-icon
-                                                    class="icon-size-5"
-                                                    matSuffix
-                                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                            </mat-form-field>
-                                            <mat-form-field
-                                                
-                                                class="flex-auto gt-xs:pl-3">
-                                                <mat-label>Description</mat-label>
-                                                <input matInput>
-                                                <mat-icon
-                                                    class="icon-size-5"
-                                                    matSuffix
-                                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                            </mat-form-field>
-                                            <mat-form-field
-                                                
-                                                class="flex-auto gt-xs:pl-3">
-                                                <mat-label>Date début</mat-label>
-                                                <input matInput type="date">
-                                                <mat-icon
-                                                    class="icon-size-5"
-                                                    matSuffix
-                                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                            </mat-form-field>
-                                            <mat-form-field
-                                                
-                                            class="flex-auto gt-xs:pl-3">
-                                            <mat-label>Prix</mat-label>
-                                            <input matInput>
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                matSuffix
-                                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                                        </mat-form-field>
-                                            <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                                <a
-                                                    mat-stroked-button
-                                                    >
-                                                    <span class="inline-flex items-center">
-            
-                                                       
-            
-                                                        <!-- Started -->
-                                                        
-                                                            <span>Ajouter</span>
-                                                        
-            
-                                                        <mat-icon
-                                                            class="ml-1.5 icon-size-5"
-                                                            [svgIcon]="'heroicons_solid:arrow-sm-right'"></mat-icon>
-                                                    </span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        
-                                    </form>
-    
+                <div class="flex flex-col gt-xs:flex-row">
+                    <mat-form-field class="flex-auto gt-xs:pr-3">
+                        <mat-label>Pièce :</mat-label>
+
+                        <mat-select [(value)]="selectedOption">
+                            <mat-option *ngFor="let option of options" [value]="option._id">
+                                {{ option.designation }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon svgIcon="feather:tool" class="icon-size-5"></mat-icon>
+                    </mat-form-field>
+                    <mat-form-field class="flex-auto gt-xs:pl-3">
+                        <mat-label>Description</mat-label>
+                        <input matInput #descriptionInput>
+                        <mat-icon svgIcon="heroicons_outline:document-text" class="icon-size-5"></mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field class="flex-auto gt-xs:pl-3">
+                        <mat-label>Prix</mat-label>
+                        <input matInput #prixInput>
+                        <mat-icon svgIcon="heroicons_outline:currency-dollar" class="icon-size-5"></mat-icon>
+                    </mat-form-field>
+                    <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
+                        <a mat-stroked-button>
+                            <span class="inline-flex items-center">
+
+
+
+                                <!-- Started -->
+
+                                <span (click)="addReparation()">Ajouter</span>
+
+
+                                <mat-icon class="ml-1.5 icon-size-5"
+                                    [svgIcon]="'heroicons_solid:arrow-sm-right'"></mat-icon>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+            </form>
+
 
         </mat-drawer>
 
@@ -115,11 +71,10 @@
         <mat-drawer-content class="flex flex-col overflow-hidden">
 
             <!-- Header -->
-            <div class="lg:hidden flex flex-0 items-center py-2 pl-4 pr-6 sm:py-4 md:pl-6 md:pr-8 border-b lg:border-b-0 bg-card dark:bg-transparent">
+            <div
+                class="lg:hidden flex flex-0 items-center py-2 pl-4 pr-6 sm:py-4 md:pl-6 md:pr-8 border-b lg:border-b-0 bg-card dark:bg-transparent">
                 <!-- Title & Actions -->
-                <a
-                    mat-icon-button
-                    [routerLink]="['..']">
+                <a mat-icon-button [routerLink]="['..']">
                     <mat-icon [svgIcon]="'heroicons_outline:arrow-sm-left'"></mat-icon>
                 </a>
                 <h2 class="ml-2.5 text-md sm:text-xl font-medium tracking-tight truncate">
@@ -128,21 +83,15 @@
             </div>
 
             <!-- Main -->
-            <div
-                class="flex-auto overflow-y-auto"
-                cdkScrollable>
+            <div class="flex-auto overflow-y-auto" cdkScrollable>
 
                 <!-- Steps -->
-                <mat-tab-group
-                    class="fuse-mat-no-header"
-                    [animationDuration]="'200'"
-                    #courseSteps>
-                    <ng-container >
+                <mat-tab-group class="fuse-mat-no-header" [animationDuration]="'200'" #courseSteps>
+                    <ng-container>
                         <mat-tab>
                             <ng-template matTabContent>
                                 <div
-                                    class="prose prose-sm max-w-3xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card"
-                                    >
+                                    class="prose prose-sm max-w-3xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card">
                                     <mat-tab-group class="fuse-mat-no-header" [animationDuration]="'200'">
                                         <ng-container>
                                             <mat-tab>
@@ -152,15 +101,20 @@
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th scope="col">#</th>
                                                                     <th scope="col">Piece</th>
+                                                                    <th scope="col">Description</th>
                                                                     <th scope="col">Prix</th>
-                                                                    <th scope="col">Etat paiement</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                
-                                                               
+                                                                <tr *ngFor="let item of listeReparations; let i = index">
+                                                                    <td>{{ item.piece }}</td>
+                                                                    <td>{{ item.description }}</td>
+                                                                    <td>{{ item.prix }}</td>
+                                                                    <td>
+                                                                        <button (click)="deleteItem(i)">Delete</button>
+                                                                    </td>
+                                                                  </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -174,7 +128,7 @@
                     </ng-container>
                 </mat-tab-group>
 
-                
+
 
             </div>
 
