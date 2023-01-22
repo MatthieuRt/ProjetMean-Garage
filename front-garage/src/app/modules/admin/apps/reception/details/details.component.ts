@@ -27,7 +27,7 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     reparation: any;
     options : any;
-    selectedOption : FormControl;
+    selectedOption : { id: '', designation: ''};
     listeReparations = [];
 
     /**
@@ -162,7 +162,8 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
 
     addReparation():void{
         let item = {
-            piece: this.selectedOption,
+            piece: this.selectedOption.id,
+            designation: this.selectedOption.designation,
             description: this.descriptionInput.nativeElement.value,
             prix: this.prixInput.nativeElement.value
         }

@@ -27,7 +27,7 @@
                         <mat-label>Pièce :</mat-label>
 
                         <mat-select [(value)]="selectedOption">
-                            <mat-option *ngFor="let option of options" [value]="option._id">
+                            <mat-option *ngFor="let option of options" [value]="{id: option._id, designation: option.designation}">
                                 {{ option.designation }}
                             </mat-option>
                         </mat-select>
@@ -40,7 +40,7 @@
                     </mat-form-field>
 
                     <mat-form-field class="flex-auto gt-xs:pl-3">
-                        <mat-label>Prix</mat-label>
+                        <mat-label>Prix ( MGA )</mat-label>
                         <input matInput #prixInput>
                         <mat-icon svgIcon="heroicons_outline:currency-dollar" class="icon-size-5"></mat-icon>
                     </mat-form-field>
@@ -98,6 +98,7 @@
                                                 <ng-template matTabContent>
                                                     <div
                                                         class="prose prose-sm max-w-3xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card">
+                                                        <h1>Liste des réparations</h1>
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
@@ -108,9 +109,9 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr *ngFor="let item of listeReparations; let i = index">
-                                                                    <td>{{ item.piece }}</td>
+                                                                    <td>{{ item.designation }}</td>
                                                                     <td>{{ item.description }}</td>
-                                                                    <td>{{ item.prix }}</td>
+                                                                    <td>{{ item.prix }} MGA</td>
                                                                     <td>
                                                                         <button (click)="deleteItem(i)">Delete</button>
                                                                     </td>
