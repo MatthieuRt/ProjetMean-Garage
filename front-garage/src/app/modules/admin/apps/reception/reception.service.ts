@@ -123,4 +123,9 @@ export class ReceptionService
             map(response => response as any)
         );
     }
+
+    insertReparations(piece:any,id:String){
+        const body = {id,idPiece:piece.idPiece.id,description:piece.description,prix:piece.prix};
+        return this._httpClient.put("http://localhost:9000/reparation/add/"+id,body);
+    }
 }

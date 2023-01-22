@@ -88,7 +88,7 @@ router.put('/add/:id', (req, res) => {
             description:req.body.description,
             estPaye:false,
             datePaiement:null,
-            dateDebut:req.body.dateDebut,
+            dateDebut:null,
             dateFin:null
         }],
     };

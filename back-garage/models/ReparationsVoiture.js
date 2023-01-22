@@ -7,7 +7,10 @@ const reparationsVoitureSchema = mongoose.Schema({
         {
             idPiece:String,
             prix:Number,
-            avancement:String,
+            avancement:{
+                type:String,
+                default:"Non traité"
+            },
             description:String,
             estPaye:Boolean,
             datePaiement:Date,

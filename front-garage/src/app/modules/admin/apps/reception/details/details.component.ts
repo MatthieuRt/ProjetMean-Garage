@@ -5,17 +5,19 @@ import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Category, Course } from 'app/modules/admin/apps/reception/reception.types';
 import { ReceptionService } from 'app/modules/admin/apps/reception/reception.service';
-import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
-    selector       : 'reception-details',
-    templateUrl    : './details.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'reception-details',
+    templateUrl: './details.component.html',
+    template: `
+    <p>{{ id }}</p>
+  `,
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ReceptionDetailsComponent implements OnInit, OnDestroy
-{
-    @ViewChild('courseSteps', {static: true}) courseSteps: MatTabGroup;
+export class ReceptionDetailsComponent implements OnInit, OnDestroy {
+    @ViewChild('courseSteps', { static: true }) courseSteps: MatTabGroup;
     @ViewChild('descriptionInput') descriptionInput: ElementRef;
     @ViewChild('prixInput') prixInput: ElementRef;
 
@@ -26,8 +28,8 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
     drawerOpened: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     reparation: any;
-    options : any;
-    selectedOption : { id: '', designation: ''};
+    options: any;
+    selectedOption: { id: '', designation: '' };
     listeReparations = [];
 
     /**
@@ -38,9 +40,9 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
         private _receptionService: ReceptionService,
         private _changeDetectorRef: ChangeDetectorRef,
         private _elementRef: ElementRef,
-        private _fuseMediaWatcherService: FuseMediaWatcherService
-    )
-    {
+        private _fuseMediaWatcherService: FuseMediaWatcherService,
+        private router: Router
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -50,10 +52,9 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
-        
-            this._receptionService.reparation$
+    ngOnInit(): void {
+
+        this._receptionService.reparation$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((reparation: any) => {
                 this.reparation = reparation;
@@ -62,31 +63,29 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
                 this._changeDetectorRef.markForCheck();
             });
 
-            this._receptionService.getPieces().pipe(takeUntil(this._unsubscribeAll)).subscribe((piece:any)=>{
-                this.options = piece;
-                this.selectedOption = this.options[0]._id;
-                this._changeDetectorRef.markForCheck();
-            });
+        this._receptionService.getPieces().pipe(takeUntil(this._unsubscribeAll)).subscribe((piece: any) => {
+            this.options = piece;
+            this.selectedOption = this.options[0]._id;
+            this._changeDetectorRef.markForCheck();
+        });
         this.options = [
             { value: 'option1', name: 'Option 1' },
             { value: 'option2', name: 'Option 2' },
             { value: 'option3', name: 'Option 3' },
-          ];
+        ];
         this.selectedOption = this.options[0].value;
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({matchingAliases}) => {
+            .subscribe(({ matchingAliases }) => {
 
                 // Set the drawerMode and drawerOpened
-                if ( matchingAliases.includes('lg') )
-                {
+                if (matchingAliases.includes('lg')) {
                     this.drawerMode = 'side';
                     this.drawerOpened = true;
                 }
-                else
-                {
+                else {
                     this.drawerMode = 'over';
                     this.drawerOpened = false;
                 }
@@ -99,8 +98,7 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -115,9 +113,9 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
      *
      * @param step
      */
-   
 
-    
+
+
 
     /**
      * Track by function for ngFor loops
@@ -125,8 +123,7 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 
@@ -143,26 +140,24 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
      *
      * @private
      */
-    private _scrollCurrentStepElementIntoView(): void
-    {
+    private _scrollCurrentStepElementIntoView(): void {
         // Wrap everything into setTimeout so we can make sure that the 'current-step' class points to correct element
         setTimeout(() => {
 
             // Get the current step element and scroll it into view
             const currentStepElement = this._document.getElementsByClassName('current-step')[0];
-            if ( currentStepElement )
-            {
+            if (currentStepElement) {
                 currentStepElement.scrollIntoView({
                     behavior: 'smooth',
-                    block   : 'start'
+                    block: 'start'
                 });
             }
         });
     }
 
-    addReparation():void{
+    addReparation(): void {
         let item = {
-            piece: this.selectedOption.id,
+            idPiece: this.selectedOption.id,
             designation: this.selectedOption.designation,
             description: this.descriptionInput.nativeElement.value,
             prix: this.prixInput.nativeElement.value
@@ -172,6 +167,17 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy
 
     deleteItem(index: number) {
         this.listeReparations.splice(index, 1);
+    }
+
+    insert() {
+        // logic to insert data
+        for (let i = 0; i < this.listeReparations.length; i++) {
+            this._receptionService.insertReparations(this.listeReparations[i],this.reparation[0]._id)
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe(() => {
+                });
+        }
+        //this.router.navigate(['apps/reception']);
     }
 
 }

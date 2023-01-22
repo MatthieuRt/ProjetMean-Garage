@@ -7,6 +7,7 @@ import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
 import { Category, Course, ListeReparation, ReparationsVoitures } from 'app/modules/admin/apps/academy/academy.types';
 import { JsonPipe } from '@angular/common';
 
+
 @Component({
     selector: 'academy-list',
     templateUrl: './list.component.html',
