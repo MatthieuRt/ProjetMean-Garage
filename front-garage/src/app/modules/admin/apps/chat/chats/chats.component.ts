@@ -18,7 +18,9 @@ export class ChatsComponent implements OnInit, OnDestroy
     profile: Profile;
     selectedChat: Chat;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
+    listDemandePaiement :any;
+    user: any;
+    listVoiture: any;
     /**
      * Constructor
      */
@@ -38,6 +40,10 @@ export class ChatsComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        let user = JSON.parse(sessionStorage.getItem('user'));
+        this.user = user;
+        this.listVoiture = user.listeVoiture;
+
         // Chats
         this._chatService.chats$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -67,7 +73,13 @@ export class ChatsComponent implements OnInit, OnDestroy
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
-    }
+            const onSuccess = (response:any)=>{
+                if(response.message==='OK'){
+                    this.listDemandePaiement = response.value;
+                }
+            }
+            this._chatService.getAllDemandePaiement().subscribe(onSuccess);
+        }
 
     /**
      * On destroy
@@ -133,5 +145,13 @@ export class ChatsComponent implements OnInit, OnDestroy
     trackByFn(index: number, item: any): any
     {
         return item.id || index;
+    }
+    getAllDemandePaiement(){
+        const onSuccess = (response:any)=>{
+            if(response.message==='OK'){
+                this.listDemandePaiement = response.value;
+            }
+        }
+        this._chatService.getAllDemandePaiement().subscribe(onSuccess);
     }
 }
