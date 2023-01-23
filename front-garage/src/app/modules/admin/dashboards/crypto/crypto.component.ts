@@ -112,9 +112,6 @@ export class CryptoComponent implements OnInit, OnDestroy
         reparationToAdd:
         ${JSON.stringify(this.reparationToAdd, null, ' ')}`;
 
-    confirmeDemandePaiement(){
-
-    }
     choisirVehicule(event){
         let idVoiture = event.value;
         this.selectedVoiture = this.listVoiture.find(voiture => voiture._id ===idVoiture);
@@ -122,7 +119,10 @@ export class CryptoComponent implements OnInit, OnDestroy
         const onSuccess = (response:any)=>{
             console.log(response);
             if(response.message==='OK'){
-               this.reparationVoitureUser = response.value;
+            //    this.reparationVoitureUser = response.value;
+               this.reparationVoitureUser = this.deleteIsPaid(  response.value);
+               console.log('___________________Filtre est déjà payé_____________________')
+               console.log(this.reparationVoitureUser);
             }else{
 
             }
@@ -153,5 +153,23 @@ export class CryptoComponent implements OnInit, OnDestroy
         let reparation = this.reparationToAdd[index];
         this.reparationUser.push(reparation);
         this.reparationToAdd.splice(index,1);
+    }
+
+    // fonction ty sisa apesaina
+    confirmeDemandePaiement(){
+        console.log("_________Demande Paiement_______________")
+        console.log(this.reparationToAdd);
+    }
+    deleteIsPaid(list: any) {
+        let retour = list.map(reparation => {
+          reparation.listeReparation = reparation.listeReparation.filter(rep => !rep.estPaye)
+          return reparation;
+        });
+        let reponse = retour.map(reparation=>{
+            if (reparation.listeReparation.length>0)
+                return reparation;
+        })
+        reponse = reponse.filter(rep=> (rep!=undefined))
+        return reponse;
     }
 }
