@@ -6,17 +6,27 @@ const router = express.Router();
 
 // demandePaiement
 router.post('/',async (request,response)=>{
-    
+    let counter = 0;
     request.body.listeDemandePaiement.forEach(async dP => {
         const demandePaiement = new DemandePaiement(dP);
         await demandePaiement.save()
         .then(rep=>{
-            const reponse = {
-                message : 'OK',
-                value : rep,
-                code :200
-            }
-            response.json(reponse);
+            counter++;
+            if(counter === request.body.listeDemandePaiement.length){
+                const reponse = {
+                    message : 'OK',
+                    value : rep,
+                    code :200
+                }
+                response.json(reponse);
+             }//else{
+            //     const reponse = {
+            //         message : 'KO',
+            //         value : request.body.listeDemandePaiement[i].idReparation +' n\'a pas été inserer',
+            //         code :404
+            //     }
+            //     response.json(reponse);
+            // }
         })
         .catch(err=>{
             const reponse ={
@@ -44,7 +54,7 @@ router.get('/pendingValidation',(request,response)=>{
             }
             response.json(rep);
         }
-        console.log(user)
+        console.log(success)
         const reponse = {
             message : 'OK',
             value : success,
