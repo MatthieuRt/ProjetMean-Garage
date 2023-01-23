@@ -6,12 +6,10 @@ const router = express.Router();
 
 // demandePaiement
 router.post('/',async (request,response)=>{
-    let demandePaiement = new DemandePaiement({
-        totalDue : request.body.totalDue,
-        piece : request.body.piece,
-        date: request.body.date
-    })
-    demandePaiement.save()
+    
+    request.body.listeDemandePaiement.forEach(async dP => {
+        const demandePaiement = new DemandePaiement(dP);
+        await demandePaiement.save()
         .then(rep=>{
             const reponse = {
                 message : 'OK',
@@ -29,6 +27,8 @@ router.post('/',async (request,response)=>{
             response.json(reponse);
             console.log(err)
         })
+    });
+    
     
 })
 
