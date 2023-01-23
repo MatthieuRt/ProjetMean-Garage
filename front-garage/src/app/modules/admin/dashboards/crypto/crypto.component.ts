@@ -118,12 +118,24 @@ export class CryptoComponent implements OnInit, OnDestroy
     choisirVehicule(event){
         let idVoiture = event.value;
         this.selectedVoiture = this.listVoiture.find(voiture => voiture._id ===idVoiture);
-        console.log(this.selectedVoiture)
+        // console.log(this.selectedVoiture)
         const onSuccess = (response:any)=>{
             console.log(response);
             if(response.message==='OK'){
-            //    this.reparationVoitureUser = response.value;
+               this.reparationVoitureUser = response.value;
                this.reparationVoitureUser = this.deleteIsPaid(  response.value);
+               this._cryptoService.getAllDemandePaiement().subscribe((rep:any)=>{
+                    if(rep.message==='OK'){
+                        let listeDemandePaiement = rep.value;
+                        // console.log('_________________Liste demande Paiement_______________________')
+                        // console.log(listeDemandePaiement);
+                        let result = this.deleteIncluDemandePaiement(this.reparationVoitureUser,listeDemandePaiement);
+                        console.log('_________________Filtre Liste demande Paiement_______________________')
+                        console.log(result)
+                        this.reparationVoitureUser = result;
+                    }
+
+               })
             }else{
 
             }
@@ -162,18 +174,22 @@ export class CryptoComponent implements OnInit, OnDestroy
         console.log(this.reparationToAdd);*/
         const listeDemandePaiement = new Array();
         this.reparationToAdd.forEach(reptoAdd=>{
-            const demandepaiement = { 
+            const demandepaiement = {
+                idReparation :reptoAdd._id,
                 totalDue: reptoAdd.prix,
                 piece: reptoAdd.piece, 
                 date: new Date()
             }
             listeDemandePaiement.push(demandepaiement);
         })
-        console.log(listeDemandePaiement);
+        // console.log(listeDemandePaiement);
         const data ={listeDemandePaiement : listeDemandePaiement}
         const onSuccess = (response:any)=>{
             if(response.message==='OK'){
                 this.dialogResponse('Demande de paiement','Félicitation votre demande a été reçu avec success');
+                this.reparationToAdd  = [];
+                this.  selectedVoiture  = undefined;
+                this.selectedDateReparation = undefined;
             }else{
                 this.dialogResponse('Demande de paiement',JSON.stringify(response.value),true);
             }
@@ -214,4 +230,13 @@ export class CryptoComponent implements OnInit, OnDestroy
               console.log("Reponse déposition : "+result);
           })
       }
+    deleteIncluDemandePaiement(listeUsereparation,listeDemandePaiement){
+        let result = listeUsereparation.map(userReparation => {
+            userReparation.listeReparation = userReparation.listeReparation.filter(rep => {
+            return !listeDemandePaiement.some(demandepaiement => demandepaiement.idReparation === rep._id);
+        });
+        return userReparation;
+        });
+        return result;
+    }
 }
