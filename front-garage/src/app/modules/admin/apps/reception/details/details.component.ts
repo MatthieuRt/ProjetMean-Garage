@@ -179,7 +179,7 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy {
             this._receptionService.updateReceptionne(this.reparation[0]._id).subscribe(()=>{
             });
         }
-        //this.router.navigate(['apps/reception']);
+        this.router.navigate(['apps/academy/'+this.reparation[0]._id]);
     }
 
 }
