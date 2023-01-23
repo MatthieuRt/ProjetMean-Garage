@@ -56,4 +56,8 @@ export class CryptoService
         let url = baseUrl+'demandepaiement/';
         return this._httpClient.post(url,data);
     }
+    getAllDemandePaiement(): Observable<any>{
+        let url = baseUrl+'demandepaiement/pendingValidation';
+        return this._httpClient.get(url);
+    }
 }

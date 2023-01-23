@@ -1,5 +1,6 @@
 export interface ListeReparation
 {
+    _id?:String,
     idPiece?: string;
     piece?: Piece,
     prix?: string;
