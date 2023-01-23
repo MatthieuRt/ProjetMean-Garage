@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, filter, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { Chat, Contact, Profile } from 'app/modules/admin/apps/chat/chat.types';
+import { baseUrl } from 'environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -197,5 +198,10 @@ export class ChatService
     resetChat(): void
     {
         this._chat.next(null);
+    }
+
+    getAllDemandePaiement(): Observable<any>{
+        let url = baseUrl+'demandepaiement/pendingValidation';
+        return this._httpClient.get(url);
     }
 }

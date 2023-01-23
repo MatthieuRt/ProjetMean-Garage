@@ -178,7 +178,10 @@ export class CryptoComponent implements OnInit, OnDestroy
                 idReparation :reptoAdd._id,
                 totalDue: reptoAdd.prix,
                 piece: reptoAdd.piece, 
-                date: new Date()
+                date: new Date(),
+                idVoiture : this.selectedVoiture._id,
+                idUser : this.user._id
+
             }
             listeDemandePaiement.push(demandepaiement);
         })
@@ -188,8 +191,9 @@ export class CryptoComponent implements OnInit, OnDestroy
             if(response.message==='OK'){
                 this.dialogResponse('Demande de paiement','Félicitation votre demande a été reçu avec success');
                 this.reparationToAdd  = [];
-                this.  selectedVoiture  = undefined;
-                this.selectedDateReparation = undefined;
+                this.reparationUser = [];
+                this.selectedVoiture=undefined;
+                this.selectedDateReparation=undefined;
             }else{
                 this.dialogResponse('Demande de paiement',JSON.stringify(response.value),true);
             }
@@ -227,6 +231,11 @@ export class CryptoComponent implements OnInit, OnDestroy
         });
         const dialogRef = this._fuseConfirmationService.open(this.dialogRep.value);
           dialogRef.afterClosed().subscribe((result) => {
+                this.reparationToAdd  = [];
+                this.reparationUser = [];
+                this.selectedVoiture=undefined;
+                this.selectedDateReparation=undefined;
+                // location.reload()
               console.log("Reponse déposition : "+result);
           })
       }
