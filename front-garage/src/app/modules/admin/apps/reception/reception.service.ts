@@ -133,4 +133,8 @@ export class ReceptionService
         const body = {id};
         return this._httpClient.put("http://localhost:9000/reparation/estReceptionne/"+id,body);
     }
+
+    getAllCars(){
+        return this._httpClient.get("http://localhost:9000/user/car");
+    }
 }
