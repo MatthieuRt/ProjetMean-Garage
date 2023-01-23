@@ -43,7 +43,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type : 'basic',
                 icon : 'fact_check',
                 link : '/dashboards/crypto'
-            }
+            },
+            {
+                id   : 'apps.validation-paiement',
+                title: 'Validation paiement',
+                type : 'basic',
+                icon : 'heroicons_outline:ticket',
+                link : '/apps/chat'
+            },
         ]
     },
     {
