@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Voiture = require('./Piece');
 const pieceSchema = mongoose.Schema({
     designation:String,
     prix:Number

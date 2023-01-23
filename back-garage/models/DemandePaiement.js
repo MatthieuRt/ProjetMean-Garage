@@ -3,7 +3,7 @@ const Piece = require('./Piece');
 const demandePaiementSchema = mongoose.Schema({
     idReparation:String,
     totalDue : String,
-    piece : Piece,
+    piece : {},
     date : {
         type : Date
     }
