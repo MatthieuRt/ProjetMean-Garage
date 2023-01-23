@@ -42,6 +42,7 @@
             <div class="grid grid-cols-12 gap-x-1 mt-12">
                 <!-- Columns -->
                 <div class="col-span-8 font-medium text-md text-secondary">Pièce</div>
+                <div class="font-medium text-md text-right text-secondary">Description</div>
                 <div class="font-medium text-md text-right text-secondary">Prix</div>
                 <div class="font-medium text-md text-right text-secondary">Etat</div>
                 <!--<div class="col-span-2 font-medium text-md text-right text-secondary">TOTAL</div>-->
@@ -53,6 +54,7 @@
                 <ng-container *ngFor="let detail of reparation?.listeReparation">
                     <!-- Item -->
                     <div class="col-span-8 text-lg font-medium">{{detail?.piece?.designation}}</div>
+                    <div class="self-center text-right">{{detail?.description}}</div>
                     <div class="self-center text-right">{{detail?.prix | number: '1.3-3'}} MGA</div>
                     <div class="self-center text-right">{{detail?.estPaye ? 'Payé' : 'Non payé'}}</div>
                     <!-- Spacer -->
