@@ -176,6 +176,8 @@ export class ReceptionDetailsComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe(() => {
                 });
+            this._receptionService.updateReceptionne(this.reparation[0]._id).subscribe(()=>{
+            });
         }
         //this.router.navigate(['apps/reception']);
     }
