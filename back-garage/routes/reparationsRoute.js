@@ -4,6 +4,7 @@ const router = express.Router();
 var ObjectId = require('mongoose').Types.ObjectId;
 
 
+
 const Utilisateur = require('../models/Utilisateur');
 const ReparationsVoiture = require('../models/ReparationsVoiture');
 
@@ -139,6 +140,13 @@ router.get('/get/:id',(req,res)=>{
 
 router.post('/depose',(req,res)=>{
     ReparationsVoiture.find({estDepose:false},(err, docs) => {
+        if (!err) { res.send(docs); }
+        else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+    });
+});
+
+router.put('/estReceptionne/:id',(req,res)=>{
+    ReparationsVoiture.updateMany({_id:req.params.id},{$set:{dateArrivee:new Date(),estDepose:true,etat:"En cours"}},(err, docs) => {
         if (!err) { res.send(docs); }
         else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
     });
