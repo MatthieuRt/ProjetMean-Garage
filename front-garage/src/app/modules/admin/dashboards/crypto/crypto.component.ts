@@ -7,6 +7,7 @@ import { CryptoService } from 'app/modules/admin/dashboards/crypto/crypto.servic
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ListeReparation } from './modele';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 
 @Component({
     selector       : 'crypto',
@@ -30,6 +31,7 @@ export class CryptoComponent implements OnInit, OnDestroy
     selectedDateReparation:any = undefined;
     user:any;
     reparationVoitureUser :any; //Objet réparation de l'utilisateur globalement (conforme à la base reparationVoiture)
+    dialogRep :UntypedFormGroup;
     /**
      * Constructor
      */
@@ -38,6 +40,7 @@ export class CryptoComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _formBuilder: UntypedFormBuilder,
+        private _fuseConfirmationService: FuseConfirmationService,
     )
     {
     }
@@ -121,8 +124,6 @@ export class CryptoComponent implements OnInit, OnDestroy
             if(response.message==='OK'){
             //    this.reparationVoitureUser = response.value;
                this.reparationVoitureUser = this.deleteIsPaid(  response.value);
-               console.log('___________________Filtre est déjà payé_____________________')
-               console.log(this.reparationVoitureUser);
             }else{
 
             }
@@ -157,8 +158,27 @@ export class CryptoComponent implements OnInit, OnDestroy
 
     // fonction ty sisa apesaina
     confirmeDemandePaiement(){
-        console.log("_________Demande Paiement_______________")
-        console.log(this.reparationToAdd);
+        /*console.log("_________Demande Paiement_______________")
+        console.log(this.reparationToAdd);*/
+        const listeDemandePaiement = new Array();
+        this.reparationToAdd.forEach(reptoAdd=>{
+            const demandepaiement = { 
+                totalDue: reptoAdd.prix,
+                piece: reptoAdd.piece, 
+                date: new Date()
+            }
+            listeDemandePaiement.push(demandepaiement);
+        })
+        console.log(listeDemandePaiement);
+        const data ={listeDemandePaiement : listeDemandePaiement}
+        const onSuccess = (response:any)=>{
+            if(response.message==='OK'){
+                this.dialogResponse('Demande de paiement','Félicitation votre demande a été reçu avec success');
+            }else{
+                this.dialogResponse('Demande de paiement',JSON.stringify(response.value),true);
+            }
+        }
+        this._cryptoService.confirmDemandePaiement(data).subscribe(onSuccess);
     }
     deleteIsPaid(list: any) {
         let retour = list.map(reparation => {
@@ -172,4 +192,26 @@ export class CryptoComponent implements OnInit, OnDestroy
         reponse = reponse.filter(rep=> (rep!=undefined))
         return reponse;
     }
+    dialogResponse(titre,message,isError=false){
+        let icone = 'heroicons_outline:check';
+        let couleur = 'success';
+        if(isError){
+          icone = 'heroicons_outline:exclamation';
+          couleur = 'warn';
+        }
+        this.dialogRep = this._formBuilder.group({
+          title      : titre,
+          message    : '<span class="font-medium">'+message+' !</span>',
+          icon       : this._formBuilder.group({
+              show : true,
+              name : icone,
+              color: couleur
+          }),
+          dismissible: true
+        });
+        const dialogRef = this._fuseConfirmationService.open(this.dialogRep.value);
+          dialogRef.afterClosed().subscribe((result) => {
+              console.log("Reponse déposition : "+result);
+          })
+      }
 }

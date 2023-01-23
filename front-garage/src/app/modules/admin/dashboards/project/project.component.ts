@@ -202,7 +202,7 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
         console.log(response)
         if(response.message=='OK'){
             await this.refreshListeVoiture();
-            this.dialogResponse('Déposition de votre voiture','Félicitation votre voiture à été déposer avec success');
+            this.dialogResponse('Déposition de votre voiture','Félicitation votre voiture a été déposer avec success');
         }else{
           this.dialogResponse('Une Erreur est survenue!',JSON.stringify(response.value),true);
         }

@@ -52,5 +52,8 @@ export class CryptoService
         let url = baseUrl+'piece/'+idPiece
         return this._httpClient.get(url);
     }
-
+    confirmDemandePaiement(data): Observable<any>{
+        let url = baseUrl+'demandepaiement/';
+        return this._httpClient.post(url,data);
+    }
 }
