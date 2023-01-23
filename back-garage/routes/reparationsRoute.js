@@ -146,7 +146,15 @@ router.post('/depose',(req,res)=>{
 });
 
 router.put('/estReceptionne/:id',(req,res)=>{
-    ReparationsVoiture.updateMany({_id:req.params.id},{$set:{dateArrivee:new Date(),estDepose:true,etat:"En cours"}},(err, docs) => {
+    const date = new Date();
+    const options = { timeZone: 'Africa/Nairobi',day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    const formatter = new Intl.DateTimeFormat('fr-FR', options);
+    const formattedDate = formatter.format(date);
+    const dateParts = formattedDate.split(', ');
+    const dateString = dateParts[0].split('/').reverse().join('-') + 'T' + dateParts[1] + 'Z';
+    const parsedDate = new Date(dateString);
+
+    ReparationsVoiture.updateMany({_id:req.params.id},{$set:{dateArrivee:parsedDate,estDepose:true,etat:"En cours"}},(err, docs) => {
         if (!err) { res.send(docs); }
         else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
     });
