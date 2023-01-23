@@ -6,7 +6,9 @@ const demandePaiementSchema = mongoose.Schema({
     piece : {},
     date : {
         type : Date
-    }
+    },
+    idVoiture :String,
+    idUser:String
 });
 
 module.exports = mongoose.model('DemandePaiement',demandePaiementSchema);
