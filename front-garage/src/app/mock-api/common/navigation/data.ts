@@ -51,6 +51,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon : 'heroicons_outline:ticket',
                 link : '/apps/chat'
             },
+            {
+                id   : 'dashboards.bon-de-sortie',
+                title: 'Bon de sortie',
+                type : 'basic',
+                icon : 'heroicons_outline:clipboard-copy',
+                link : '/dashboards/bondesortie'
+            },
         ]
     },
     {

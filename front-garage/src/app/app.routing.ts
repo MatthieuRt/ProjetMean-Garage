@@ -82,6 +82,7 @@ export const appRoutes: Route[] = [
                 {path: 'analytics', loadChildren: () => import('app/modules/admin/dashboards/analytics/analytics.module').then(m => m.AnalyticsModule)},
                 {path: 'finance', loadChildren: () => import('app/modules/admin/dashboards/finance/finance.module').then(m => m.FinanceModule)},
                 {path: 'crypto', loadChildren: () => import('app/modules/admin/dashboards/crypto/crypto.module').then(m => m.CryptoModule)},
+                {path: 'bondesortie', loadChildren: () => import('app/modules/admin/dashboards/bon-de-sortie/bon-de-sortie.module').then(m => m.BonDeSortieModule)},
             ]},
 
             // Apps

@@ -20,7 +20,9 @@ export class ChatsComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     listDemandePaiement :any;
     user: any;
-    listVoiture: any;
+    listVoiture: any = undefined;
+    filteredCars: any[];
+    isLoaded :Boolean = false;
     /**
      * Constructor
      */
@@ -54,53 +56,55 @@ export class ChatsComponent implements OnInit, OnDestroy
             });
 
         // Profile
-        this._chatService.profile$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((profile: Profile) => {
-                this.profile = profile;
+        // this._chatService.profile$
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((profile: Profile) => {
+        //         this.profile = profile;
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+        //         // Mark for check
+        //         this._changeDetectorRef.markForCheck();
+        //     });
 
         // Selected chat
-        this._chatService.chat$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((chat: Chat) => {
-                this.selectedCar = chat;
+        // this._chatService.chat$
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((chat: Chat) => {
+        //         this.selectedCar = chat;
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+        //         // Mark for check
+        //         this._changeDetectorRef.markForCheck();
+        //     });
+        const onSuccessCar =  (response:any)=>{
+            if(response.message=='OK'){
+                 console.log('_____________Car___________________')
+                console.log(response)
+                let liste = response.value
+                const newList = liste.map(user => {
+                    return user.listeVoiture.map(voiture => {
+                        return {
+                            utilisateurId: user._id,
+                            numero: voiture.numero,
+                            modele: voiture.modele,
+                            dateAjout: voiture.dateAjout,
+                            enCoursDepot: voiture.enCoursDepot,
+                            voitureId: voiture._id
+                        };
+                    });
+                }).flat();
+                console.log(newList);
+                this.listVoiture = newList;
+                this.isLoaded = true;
+            }
+           
+        }
+        this._chatService.getAllCar().subscribe(onSuccessCar);
             const onSuccess = (response:any)=>{
                 if(response.message==='OK'){
                     this.listDemandePaiement = response.value;
                 }
             }
             this._chatService.getAllDemandePaiement().subscribe(onSuccess);
-            const onSuccessCar =  (response:any)=>{
-                if(response.message==='OK'){
-                     console.log('_____________Car___________________')
-                    console.log(response)
-                    let liste = response.value
-                    const newList = liste.map(user => {
-                        return user.listeVoiture.map(voiture => {
-                            return {
-                                utilisateurId: user._id,
-                                numero: voiture.numero,
-                                modele: voiture.modele,
-                                dateAjout: voiture.dateAjout,
-                                enCoursDepot: voiture.enCoursDepot,
-                                voitureId: voiture._id
-                            };
-                        });
-                    }).flat();
-                    console.log(newList);
-                    this.listVoiture = newList;
-                }
-               
-            }
-            this._chatService.getAllCar().subscribe(onSuccessCar);
+            
         }
 
     /**
@@ -128,10 +132,12 @@ export class ChatsComponent implements OnInit, OnDestroy
         if ( !query )
         {
             this.filteredChats = this.chats;
+            this.filteredCars = this.listVoiture;
             return;
         }
 
         this.filteredChats = this.chats.filter(chat => chat.contact.name.toLowerCase().includes(query.toLowerCase()));
+        this.filteredCars = this.listVoiture.filter(car=>car.modele.toLowerCase().includes(query.toLowerCase));
     }
 
     /**

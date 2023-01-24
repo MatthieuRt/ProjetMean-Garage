@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, filter, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
-import { Chat, Contact, Profile } from 'app/modules/admin/apps/chat/chat.types';
+import { Chat, Contact, Profile, Voiture } from 'app/modules/admin/apps/chat/chat.types';
 import { baseUrl } from 'environments/environment';
 
 @Injectable({
@@ -14,6 +14,8 @@ export class ChatService
     private _contact: BehaviorSubject<Contact> = new BehaviorSubject(null);
     private _contacts: BehaviorSubject<Contact[]> = new BehaviorSubject(null);
     private _profile: BehaviorSubject<Profile> = new BehaviorSubject(null);
+    private _voiture: BehaviorSubject<Voiture> = new BehaviorSubject(null);
+    private listeVoiture: BehaviorSubject<Voiture[]> = new BehaviorSubject(null);
 
     /**
      * Constructor
@@ -33,7 +35,13 @@ export class ChatService
     {
         return this._chat.asObservable();
     }
-
+    /**
+     * Getter for listeVoiture
+     */
+    get listeVoiture$(): Observable<Voiture[]>
+    {
+        return this.listeVoiture.asObservable();
+    }
     /**
      * Getter for chats
      */
@@ -81,6 +89,19 @@ export class ChatService
             })
         );
     }
+    
+    /**
+     * Get listeVoiture
+     */
+    getListeVoiture(): Observable<any>
+    {
+        return this._httpClient.get<Voiture[]>('api/apps/chat/chats').pipe(
+            tap((response: Voiture[]) => {
+                this.listeVoiture.next(response);
+            })
+        );
+    }
+
 
     /**
      * Get contact
@@ -147,7 +168,32 @@ export class ChatService
             })
         );
     }
+    /**
+     * Get voiture
+     *
+     */
+    getVoitureById(id: string): Observable<any>
+    {
+        return this._httpClient.get<Voiture>('api/apps/chat/chat', {params: {id}}).pipe(
+            map((car) => {
 
+                // Update the voiture
+                this._voiture.next(car);
+
+                // Return the voiture
+                return car;
+            }),
+            switchMap((car) => {
+
+                if ( !car )
+                {
+                    return throwError('Could not found chat with id of ' + id + '!');
+                }
+
+                return of(car);
+            })
+        );
+    }
     /**
      * Update chat
      *

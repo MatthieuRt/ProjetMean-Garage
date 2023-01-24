@@ -35,7 +35,7 @@
                         <div class="flex items-center">
                             <div
                                 class="flex items-center mr-1 cursor-pointer"
-                                (click)="openProfile()">
+                               >
                                 <div class="relative w-20 h-20">
                                         <img
                                             class="object-cover w-full h-full rounded-full object-cover"
@@ -44,46 +44,6 @@
                                 </div>
                                 <div class="ml-4 font-medium truncate">Validation des paiements.</div>
                             </div>
-                            <!-- <button
-                                class="ml-auto"
-                                mat-icon-button
-                                (click)="openNewChat()">
-                                <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
-                            </button>
-                            <button
-                                class="ml-1 -mr-4"
-                                mat-icon-button
-                                [matMenuTriggerFor]="chatsHeaderMenu">
-                                <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
-                                <mat-menu #chatsHeaderMenu>
-                                    <button mat-menu-item>
-                                        <mat-icon [svgIcon]="'heroicons_outline:user-group'"></mat-icon>
-                                        New group
-                                    </button>
-                                    <button mat-menu-item>
-                                        <mat-icon [svgIcon]="'heroicons_outline:chat-alt-2'"></mat-icon>
-                                        Create a room
-                                    </button>
-                                    <button
-                                        mat-menu-item
-                                        (click)="openProfile()">
-                                        <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
-                                        Profile
-                                    </button>
-                                    <button mat-menu-item>
-                                        <mat-icon [svgIcon]="'heroicons_outline:archive'"></mat-icon>
-                                        Archived
-                                    </button>
-                                    <button mat-menu-item>
-                                        <mat-icon [svgIcon]="'heroicons_outline:star'"></mat-icon>
-                                        Starred
-                                    </button>
-                                    <button mat-menu-item>
-                                        <mat-icon [svgIcon]="'heroicons_outline:cog'"></mat-icon>
-                                        Settings
-                                    </button>
-                                </mat-menu>
-                            </button> -->
                         </div>
                         <!-- Search -->
                         <div class="mt-4">
@@ -106,40 +66,43 @@
                     <!-- <pre>{{listVoiture | json}}</pre> -->
                     <!-- Chats -->
                     <div class="flex-auto overflow-y-auto">
-                        <ng-container *ngIf="listVoiture; else noCars">
-                            <ng-container *ngFor="let car of listVoiture">
-                                <a
-                                    class="z-20 flex items-center py-5 px-8 cursor-pointer border-b"
-                                    [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedCar || selectedCar.id !== car.voitureId,
-                                                'bg-primary-50 dark:bg-hover': selectedCar && selectedCar.id === car.voitureId}"
-                                    [routerLink]="[car.voitureId]">
-                                    <div class="relative flex flex-0 items-center justify-center w-10 h-10">
-                                        <ng-container *ngIf="1 > 0">
-                                            <div
-                                                class="absolute bottom-0 right-0 flex-0 w-2 h-2 -ml-0.5 rounded-full ring-2 ring-bg-card dark:ring-gray-900 bg-primary dark:bg-primary-500 text-on-primary"
-                                                [class.ring-primary-50]="selectedCar && selectedCar.id === car.voitureId"></div>
-                                        </ng-container>
-                                      
-                                        <ng-container>
-                                            <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                                                {{car.modele.charAt(0)}}{{car.modele.charAt(1)}}
-                                            </div>
-                                        </ng-container>
-                                    </div>
-                                    <div class="min-w-0 ml-4">
-                                        <div class="font-medium leading-5 truncate">{{car.modele}}</div>
-                                        <div
-                                            class="leading-5 truncate text-secondary"
-                                            [class.dark:text-primary-500]="1 > 0">
-                                            {{car.numero}}
+                        <ng-container *ngIf="listVoiture" >
+                            <ng-container *ngIf="listVoiture.length>0; else noCars">
+                                <ng-container *ngFor="let car of listVoiture ; trackBy: trackByFn">
+                                    <a
+                                        class="z-20 flex items-center py-5 px-8 cursor-pointer border-b"
+                                        [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedCar || selectedCar.id !== car.voitureId,
+                                                    'bg-primary-50 dark:bg-hover': selectedCar && selectedCar.id === car.voitureId}"
+                                        [routerLink]="[car.voitureId]">
+                                        <div class="relative flex flex-0 items-center justify-center w-10 h-10">
+                                            <ng-container *ngIf="1 > 0">
+                                                <div
+                                                    class="absolute bottom-0 right-0 flex-0 w-2 h-2 -ml-0.5 rounded-full ring-2 ring-bg-card dark:ring-gray-900 bg-primary dark:bg-primary-500 text-on-primary"
+                                                    [class.ring-primary-50]="selectedCar && selectedCar.id === car.voitureId"></div>
+                                            </ng-container>
+                                          
+                                            <ng-container>
+                                                <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                                    {{car.modele.charAt(0)}}{{car.modele.charAt(1)}}
+                                                </div>
+                                            </ng-container>
                                         </div>
-                                    </div>
-                                    <div class="flex flex-col items-end self-start ml-auto pl-2">
-                                        <div class="text-sm leading-5 text-secondary">24/01/2023</div>
-                                    </div>
-                                </a>
+                                        <div class="min-w-0 ml-4">
+                                            <div class="font-medium leading-5 truncate">{{car.modele}}</div>
+                                            <div
+                                                class="leading-5 truncate text-secondary"
+                                                [class.dark:text-primary-500]="1 > 0">
+                                                {{car.numero}}
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-col items-end self-start ml-auto pl-2">
+                                            <div class="text-sm leading-5 text-secondary">en attente de validation</div>
+                                        </div>
+                                    </a>
+                                </ng-container>
                             </ng-container>
                         </ng-container>
+                        
                     </div>
 
                 </div>
