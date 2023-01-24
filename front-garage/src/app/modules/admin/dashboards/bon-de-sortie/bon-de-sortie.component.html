@@ -53,21 +53,28 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>Naina</td>
-                                                    <td>8900TAB</td>
-                                                    <td>
-                                                        <button
-                                                            class="ml-4"
-                                                            mat-flat-button
-                                                            style="background-color: #0070acd4;"
-                                                            (click)="confirmeDemandePaiement()">
-                                                            <mat-icon [svgIcon]="'heroicons_outline:key'"></mat-icon>
-                                                            <span class="ml-2 mr-1">Validé</span>
-                                                        </button>
-                                                    </td>
-                                                </tr>
+                                                <ng-container *ngIf="listVoiture.length>0; else noList">
+                                                    <tr  *ngFor="let vehicule of listVoiture; let i = index">
+                                                        <th scope="row">1</th>
+                                                        <td>{{vehicule?.identifiant}}</td>
+                                                        <td>{{vehicule?.numero}}</td>
+                                                        <td>
+                                                            <button
+                                                                class="ml-4"
+                                                                mat-flat-button
+                                                                style="background-color: #0070acd4;"
+                                                                (click)="validerBonDeSortie(i)">
+                                                                <mat-icon [svgIcon]="'heroicons_outline:key'"></mat-icon>
+                                                                <span class="ml-2 mr-1">Validé</span>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
+                                                <ng-template #noList>
+                                                        
+                                                    <p>Pas de véhicule à traiter pour l'instant</p>
+                                                
+                                            </ng-template>
                                             </tbody>
                                         </table>
                                             
