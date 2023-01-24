@@ -17,6 +17,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link : '/dashboards/project'
             },
             {
+                id   : 'apps.reception',
+                title: 'Reception',
+                type : 'basic',
+                icon : 'heroicons_outline:academic-cap',
+                link : '/apps/reception'
+            },
+            {
                 id   : 'apps.academy',
                 title: 'Réparations',
                 type : 'basic',
@@ -67,13 +74,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type    : 'group',
         icon    : 'heroicons_outline:home',
         children: [
-            {
+            /*{
                 id   : 'apps.reception',
                 title: 'Reception',
                 type : 'basic',
                 icon : 'heroicons_outline:academic-cap',
                 link : '/apps/reception'
-            },
+            },*/
             {
                 id   : 'apps.chat',
                 title: 'Chat',
