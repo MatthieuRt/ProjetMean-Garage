@@ -82,7 +82,21 @@ export class ChatsComponent implements OnInit, OnDestroy
                 if(response.message==='OK'){
                      console.log('_____________Car___________________')
                     console.log(response)
-                    this.listVoiture = response.value.listeVoiture
+                    let liste = response.value
+                    const newList = liste.map(user => {
+                        return user.listeVoiture.map(voiture => {
+                            return {
+                                utilisateurId: user._id,
+                                numero: voiture.numero,
+                                modele: voiture.modele,
+                                dateAjout: voiture.dateAjout,
+                                enCoursDepot: voiture.enCoursDepot,
+                                voitureId: voiture._id
+                            };
+                        });
+                    }).flat();
+                    console.log(newList);
+                    this.listVoiture = newList;
                 }
                
             }
@@ -161,5 +175,25 @@ export class ChatsComponent implements OnInit, OnDestroy
             }
         }
         this._chatService.getAllDemandePaiement().subscribe(onSuccess);
+    }
+
+    reccupererListeVoiture(liste){
+        // let liste = response.value
+        let newListe = [];
+        liste.forEach(user => {
+            user.listeVoiture.forEach(voiture => {
+                let newItem = {
+                        utilisateurId: user._id,
+                        numero: voiture.numero,
+                        modele: voiture.modele,
+                        dateAjout: voiture.dateAjout,
+                        enCoursDepot: voiture.enCoursDepot,
+                        voitureId: voiture._id
+                }
+                newListe.push(newItem);
+                });
+        });
+        console.log(newListe)
+        return newListe;
     }
 }

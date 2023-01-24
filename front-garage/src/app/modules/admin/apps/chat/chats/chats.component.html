@@ -106,8 +106,8 @@
 
                     <!-- Chats -->
                     <div class="flex-auto overflow-y-auto">
-                        <ng-container *ngIf="listeVoiture.length > 0; else noCars">
-                            <ng-container *ngFor="let car of listeVoiture">
+                        <ng-container *ngIf="listVoiture; else noCars">
+                            <ng-container *ngFor="let car of listVoiture">
                                 <a
                                     class="z-20 flex items-center py-5 px-8 cursor-pointer border-b"
                                     [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedCar || selectedCar.id !== chat._id,
