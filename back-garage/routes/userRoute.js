@@ -227,7 +227,7 @@ router.get('/car',(req,res)=>{
 
 //liste utilisateur avec voiture
 router.get('/carlist',(req,res)=>{
-    Utilisateur.find({profil:'user'},{listeVoiture:1},(err, all) => {
+    Utilisateur.find({profil:'user'},{identifiant:1,listeVoiture:1},(err, all) => {
         let reponse = {};
         if (!err) { 
             reponse = {
