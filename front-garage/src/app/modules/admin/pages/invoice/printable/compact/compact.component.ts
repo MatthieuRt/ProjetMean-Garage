@@ -18,6 +18,7 @@ export class CompactComponent {
     reparation: any;
     listePieces: any;
     totalPrix: number;
+    user:any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(private route: ActivatedRoute, private _academyService: AcademyService, private _changeDetectorRef: ChangeDetectorRef,) {
@@ -38,6 +39,7 @@ export class CompactComponent {
 
             let user = sessionStorage.getItem("user");
             let jsonObject = JSON.parse(user);
+            this.user = jsonObject;
             const listeVoitures = jsonObject.listeVoiture;
             for (let i = 0; i < listeVoitures.length; i++) {
                 if (listeVoitures[i].id == this.reparation.idVoiture) {
