@@ -16,7 +16,7 @@ export class ChatsComponent implements OnInit, OnDestroy
     drawerOpened: boolean = false;
     filteredChats: Chat[];
     profile: Profile;
-    selectedChat: Chat;
+    selectedCar:any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     listDemandePaiement :any;
     user: any;
@@ -42,7 +42,6 @@ export class ChatsComponent implements OnInit, OnDestroy
     {
         let user = JSON.parse(sessionStorage.getItem('user'));
         this.user = user;
-        this.listVoiture = user.listeVoiture;
 
         // Chats
         this._chatService.chats$
@@ -68,7 +67,7 @@ export class ChatsComponent implements OnInit, OnDestroy
         this._chatService.chat$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((chat: Chat) => {
-                this.selectedChat = chat;
+                this.selectedCar = chat;
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -79,6 +78,15 @@ export class ChatsComponent implements OnInit, OnDestroy
                 }
             }
             this._chatService.getAllDemandePaiement().subscribe(onSuccess);
+            const onSuccessCar =  (response:any)=>{
+                if(response.message==='OK'){
+                     console.log('_____________Car___________________')
+                    console.log(response)
+                    this.listVoiture = response.value.listeVoiture
+                }
+               
+            }
+            this._chatService.getAllCar().subscribe(onSuccessCar);
         }
 
     /**
