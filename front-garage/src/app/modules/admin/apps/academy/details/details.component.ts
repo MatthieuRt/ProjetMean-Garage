@@ -21,6 +21,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     reparation: any;
     listeVoitures: Voiture[];
+    user : any;
 
     /**
      * Constructor
@@ -54,7 +55,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy {
 
                 let user = sessionStorage.getItem("user");
                 let jsonObject = JSON.parse(user);
-
+                this.user = jsonObject;
 
                 this.listeVoitures = jsonObject.listeVoiture;
                 for (let i = 0; i < this.listeVoitures.length; i++) {
