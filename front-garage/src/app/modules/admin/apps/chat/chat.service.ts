@@ -204,4 +204,8 @@ export class ChatService
         let url = baseUrl+'demandepaiement/pendingValidation';
         return this._httpClient.get(url);
     }
+    getAllCar(): Observable<any>{
+        let url = baseUrl+'user/carlist';
+        return this._httpClient.get(url);
+    }
 }
