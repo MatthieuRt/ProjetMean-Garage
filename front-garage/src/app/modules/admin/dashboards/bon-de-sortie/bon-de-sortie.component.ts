@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
+import { BonDeSortieService } from './bon-de-sortie.service';
 
 @Component({
   selector: 'app-bon-de-sortie',
@@ -30,9 +31,35 @@ animations     : fuseAnimations
 })
 export class BonDeSortieComponent implements OnInit {
 
-  constructor() { }
+  listVoiture:any;
+  constructor(private _bondeSortieServ : BonDeSortieService) { }
 
   ngOnInit(): void {
+    const onSuccessCar =  (response:any)=>{
+      if(response.message=='OK'){
+           console.log('_____________Car___________________')
+          console.log(response)
+          let liste = response.value
+          const newList = liste.map(user => {
+              return user.listeVoiture.map(voiture => {
+                  return {
+                      utilisateurId: user._id,
+                      numero: voiture.numero,
+                      modele: voiture.modele,
+                      dateAjout: voiture.dateAjout,
+                      enCoursDepot: voiture.enCoursDepot,
+                      voitureId: voiture._id,
+                      identifiant: user.identifiant
+                  };
+              });
+          }).flat();
+          console.log(newList);
+          this.listVoiture = newList;
+      }
+    }
+    this._bondeSortieServ.getAllCar().subscribe(onSuccessCar);
   }
-
+  validerBonDeSortie(index){
+    
+  }
 }
