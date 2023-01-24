@@ -52,7 +52,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy {
                 console.log(course)
                 // Get the course
                 this.reparation = course[0];
-
+                console.log("--------------------------"+this.reparation?.dateArrivee)
                 let user = sessionStorage.getItem("user");
                 let jsonObject = JSON.parse(user);
                 this.user = jsonObject;
