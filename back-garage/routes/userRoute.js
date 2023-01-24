@@ -224,4 +224,27 @@ router.get('/car',(req,res)=>{
         else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
     });
 })
+
+//liste utilisateur avec voiture
+router.get('/',(req,res)=>{
+    Utilisateur.find({profil:'user'},{listeVoiture:1},(err, all) => {
+        let reponse = {};
+        if (!err) { 
+            reponse = {
+                message :'OK',
+                code:200,
+                value:all
+            }
+        }
+        else { 
+            console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); 
+            reponse = {
+                message :'KO',
+                code:404,
+                value:err
+            }
+        }
+        res.json(reponse);
+    });
+})
 module.exports = router;
