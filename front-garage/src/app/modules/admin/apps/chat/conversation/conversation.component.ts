@@ -198,7 +198,7 @@ export class ConversationComponent implements OnInit, OnDestroy
         }
         
     }
-    validerPaiement(){
-        
+    validerPaiement(index){
+       console.log(this.listDemandePaiement[index])
     }
 }

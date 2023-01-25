@@ -63,15 +63,16 @@ export interface Voiture
     voitureId?: String
     
 }
-export interface DemandePaiement
+export class DemandePaiement
 {
-    _id?: String,
-    idReparation?: String,
-    totalDue?: Number,
-    piece?: Piece,
-    date?: Date,
-    idVoiture?: String,
-    idUser?: String,
+    _id?: String;
+    idReparation?: String;
+    totalDue?: Number;
+    piece?: Piece;
+    date?: Date;
+    idVoiture?: String;
+    idUser?: String;
+    isChecked:Boolean = false;
 }
 export interface Piece 
 {

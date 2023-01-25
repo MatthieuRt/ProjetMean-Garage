@@ -1,7 +1,7 @@
 <div class="flex flex-col flex-auto overflow-y-auto lg:overflow-hidden bg-card dark:bg-default">
 <!-- <pre>{{ voiture | json}}</pre>-->
 <!-- <pre>{{ listDemandePaiement | json}}</pre>  -->
-
+<!-- <pre>{{listToggle | json}}</pre> -->
     <ng-container *ngIf="'true'; else selectChatOrStartNew">
 
         <mat-drawer-container
@@ -58,11 +58,17 @@
                                             <td>{{demandepaiement.date  | date:'dd MMMM yyyy' }}</td>
                                             <td>{{demandepaiement.totalDue}}</td>
                                             <td>
-                                                <mat-slide-toggle
-                                                    class="ml-2"
-                                                    [color]="'primary'"
-                                                   >
-                                                </mat-slide-toggle>
+                                                <button
+                                                class="ml-3"
+                                                mat-flat-button
+                                                style="background-color: #17e86ed4;"
+                                                (click)="validerPaiement(i)">
+                                                <mat-icon [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                                                <span class="ml-2 mr-1">Validé</span>
+                                                <mat-progress-spinner
+                                                    [diameter]="24"
+                                                    [mode]="'indeterminate'"></mat-progress-spinner>
+                                            </button>
                                             </td>
                                         </tr>
                                     </ng-container>
@@ -73,19 +79,6 @@
                                     </ng-template>
                                 </tbody>
                             </table>
-                            <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
-                                <button
-                                    class="ml-4"
-                                    mat-flat-button
-                                    style="background-color: #17e86ed4;"
-                                    (click)="confirmeDemandePaiement()">
-                                    <mat-icon [svgIcon]="'heroicons_outline:check'"></mat-icon>
-                                    <span class="ml-2 mr-1">Validé</span>
-                                    <mat-progress-spinner
-                                        [diameter]="24"
-                                        [mode]="'indeterminate'"></mat-progress-spinner>
-                                </button>
-                            </div>
                         </div>
                 </div>
 
