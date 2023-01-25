@@ -120,7 +120,7 @@ router.post('/confirmation',async (request,response)=>{
 })
 // connexion utilisateur
 router.post('/login',(request,response)=>{
-    console.log({mail : request.body.mail, motDePasse: request.body.password,valid:true})
+    // console.log({mail : request.body.mail, motDePasse: request.body.password,valid:true})
     Utilisateur.findOne({mail : request.body.mail, motDePasse: request.body.password},(err,user)=>{
         if(err){
             const rep = {

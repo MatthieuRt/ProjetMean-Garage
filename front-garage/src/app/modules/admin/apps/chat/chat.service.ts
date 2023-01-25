@@ -295,5 +295,8 @@ export class ChatService
         let url = baseUrl+'user/carlist';
         return this._httpClient.get(url);
     }
-
+    validationPaiement(data:any): Observable<any>{
+        let url = baseUrl+'reparation/validation/paiement';
+        return this._httpClient.post(url,data);
+    }
 }

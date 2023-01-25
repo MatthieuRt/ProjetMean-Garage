@@ -7,7 +7,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 
 const Utilisateur = require('../models/Utilisateur');
 const ReparationsVoiture = require('../models/ReparationsVoiture');
-
+const DemandePaiement = require('../models/DemandePaiement');
 
 
 router.get('/', (req, res) => {
@@ -158,6 +158,31 @@ router.put('/estReceptionne/:id',(req,res)=>{
         if (!err) { res.send(docs); }
         else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
     });
+});
+router.post('/validation/paiement',async (req,res)=>{
+    console.log("miantso ")
+    const date = new Date();
+    const options = { timeZone: 'Africa/Nairobi',day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    const formatter = new Intl.DateTimeFormat('fr-FR', options);
+    const formattedDate = formatter.format(date);
+    const dateParts = formattedDate.split(', ');
+    const dateString = dateParts[0].split('/').reverse().join('-') + 'T' + dateParts[1] + 'Z';
+    const datePaiement = new Date(dateString);
+
+    const demandePaiement = new DemandePaiement(req.body.demandePaiement);
+    const reparationvoitures = await ReparationsVoiture.find({idVoiture:demandePaiement.idVoiture,idUtilisateur:demandePaiement.idUser})
+    for(let i=0;i<reparationvoitures.length;i++){
+        const reparation = reparationvoitures[i];
+        let reparationVoiture = reparation.listeReparation.find(lreparation=> lreparation._id===demandePaiement.idReparation);
+        if(reparationVoiture){
+            console.log('ita leizi')
+            console.log(reparationVoiture)
+            res.send(reparationVoiture)
+        }
+        else if(!reparationVoiture){
+            continue;
+        }
+    }
 });
 
 module.exports = router;

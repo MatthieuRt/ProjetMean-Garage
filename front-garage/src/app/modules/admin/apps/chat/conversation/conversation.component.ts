@@ -200,5 +200,11 @@ export class ConversationComponent implements OnInit, OnDestroy
     }
     validerPaiement(index){
        console.log(this.listDemandePaiement[index])
+       const data = {
+        demandePaiement : this.listDemandePaiement[index]
+       }
+       this._chatService.validationPaiement(data).subscribe((response:any)=>{
+            console.log(response);
+       })
     }
 }
