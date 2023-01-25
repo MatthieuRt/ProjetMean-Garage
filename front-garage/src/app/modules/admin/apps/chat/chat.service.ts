@@ -95,9 +95,28 @@ export class ChatService
      */
     getListeVoiture(): Observable<any>
     {
-        return this._httpClient.get<Voiture[]>('api/apps/chat/chats').pipe(
-            tap((response: Voiture[]) => {
-                this.listeVoiture.next(response);
+        let url = baseUrl+'user/carlist';
+        return this._httpClient.get<Voiture[]>(url).pipe(
+            tap((response:any) => {
+                if(response.message==='OK'){
+                    // alert(response.message)
+                    // console.log(response)
+                    let liste = response.value
+                    const newList = liste.map(user => {
+                    return user.listeVoiture.map(voiture => {
+                        return {
+                            utilisateurId: user._id,
+                            numero: voiture.numero,
+                            modele: voiture.modele,
+                            dateAjout: voiture.dateAjout,
+                            enCoursDepot: voiture.enCoursDepot,
+                            voitureId: voiture._id
+                        };
+                    });
+                }).flat();
+                    this.listeVoiture.next(newList);
+                }
+               
             })
         );
     }
@@ -172,26 +191,10 @@ export class ChatService
      * Get voiture
      *
      */
-    getVoitureById(id: string): Observable<any>
+    getVoitureById(id: string): Observable<Voiture>
     {
-        return this._httpClient.get<Voiture>('api/apps/chat/chat', {params: {id}}).pipe(
-            map((car) => {
-
-                // Update the voiture
-                this._voiture.next(car);
-
-                // Return the voiture
-                return car;
-            }),
-            switchMap((car) => {
-
-                if ( !car )
-                {
-                    return throwError('Could not found chat with id of ' + id + '!');
-                }
-
-                return of(car);
-            })
+        return this.listeVoiture.pipe(
+            map(list => list.find(voiture => voiture.voitureId === id))
         );
     }
     /**
@@ -254,4 +257,5 @@ export class ChatService
         let url = baseUrl+'user/carlist';
         return this._httpClient.get(url);
     }
+
 }

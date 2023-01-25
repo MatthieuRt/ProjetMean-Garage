@@ -31,8 +31,10 @@ export class ChatChatsResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Chat[]> | any
     {
-        return this._chatService.getChats();
+        // return this._chatService.getChats();
+        return this._chatService.getListeVoiture();
     }
+    
 }
 
 @Injectable({
