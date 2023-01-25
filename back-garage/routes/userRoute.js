@@ -138,7 +138,7 @@ router.post('/login',(request,response)=>{
             }
             response.json(reponse)
         }
-        console.log(user)
+        // console.log(user)
         const reponse = {
             message : 'OK',
             value : user,
@@ -207,7 +207,7 @@ router.get('/car/:idUser',(request,response)=>{
             }
             response.send(rep);
         }
-        console.log(user)
+        // console.log(user)
         const reponse = {
             message : 'OK',
             value : user.listeVoiture,

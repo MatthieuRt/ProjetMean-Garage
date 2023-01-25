@@ -115,8 +115,8 @@ router.get('/historique/:idUser/:idVoiture', (req, res) => {
                 value : docs,
                 code : 200
             }
-            console.log('usssssssss')
-            console.log(docs);
+            // console.log('usssssssss')
+            // console.log(docs);
             res.json(response)
         }
         else {
