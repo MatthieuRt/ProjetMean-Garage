@@ -79,3 +79,7 @@ export interface Piece
     designation?:string,
     prix?:number
 }
+export interface toggleCheck{
+    index?:Number,
+    checked?:Boolean
+}

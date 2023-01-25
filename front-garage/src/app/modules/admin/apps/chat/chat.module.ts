@@ -16,6 +16,7 @@ import { EmptyConversationComponent } from 'app/modules/admin/apps/chat/empty-co
 import { ConversationComponent } from 'app/modules/admin/apps/chat/conversation/conversation.component';
 import { NewChatComponent } from 'app/modules/admin/apps/chat/new-chat/new-chat.component';
 import { ProfileComponent } from 'app/modules/admin/apps/chat/profile/profile.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
     declarations: [
@@ -36,6 +37,7 @@ import { ProfileComponent } from 'app/modules/admin/apps/chat/profile/profile.co
         MatInputModule,
         MatMenuModule,
         MatSidenavModule,
+        MatSlideToggleModule,
         SharedModule
     ]
 })

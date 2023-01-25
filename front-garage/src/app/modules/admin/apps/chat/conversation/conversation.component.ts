@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Chat, DemandePaiement, Voiture } from 'app/modules/admin/apps/chat/chat.types';
+import { Chat, DemandePaiement, toggleCheck, Voiture } from 'app/modules/admin/apps/chat/chat.types';
 import { ChatService } from 'app/modules/admin/apps/chat/chat.service';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
     selector       : 'chat-conversation',
@@ -12,14 +13,14 @@ import { ChatService } from 'app/modules/admin/apps/chat/chat.service';
 })
 export class ConversationComponent implements OnInit, OnDestroy
 {
-    @ViewChild('messageInput') messageInput: ElementRef;
     chat: Chat;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     voiture:Voiture;
     listDemandePaiement:DemandePaiement[];
-
+    listToggle:toggleCheck[];
+    confirmPaiementForm: UntypedFormGroup;
     /**
      * Constructor
      */
@@ -43,27 +44,27 @@ export class ConversationComponent implements OnInit, OnDestroy
      */
     @HostListener('input')
     @HostListener('ngModelChange')
-    private _resizeMessageInput(): void
-    {
-        // This doesn't need to trigger Angular's change detection by itself
-        this._ngZone.runOutsideAngular(() => {
+    // private _resizeMessageInput(): void
+    // {
+    //     // This doesn't need to trigger Angular's change detection by itself
+    //     this._ngZone.runOutsideAngular(() => {
 
-            setTimeout(() => {
+    //         setTimeout(() => {
 
-                // Set the height to 'auto' so we can correctly read the scrollHeight
-                this.messageInput.nativeElement.style.height = 'auto';
+    //             // Set the height to 'auto' so we can correctly read the scrollHeight
+    //             this.messageInput.nativeElement.style.height = 'auto';
 
-                // Detect the changes so the height is applied
-                this._changeDetectorRef.detectChanges();
+    //             // Detect the changes so the height is applied
+    //             this._changeDetectorRef.detectChanges();
 
-                // Get the scrollHeight and subtract the vertical padding
-                this.messageInput.nativeElement.style.height = `${this.messageInput.nativeElement.scrollHeight}px`;
+    //             // Get the scrollHeight and subtract the vertical padding
+    //             this.messageInput.nativeElement.style.height = `${this.messageInput.nativeElement.scrollHeight}px`;
 
-                // Detect the changes one more time to apply the final height
-                this._changeDetectorRef.detectChanges();
-            });
-        });
-    }
+    //             // Detect the changes one more time to apply the final height
+    //             this._changeDetectorRef.detectChanges();
+    //         });
+    //     });
+    // }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -97,7 +98,7 @@ export class ConversationComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((listDemandePaiement: DemandePaiement[]) => {
                 this.listDemandePaiement = listDemandePaiement;
-
+                this.createListToggle(this.listDemandePaiement);
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -182,5 +183,22 @@ export class ConversationComponent implements OnInit, OnDestroy
     trackByFn(index: number, item: any): any
     {
         return item.id || index;
+    }
+
+    createListToggle(list:any){
+        if(list){
+            this.listToggle = [];
+            for(let i =0;i<list.length;i++){
+                let newT = {
+                    index : i,
+                    checked : false
+                }
+                this.listToggle.push(newT);
+            }
+        }
+        
+    }
+    validerPaiement(){
+        
     }
 }

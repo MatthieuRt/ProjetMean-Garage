@@ -1,6 +1,6 @@
 <div class="flex flex-col flex-auto overflow-y-auto lg:overflow-hidden bg-card dark:bg-default">
-<!-- <pre>{{ voiture | json}}</pre>
-<pre>{{ listDemandePaiement | json}}</pre> -->
+<!-- <pre>{{ voiture | json}}</pre>-->
+<!-- <pre>{{ listDemandePaiement | json}}</pre>  -->
 
     <ng-container *ngIf="'true'; else selectChatOrStartNew">
 
@@ -25,7 +25,7 @@
 
                     <!-- Header validation paiement corps -->
                     <div class="flex items-center ml-2 lg:ml-0 mr-2 cursor-pointer">
-                        <div class="ml-4 text-lg font-medium leading-5 truncate">{{voiture.modele}}</div>
+                        <div class="ml-4 text-lg font-medium leading-5 truncate">{{voiture.modele}} : {{voiture.numero}}</div>
                     </div>
                     <div class="ml-auto w-15 h-15">
                     <img
@@ -37,10 +37,56 @@
                 </div>
 
                 <!-- Conversation -->
-                <div class="flex overflow-y-auto flex-col-reverse">
-                    <div class="flex flex-col flex-auto shrink p-6 bg-card dark:bg-transparent">
-                        
-                    </div>
+                <div class="flex overflow-y-auto flex-col-reverse" style="min-height:45% ;">
+                        <div
+                            class="prose prose-sm max-w-3xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card">
+                            <table class="table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Pièce</th>
+                                        <th scope="col">Date de la demande</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col">Validation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngIf="listDemandePaiement &&listDemandePaiement.length>0; else noSortie">
+                                        <tr *ngFor="let demandepaiement of listDemandePaiement;let i =index">
+                                            <th scope="row">1</th>
+                                            <td>{{demandepaiement.piece.designation}}</td>
+                                            <td>{{demandepaiement.date  | date:'dd MMMM yyyy' }}</td>
+                                            <td>{{demandepaiement.totalDue}}</td>
+                                            <td>
+                                                <mat-slide-toggle
+                                                    class="ml-2"
+                                                    [color]="'primary'"
+                                                   >
+                                                </mat-slide-toggle>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                    <ng-template #noSortie>
+                                        
+                                            <th colspan="5" style="text-align: center;">Pas de validation de paiement pour ce vehicule ou encore en chargement...</th>
+                                        
+                                    </ng-template>
+                                </tbody>
+                            </table>
+                            <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
+                                <button
+                                    class="ml-4"
+                                    mat-flat-button
+                                    style="background-color: #17e86ed4;"
+                                    (click)="confirmeDemandePaiement()">
+                                    <mat-icon [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                                    <span class="ml-2 mr-1">Validé</span>
+                                    <mat-progress-spinner
+                                        [diameter]="24"
+                                        [mode]="'indeterminate'"></mat-progress-spinner>
+                                </button>
+                            </div>
+                        </div>
                 </div>
 
 
