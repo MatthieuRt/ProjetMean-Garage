@@ -239,5 +239,36 @@ router.get('/stats/tempsMoyen',(req,res)=>{
     });
 });
 
+router.post('/stats/chiffreAffaire',(req,res)=>{
+    let totalPrix = 0;
+    let count = 0;
+    let dateDebut = req.body.dateDebut;
+    let dateFin = req.body.dateFin;
+
+    ReparationsVoiture.find({}, function (err, reparations) {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({error: "Une erreur est survenue lors de la récupération des données"});
+        }
+        
+        reparations.forEach(function(rep) {
+          if (rep.listeReparation) {
+            
+            rep.listeReparation.forEach(function(liste) {
+                
+              if (liste.dateDebut >= dateDebut && liste.dateFin <= dateFin) {
+                console.log(liste);
+                totalPrix += liste.prix;
+                count++;
+              }
+            });
+          }
+        });
+        let average = totalPrix / count;
+        console.log("La moyenne des prix est : ", average);
+        res.status(200).json({moyenne : average});
+    });
+});
+
 
 module.exports = router;
