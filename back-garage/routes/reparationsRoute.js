@@ -242,8 +242,8 @@ router.get('/stats/tempsMoyen',(req,res)=>{
 router.post('/stats/chiffreAffaire',(req,res)=>{
     let totalPrix = 0;
     let count = 0;
-    let dateDebut = req.body.dateDebut;
-    let dateFin = req.body.dateFin;
+    let dateDebut = new Date(req.body.dateDebut);
+    let dateFin = new Date(req.body.dateFin);
 
     ReparationsVoiture.find({}, function (err, reparations) {
         if (err) {
