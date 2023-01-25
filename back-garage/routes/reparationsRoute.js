@@ -169,20 +169,45 @@ router.post('/validation/paiement',async (req,res)=>{
     const dateString = dateParts[0].split('/').reverse().join('-') + 'T' + dateParts[1] + 'Z';
     const datePaiement = new Date(dateString);
 
+    // const demandePaiement = new DemandePaiement(req.body.demandePaiement);
+    // const reparationvoitures = await ReparationsVoiture.find({idVoiture:demandePaiement.idVoiture,idUtilisateur:demandePaiement.idUser})
+    // for(let i=0;i<reparationvoitures.length;i++){
+    //     const reparation = reparationvoitures[i];
+    //     let reparationVoiture = reparation.listeReparation.find(lreparation=> lreparation._id===demandePaiement.idReparation);
+    //     if(reparationVoiture){
+    //         console.log('ita leizi')
+    //         console.log(reparationVoiture)
+    //         res.send(reparationVoiture)
+    //     }
+    //     else if(!reparationVoiture){
+    //         continue;
+    //     }
+    // }
     const demandePaiement = new DemandePaiement(req.body.demandePaiement);
-    const reparationvoitures = await ReparationsVoiture.find({idVoiture:demandePaiement.idVoiture,idUtilisateur:demandePaiement.idUser})
-    for(let i=0;i<reparationvoitures.length;i++){
-        const reparation = reparationvoitures[i];
-        let reparationVoiture = reparation.listeReparation.find(lreparation=> lreparation._id===demandePaiement.idReparation);
-        if(reparationVoiture){
-            console.log('ita leizi')
-            console.log(reparationVoiture)
-            res.send(reparationVoiture)
-        }
-        else if(!reparationVoiture){
-            continue;
-        }
-    }
+    ReparationsVoiture.find({idVoiture:demandePaiement.idVoiture,idUtilisateur:demandePaiement.idUser})
+        .then(reparationvoitures=>{
+            // console.log(reparationvoitures)
+            for(let i=0;i<reparationvoitures.length;i++){
+                const reparation = reparationvoitures[i];
+                // voiture => voiture.numero ===car.numero
+                
+                let reparationVoiture = reparation.listeReparation.find(lreparation=> lreparation._id===demandePaiement.idReparation);
+                console.log(reparationVoiture)
+                console.log('______________________________________________________________________')
+                if(reparationVoiture){
+                    console.log('ita leizi')
+                    console.log(reparationVoiture)
+                    res.send(reparationVoiture)
+                }
+                else if(!reparationVoiture){
+                    continue;
+                }
+            }
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    
 });
 
 module.exports = router;
