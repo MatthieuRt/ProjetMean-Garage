@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Chat, Voiture } from 'app/modules/admin/apps/chat/chat.types';
+import { Chat, DemandePaiement, Voiture } from 'app/modules/admin/apps/chat/chat.types';
 import { ChatService } from 'app/modules/admin/apps/chat/chat.service';
 
 @Component({
@@ -18,6 +18,7 @@ export class ConversationComponent implements OnInit, OnDestroy
     drawerOpened: boolean = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     voiture:Voiture;
+    listDemandePaiement:DemandePaiement[];
 
     /**
      * Constructor
@@ -87,6 +88,15 @@ export class ConversationComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((car: Voiture) => {
                 this.voiture = car;
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+        //liste demande paiement de la voiture 
+            this._chatService.listeDemandePaiementVoiture$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((listDemandePaiement: DemandePaiement[]) => {
+                this.listDemandePaiement = listDemandePaiement;
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
