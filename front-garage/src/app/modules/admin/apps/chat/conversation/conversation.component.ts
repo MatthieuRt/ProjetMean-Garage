@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Chat } from 'app/modules/admin/apps/chat/chat.types';
+import { Chat, Voiture } from 'app/modules/admin/apps/chat/chat.types';
 import { ChatService } from 'app/modules/admin/apps/chat/chat.service';
 
 @Component({
@@ -17,6 +17,7 @@ export class ConversationComponent implements OnInit, OnDestroy
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    voiture:Voiture;
 
     /**
      * Constructor
@@ -81,7 +82,15 @@ export class ConversationComponent implements OnInit, OnDestroy
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+        //Voiture 
+        this._chatService.voiture$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((car: Voiture) => {
+                this.voiture = car;
 
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))

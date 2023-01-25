@@ -36,6 +36,13 @@ export class ChatService
         return this._chat.asObservable();
     }
     /**
+     * Getter for Voiture
+     */
+    get voiture$(): Observable<Voiture>
+    {
+        return this._voiture.asObservable();
+    }
+    /**
      * Getter for listeVoiture
      */
     get listeVoiture$(): Observable<Voiture[]>
@@ -189,14 +196,23 @@ export class ChatService
     }
     /**
      * Get voiture
-     *
+     * @param id
      */
-    getVoitureById(id: string): Observable<Voiture>
-    {
+    getVoitureById(id: string): Observable<Voiture> {
         return this.listeVoiture.pipe(
-            map(list => list.find(voiture => voiture.voitureId === id))
+          map(voitures => {
+            const voiture = voitures.find(v => v.voitureId === id);
+            this._voiture.next(voiture);
+            return voiture;
+          }),
+          switchMap(voiture => {
+            if (!voiture) {
+              return throwError(`La voiture avec l'id :  ${id} est introuvable!`);
+            }
+            return of(voiture);
+          })
         );
-    }
+      }
     /**
      * Update chat
      *
