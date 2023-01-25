@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { ChatService } from 'app/modules/admin/apps/chat/chat.service';
 import { Chat, Contact, Profile, Voiture } from 'app/modules/admin/apps/chat/chat.types';
 
@@ -87,6 +87,10 @@ export class ChatChatResolver implements Resolve<any>
     {
         return this._chatService.getVoitureById(route.paramMap.get('id'))
                    .pipe(
+                        switchMap((voiture)=>{
+                            this._chatService.getListeDemandePaiementVoitureById(voiture.voitureId).subscribe();
+                            return of(voiture);
+                        }),
                        // Error here means the requested chat is not available
                        catchError((error) => {
 

@@ -63,3 +63,19 @@ export interface Voiture
     voitureId?: String
     
 }
+export interface DemandePaiement
+{
+    _id?: String,
+    idReparation?: String,
+    totalDue?: Number,
+    piece?: Piece,
+    date?: Date,
+    idVoiture?: String,
+    idUser?: String,
+}
+export interface Piece 
+{
+    id?:string,
+    designation?:string,
+    prix?:number
+}

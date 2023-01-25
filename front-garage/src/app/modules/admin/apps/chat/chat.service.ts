@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, filter, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
-import { Chat, Contact, Profile, Voiture } from 'app/modules/admin/apps/chat/chat.types';
+import { Chat, Contact, DemandePaiement, Profile, Voiture } from 'app/modules/admin/apps/chat/chat.types';
 import { baseUrl } from 'environments/environment';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class ChatService
     private _profile: BehaviorSubject<Profile> = new BehaviorSubject(null);
     private _voiture: BehaviorSubject<Voiture> = new BehaviorSubject(null);
     private listeVoiture: BehaviorSubject<Voiture[]> = new BehaviorSubject(null);
-
+    private _listeDemandePaiementVoiture: BehaviorSubject<DemandePaiement[]> = new BehaviorSubject(null);
     /**
      * Constructor
      */
@@ -41,6 +41,13 @@ export class ChatService
     get voiture$(): Observable<Voiture>
     {
         return this._voiture.asObservable();
+    }
+    /**
+     * Getter for _liste Demande Paiement Voiture
+     */
+    get listeDemandePaiementVoiture$(): Observable<DemandePaiement[]>
+    {
+        return this._listeDemandePaiementVoiture.asObservable();
     }
     /**
      * Getter for listeVoiture
@@ -211,6 +218,21 @@ export class ChatService
             }
             return of(voiture);
           })
+        );
+      }
+    /**
+    * Get demande paiement voiture par idVoiture
+    * @param id
+    */
+    getListeDemandePaiementVoitureById(id: String): Observable<DemandePaiement[]> {
+        let url = baseUrl+'demandepaiement/pendingValidation/'+id;
+        return this._httpClient.get<DemandePaiement[]>(url).pipe(
+            tap((response:any) => {
+                if(response.message==='OK'){
+                    this._listeDemandePaiementVoiture.next(response.value);
+                }
+               
+            })
         );
       }
     /**
