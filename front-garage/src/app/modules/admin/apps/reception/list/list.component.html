@@ -30,7 +30,7 @@
             <!-- Filters -->
             
             <!-- Courses -->
-            <ng-container *ngIf="this.filteredCourses.length; else noCourses">
+            <ng-container *ngIf="this.filteredCourses.length > 0; else noCourses">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 sm:mt-10">
                     <ng-container *ngFor="let course of filteredListeReparations; trackBy: trackByFn">
                         <!-- Course -->
