@@ -17,6 +17,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link : '/dashboards/project'
             },
             {
+                id   : 'apps.reception',
+                title: 'Reception',
+                type : 'basic',
+                icon : 'heroicons_outline:academic-cap',
+                link : '/apps/reception'
+            },
+            {
                 id   : 'apps.academy',
                 title: 'Réparations',
                 type : 'basic',
@@ -51,6 +58,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon : 'heroicons_outline:ticket',
                 link : '/apps/chat'
             },
+            {
+                id   : 'dashboards.bon-de-sortie',
+                title: 'Bon de sortie',
+                type : 'basic',
+                icon : 'heroicons_outline:clipboard-copy',
+                link : '/dashboards/bondesortie'
+            },
         ]
     },
     {
@@ -61,12 +75,19 @@ export const defaultNavigation: FuseNavigationItem[] = [
         icon    : 'heroicons_outline:home',
         children: [
             {
+                id   : 'pages.statistiques',
+                title: 'Statistiques',
+                type : 'basic',
+                icon : 'heroicons_outline:cog',
+                link : '/pages/statistiques'
+            },
+            /*{
                 id   : 'apps.reception',
                 title: 'Reception',
                 type : 'basic',
                 icon : 'heroicons_outline:academic-cap',
                 link : '/apps/reception'
-            },
+            },*/
             {
                 id   : 'apps.chat',
                 title: 'Chat',

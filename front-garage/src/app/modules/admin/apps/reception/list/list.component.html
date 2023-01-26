@@ -28,34 +28,9 @@
 
         <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-5xl mx-auto">
             <!-- Filters -->
-            <div class="flex flex-col sm:flex-row items-center justify-between w-full max-w-xs sm:max-w-none">
-                <mat-form-field class="fuse-mat-no-subscript w-full sm:w-36">
-                    <mat-select
-                        [value]="'all'"
-                        (selectionChange)="filterByCategory($event)">
-                        <mat-option [value]="'all'">All</mat-option>
-                        <ng-container *ngFor="let category of categories; trackBy: trackByFn">
-                            <mat-option [value]="category.slug">{{category.title}}</mat-option>
-                        </ng-container>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field
-                    class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4"
-                    [floatLabel]="'always'">
-                    <mat-icon
-                        matPrefix
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                    <input
-                        (input)="filterByQuery(query.value)"
-                        placeholder="Search by title or description"
-                        matInput
-                        #query>
-                </mat-form-field>
-                
-            </div>
+            
             <!-- Courses -->
-            <ng-container *ngIf="this.filteredCourses.length; else noCourses">
+            <ng-container *ngIf="this.filteredCourses.length > 0; else noCourses">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 sm:mt-10">
                     <ng-container *ngFor="let course of filteredListeReparations; trackBy: trackByFn">
                         <!-- Course -->
@@ -67,15 +42,15 @@
                                     
                                 </div>
                                 <!-- Course title & description -->
-                                <div class="mt-4 text-lg font-medium">{{course?.idVoiture}}</div>
-                                <div class="mt-0.5 line-clamp-2 text-secondary">{{course?.idUtilisateur}}</div>
+                                <div class="mt-4 text-lg font-medium">Voiture : {{course?.modele}}</div>
+                                <div class="mt-0.5 line-clamp-2 text-secondary">Immatriculation : {{course?.numero}}</div>
                                 <div class="w-12 h-1 my-6 border-t-2"></div>
                                 <!-- Course time -->
                                 <div class="flex items-center leading-5 text-md text-secondary">
                                     <mat-icon
                                         class="icon-size-5 text-hint"
                                         [svgIcon]="'heroicons_solid:clock'"></mat-icon>
-                                    <div class="ml-1.5">{{course?.duration}} minutes</div>
+                                    <div class="ml-1.5">Propriétaire : {{course?.duration}}</div>
                                 </div>
                                 
                             </div>

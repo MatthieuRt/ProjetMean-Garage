@@ -28,6 +28,7 @@ export class ReceptionListComponent implements OnInit, OnDestroy
     };
 
     filteredListeReparations: any;
+    allCars: any;
     listeReparations: any;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -67,7 +68,25 @@ export class ReceptionListComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((liste: any) => {
                 this.filteredListeReparations = this.listeReparations = liste;
-
+                this._receptionService.getAllCars().pipe(takeUntil(this._unsubscribeAll)).subscribe((liste:any)=>{
+                    this.allCars = liste
+                    
+                    for (let i = 0; i < this.filteredListeReparations.length; i++) {
+                        for (let j = 0; j < this.allCars.length; j++) {
+                            for(let k = 0; k < this.allCars[j].listeVoiture.length; k++){
+                                if (this.filteredListeReparations[i].idVoiture === this.allCars[j].listeVoiture[k]._id) {
+                                    this.filteredListeReparations[i].modele = this.allCars[j].listeVoiture[k].modele;
+                                    this.filteredListeReparations[i].numero = this.allCars[j].listeVoiture[k].numero;
+                                    
+                                    console.log(this.filteredListeReparations[0].modele)
+                                }
+                            }
+                        }
+                    }
+                    
+                    this._changeDetectorRef.markForCheck();
+                });
+                
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });

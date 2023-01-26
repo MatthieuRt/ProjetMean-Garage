@@ -74,7 +74,7 @@ export class AcademyListComponent implements OnInit, OnDestroy {
 
                 for (let i = 0; i < this.listereparations.length; i++) {
                     for (let j = 0; j < this.listeVoitures.length; j++) {
-                        if (this.listereparations[i].idVoiture == this.listeVoitures[j].id) {
+                        if (this.listereparations[i].idVoiture == this.listeVoitures[j]._id) {
                             this.listereparations[i].modele = this.listeVoitures[j].modele;
                         }
                     }
@@ -95,7 +95,8 @@ export class AcademyListComponent implements OnInit, OnDestroy {
 
                 for (let i = 0; i < this.listereparations.length; i++) {
                     for (let j = 0; j < this.listeVoitures.length; j++) {
-                        if (this.listereparations[i].idVoiture == this.listeVoitures[j].id) {
+                        if (this.listereparations[i].idVoiture == this.listeVoitures[j]._id) {
+                            
                             this.listereparations[i].modele = this.listeVoitures[j].modele;
                         }
                     }

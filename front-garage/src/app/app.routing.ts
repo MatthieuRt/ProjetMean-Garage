@@ -82,6 +82,7 @@ export const appRoutes: Route[] = [
                 {path: 'analytics', loadChildren: () => import('app/modules/admin/dashboards/analytics/analytics.module').then(m => m.AnalyticsModule)},
                 {path: 'finance', loadChildren: () => import('app/modules/admin/dashboards/finance/finance.module').then(m => m.FinanceModule)},
                 {path: 'crypto', loadChildren: () => import('app/modules/admin/dashboards/crypto/crypto.module').then(m => m.CryptoModule)},
+                {path: 'bondesortie', loadChildren: () => import('app/modules/admin/dashboards/bon-de-sortie/bon-de-sortie.module').then(m => m.BonDeSortieModule)},
             ]},
 
             // Apps
@@ -140,7 +141,8 @@ export const appRoutes: Route[] = [
                 {path: 'profile', loadChildren: () => import('app/modules/admin/pages/profile/profile.module').then(m => m.ProfileModule)},
 
                 // Settings
-                {path: 'settings', loadChildren: () => import('app/modules/admin/pages/settings/settings.module').then(m => m.SettingsModule)},
+                /*{path: 'settings', loadChildren: () => import('app/modules/admin/pages/settings/settings.module').then(m => m.SettingsModule)},*/
+                {path: 'statistiques', loadChildren: () => import('app/modules/admin/pages/statistiques/statistiques.module').then(m => m.StatistiquesModule)},
             ]},
 
             // User Interface

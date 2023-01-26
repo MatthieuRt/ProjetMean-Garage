@@ -54,7 +54,28 @@ router.get('/pendingValidation',(request,response)=>{
             }
             response.json(rep);
         }
-        console.log(success)
+        // console.log(success)
+        const reponse = {
+            message : 'OK',
+            value : success,
+            code : 200
+        }
+        response.json(reponse)
+    });
+})
+//liste demande paiement en attente par idVoiture
+router.get('/pendingValidation/:idVoiture',(request,response)=>{
+    DemandePaiement.find({idVoiture: request.params.idVoiture},(err,success) => {
+        if(err){
+            const rep = {
+                message : 'KO',
+                code : 404,
+                value :  err
+            }
+            response.json(rep);
+        }
+        // console.log('_______________________________________Liste demande paiement voiture_______________________________________')
+        // console.log(success)
         const reponse = {
             message : 'OK',
             value : success,

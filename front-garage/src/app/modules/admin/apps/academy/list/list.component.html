@@ -88,7 +88,7 @@
                                     <mat-icon
                                         class="icon-size-5 text-hint"
                                         [svgIcon]="'heroicons_solid:clock'"></mat-icon>
-                                        <div class="ml-1.5">Arrivée le {{liste.dateArrivee | date:'dd/MM/yyyy HH:mm:ss'}}</div>
+                                        <div class="ml-1.5">Arrivée le {{liste.dateArrivee | date:'dd/MM/yyyy HH:mm:ss' : 'UTC'}}</div>
                                     <div class="ml-1.5"></div>
                                 </div>
                                 <!-- Course completion -->
@@ -101,7 +101,7 @@
                                     </ng-container>
                                     <ng-container *ngIf="liste.dateSortie">
                                         <div class="ml-1.5">
-                                            <span>Terminé le {{liste.dateSortie | date:'dd/MM/yyyy HH:mm:ss'}}</span>
+                                            <span>Terminé le {{liste.dateSortie | date:'dd/MM/yyyy HH:mm:ss' : 'UTC'}}</span>
                                         </div>
                                     </ng-container>
                                 </div>

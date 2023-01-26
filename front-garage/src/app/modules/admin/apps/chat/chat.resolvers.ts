@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { ChatService } from 'app/modules/admin/apps/chat/chat.service';
-import { Chat, Contact, Profile } from 'app/modules/admin/apps/chat/chat.types';
+import { Chat, Contact, Profile, Voiture } from 'app/modules/admin/apps/chat/chat.types';
 
 @Injectable({
     providedIn: 'root'
@@ -31,8 +31,10 @@ export class ChatChatsResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Chat[]> | any
     {
-        return this._chatService.getChats();
+        // return this._chatService.getChats();
+        return this._chatService.getListeVoiture();
     }
+    
 }
 
 @Injectable({
@@ -60,10 +62,35 @@ export class ChatChatResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Chat>
+    // resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Chat>
+    // {
+    //     return this._chatService.getChatById(route.paramMap.get('id'))
+    //                .pipe(
+    //                    // Error here means the requested chat is not available
+    //                    catchError((error) => {
+
+    //                        // Log the error
+    //                        console.error(error);
+
+    //                        // Get the parent url
+    //                        const parentUrl = state.url.split('/').slice(0, -1).join('/');
+    //                         console.log(parentUrl)
+    //                        // Navigate to there
+    //                        this._router.navigateByUrl(parentUrl);
+
+    //                        // Throw an error
+    //                        return throwError(error);
+    //                    })
+    //                );
+    // }
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Voiture>
     {
-        return this._chatService.getChatById(route.paramMap.get('id'))
+        return this._chatService.getVoitureById(route.paramMap.get('id'))
                    .pipe(
+                        switchMap((voiture)=>{
+                            this._chatService.getListeDemandePaiementVoitureById(voiture.voitureId).subscribe();
+                            return of(voiture);
+                        }),
                        // Error here means the requested chat is not available
                        catchError((error) => {
 
@@ -72,7 +99,7 @@ export class ChatChatResolver implements Resolve<any>
 
                            // Get the parent url
                            const parentUrl = state.url.split('/').slice(0, -1).join('/');
-
+                            console.log(parentUrl)
                            // Navigate to there
                            this._router.navigateByUrl(parentUrl);
 

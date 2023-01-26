@@ -53,3 +53,34 @@ export interface Chat
         createdAt?: string;
     }[];
 }
+export interface Voiture
+{
+    utilisateurId?: String,
+    numero?: String,
+    modele?: String,
+    dateAjout?: Date,
+    enCoursDepot?: boolean,
+    voitureId?: String
+    
+}
+export class DemandePaiement
+{
+    _id?: String;
+    idReparation?: String;
+    totalDue?: Number;
+    piece?: Piece;
+    date?: Date;
+    idVoiture?: String;
+    idUser?: String;
+    isChecked:Boolean = false;
+}
+export interface Piece 
+{
+    id?:string,
+    designation?:string,
+    prix?:number
+}
+export interface toggleCheck{
+    index?:Number,
+    checked?:Boolean
+}

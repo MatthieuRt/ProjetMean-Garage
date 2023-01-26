@@ -15,7 +15,7 @@
                     <div class="font-medium">Jul 19, 2022</div>
 
                     <div class="font-medium tracking-tight text-secondary">Total</div>
-                    <div class="font-medium">$235,000.00</div>
+                    <div class="font-medium">{{ totalPrix | number: '1.3-3' }} MGA</div>
                 </div>
                 <div class="grid auto-cols-max grid-flow-col gap-x-8 -mr-16 py-6 px-8 rounded-l-2xl bg-accent dark">
                     <div class="place-self-center w-24">
@@ -33,17 +33,18 @@
             </div>
 
             <div class="text-md">
-                <div class="text-xl font-medium">Brian Hughes</div>
-                <div>9301 Wood Street Philadelphia, PA 19111</div>
-                <div>hughes.brian@company.com</div>
-                <div>+55 552 455 87</div>
+                <div class="text-xl font-medium">{{user.identifiant}}</div>
+                <div>Antananarivo, Madagascar 101</div>
+                <div>{{user.mail}}</div>
+                <div>+261 34 06 376 17</div>
             </div>
 
             <div class="grid grid-cols-12 gap-x-1 mt-12">
                 <!-- Columns -->
-                <div class="col-span-8 font-medium text-md text-secondary">Pièce</div>
-                <div class="font-medium text-md text-right text-secondary">Prix</div>
-                <div class="font-medium text-md text-right text-secondary">Etat</div>
+                <div class="col-span-4 font-medium text-md text-secondary">Pièce</div>
+                <div class="col-span-3 font-medium text-md text-right text-secondary">Description</div>
+                <div class="col-span-3 font-medium text-md text-right text-secondary">Prix</div>
+                <div class="col-span-2 font-medium text-md text-right text-secondary">Etat</div>
                 <!--<div class="col-span-2 font-medium text-md text-right text-secondary">TOTAL</div>-->
 
                 <!-- Divider -->
@@ -52,9 +53,10 @@
                 <ng-container *ngIf="reparation?.listeReparation?.length > 0; else noListe">
                 <ng-container *ngFor="let detail of reparation?.listeReparation">
                     <!-- Item -->
-                    <div class="col-span-8 text-lg font-medium">{{detail?.piece?.designation}}</div>
-                    <div class="self-center text-right">{{detail?.prix | number: '1.3-3'}} MGA</div>
-                    <div class="self-center text-right">{{detail?.estPaye ? 'Payé' : 'Non payé'}}</div>
+                    <div class="col-span-4 text-lg font-medium">{{detail?.piece?.designation}}</div>
+                    <div class="col-span-3 self-center text-right">{{detail?.description}}</div>
+                    <div class="col-span-3 self-center text-right">{{detail?.prix | number: '1.3-3'}} MGA</div>
+                    <div class="col-span-2 self-center text-right">{{detail?.estPaye ? 'Payé' : 'Non payé'}}</div>
                     <!-- Spacer -->
                     <div class="col-span-12 mt-16"></div>
                 </ng-container>

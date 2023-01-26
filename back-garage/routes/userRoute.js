@@ -120,7 +120,7 @@ router.post('/confirmation',async (request,response)=>{
 })
 // connexion utilisateur
 router.post('/login',(request,response)=>{
-    console.log({mail : request.body.mail, motDePasse: request.body.password,valid:true})
+    // console.log({mail : request.body.mail, motDePasse: request.body.password,valid:true})
     Utilisateur.findOne({mail : request.body.mail, motDePasse: request.body.password},(err,user)=>{
         if(err){
             const rep = {
@@ -138,7 +138,7 @@ router.post('/login',(request,response)=>{
             }
             response.json(reponse)
         }
-        console.log(user)
+        // console.log(user)
         const reponse = {
             message : 'OK',
             value : user,
@@ -207,7 +207,7 @@ router.get('/car/:idUser',(request,response)=>{
             }
             response.send(rep);
         }
-        console.log(user)
+        // console.log(user)
         const reponse = {
             message : 'OK',
             value : user.listeVoiture,
@@ -222,6 +222,29 @@ router.get('/car',(req,res)=>{
     Utilisateur.find({},{listeVoiture:1},(err, docs) => {
         if (!err) { res.send(docs); }
         else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
+    });
+})
+
+//liste utilisateur avec voiture
+router.get('/carlist',(req,res)=>{
+    Utilisateur.find({profil:'user'},{identifiant:1,listeVoiture:1},(err, all) => {
+        let reponse = {};
+        if (!err) { 
+            reponse = {
+                message :'OK',
+                code:200,
+                value:all
+            }
+        }
+        else { 
+            console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); 
+            reponse = {
+                message :'KO',
+                code:404,
+                value:err
+            }
+        }
+        res.json(reponse);
     });
 })
 module.exports = router;
