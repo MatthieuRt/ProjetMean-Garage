@@ -5,13 +5,25 @@
 
 
         <!-- Header validation paiement corps -->
-        <div class="flex items-center ml-2 lg:ml-0 mr-2 cursor-pointer">
-            <div class="ml-4 text-lg font-medium leading-5 truncate">Expoter</div>
+        <div class="d-flex align-items-center ml-2 lg:ml-0 mr-2">
+            <h2 class=" text-3xl text-center  md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                Bon de sortie 
+            </h2>
         </div>
+        <div class="d-flex align-items-center justify-content-center mx-auto">
+            <button
+                mat-flat-button
+                [color]="'primary'">
+                <mat-icon [svgIcon]="'mat_solid:picture_as_pdf'"></mat-icon>
+                <span class="ml-2 mr-1">Exporter en PDF</span>
+            </button>
+        </div>
+        
+        
         <div class="ml-auto w-15 h-15">
         <img
             class="w-full h-full rounded-full object-cover"
-            src="assets/images/avatars/validationpaiement.png"
+            src="assets/images/avatars/export.png"
             alt="Contact avatar"/>
         </div>
 
