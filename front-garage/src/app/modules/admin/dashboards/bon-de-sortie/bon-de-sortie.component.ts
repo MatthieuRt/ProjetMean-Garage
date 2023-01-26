@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { BonDeSortieService } from './bon-de-sortie.service';
-
+import { Subject, takeUntil } from 'rxjs';
+import { Voiture } from '../../apps/chat/chat.types';
 @Component({
   selector: 'app-bon-de-sortie',
   templateUrl: './bon-de-sortie.component.html',
@@ -30,34 +31,19 @@ changeDetection: ChangeDetectionStrategy.OnPush,
 animations     : fuseAnimations
 })
 export class BonDeSortieComponent implements OnInit {
-
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
   listVoiture:any;
-  constructor(private _bondeSortieServ : BonDeSortieService) { }
+  constructor(private _bondeSortieServ : BonDeSortieService,  private _changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    const onSuccessCar =  (response:any)=>{
-      if(response.message=='OK'){
-           console.log('_____________Car___________________')
-          console.log(response)
-          let liste = response.value
-          const newList = liste.map(user => {
-              return user.listeVoiture.map(voiture => {
-                  return {
-                      utilisateurId: user._id,
-                      numero: voiture.numero,
-                      modele: voiture.modele,
-                      dateAjout: voiture.dateAjout,
-                      enCoursDepot: voiture.enCoursDepot,
-                      voitureId: voiture._id,
-                      identifiant: user.identifiant
-                  };
-              });
-          }).flat();
-          console.log(newList);
-          this.listVoiture = newList;
-      }
-    }
-    this._bondeSortieServ.getAllCar().subscribe(onSuccessCar);
+    this._bondeSortieServ.listeVoiture$
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((car: Voiture[]) => {
+        this.listVoiture  = car;
+
+        // Mark for check
+        this._changeDetectorRef.markForCheck();
+    });
   }
   validerBonDeSortie(index){
     

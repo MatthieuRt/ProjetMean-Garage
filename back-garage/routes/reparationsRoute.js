@@ -177,8 +177,8 @@ router.post('/validation/paiement',async (req,res)=>{
                                 code:200,
                                 value : result
                             }
-                            console.log('_______________Update reparationvoiture____________________')
-                            console.log(reponse)
+                            // console.log('_______________Update reparationvoiture____________________')
+                            // console.log(reponse)
                             res.json(reponse)
                         })
                         .catch(error => {

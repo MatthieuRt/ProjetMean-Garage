@@ -53,7 +53,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <ng-container *ngIf="listVoiture.length>0; else noList">
+                                                <ng-container *ngIf="listVoiture && listVoiture.length>0; else noList">
                                                     <tr  *ngFor="let vehicule of listVoiture; let i = index">
                                                         <th scope="row">1</th>
                                                         <td>{{vehicule?.identifiant}}</td>
