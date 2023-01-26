@@ -22,4 +22,8 @@ export class StatistiquesService{
         return this._httpClient.get("http://localhost:9000/reparation/stats/tempsMoyen/");
     }
 
+    getChiffreAffaire(date1:String,date2:String){
+        return this._httpClient.get("http://localhost:9000/reparation/stats/chiffreAffaire/"+date1+"/"+date2);
+    }
+
 }
