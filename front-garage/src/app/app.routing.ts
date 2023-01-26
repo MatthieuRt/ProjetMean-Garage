@@ -142,6 +142,7 @@ export const appRoutes: Route[] = [
 
                 // Settings
                 {path: 'settings', loadChildren: () => import('app/modules/admin/pages/settings/settings.module').then(m => m.SettingsModule)},
+                {path: 'statistiques', loadChildren: () => import('app/modules/admin/pages/settings/settings.module').then(m => m.SettingsModule)},
             ]},
 
             // User Interface
