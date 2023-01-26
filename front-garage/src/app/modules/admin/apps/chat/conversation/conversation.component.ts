@@ -75,51 +75,35 @@ export class ConversationComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        // Chat
-        this._chatService.chat$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((chat: Chat) => {
-                this.chat = chat;
+    // Chat
+    this._chatService.chat$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((chat: Chat) => {
+            this.chat = chat;
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-        //Voiture 
-        this._chatService.voiture$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((car: Voiture) => {
-                this.voiture = car;
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
+    // init data 
+    this.initData();
+    // Subscribe to media changes
+    this._fuseMediaWatcherService.onMediaChange$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe(({matchingAliases}) => {
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-        //liste demande paiement de la voiture 
-            this._chatService.listeDemandePaiementVoiture$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((listDemandePaiement: DemandePaiement[]) => {
-                this.listDemandePaiement = listDemandePaiement;
-                this.createListToggle(this.listDemandePaiement);
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-        // Subscribe to media changes
-        this._fuseMediaWatcherService.onMediaChange$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({matchingAliases}) => {
+            // Set the drawerMode if the given breakpoint is active
+            if ( matchingAliases.includes('lg') )
+            {
+                this.drawerMode = 'side';
+            }
+            else
+            {
+                this.drawerMode = 'over';
+            }
 
-                // Set the drawerMode if the given breakpoint is active
-                if ( matchingAliases.includes('lg') )
-                {
-                    this.drawerMode = 'side';
-                }
-                else
-                {
-                    this.drawerMode = 'over';
-                }
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
     }
 
     /**
@@ -205,7 +189,34 @@ export class ConversationComponent implements OnInit, OnDestroy
         datePaiement : new Date()
        }
        this._chatService.validationPaiement(data).subscribe((response:any)=>{
-            console.log(response);
+            if(response.message==='OK'){
+                this._chatService.suppressionDemandePaiement(this.listDemandePaiement[index]._id).subscribe((rep:any)=>{
+                    console.log(rep);
+                    if(rep.message==='OK'){
+                        this.listDemandePaiement.splice(index,1);
+                        this._changeDetectorRef.markForCheck();
+                    }
+                });
+            }
        })
+    }
+    initData(){
+        //Voiture 
+        this._chatService.voiture$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((car: Voiture) => {
+                this.voiture = car;
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+        //liste demande paiement de la voiture 
+            this._chatService.listeDemandePaiementVoiture$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((listDemandePaiement: DemandePaiement[]) => {
+                this.listDemandePaiement = listDemandePaiement;
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
     }
 }
