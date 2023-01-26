@@ -38,7 +38,8 @@ import { statistiquesRoutes } from 'app/modules/admin/pages/statistiques/statist
         MatSidenavModule,
         MatSlideToggleModule,
         FuseAlertModule,
-        SharedModule
+        SharedModule,
+        MatFormFieldModule
     ]
 })
 export class StatistiquesModule
