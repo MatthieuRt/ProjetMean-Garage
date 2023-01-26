@@ -12,7 +12,7 @@
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
-                <div class="text-4xl font-extrabold tracking-tight leading-none">Settings</div>
+                <div class="text-4xl font-extrabold tracking-tight leading-none">Statistiques</div>
                 <!-- Close button -->
                 <div class="lg:hidden">
                     <button
@@ -72,28 +72,28 @@
                     </div>
                 </div>
 
-                <!-- Load settings panel -->
+                <!-- Load statistiques panel -->
                 <div class="mt-8">
                     <ng-container [ngSwitch]="selectedPanel">
                         <!-- Account -->
                         <ng-container *ngSwitchCase="'account'">
-                            <settings-account></settings-account>
+                            <statistiques-account></statistiques-account>
                         </ng-container>
                         <!-- Security -->
                         <ng-container *ngSwitchCase="'security'">
-                            <settings-security></settings-security>
+                            <statistiques-security></statistiques-security>
                         </ng-container>
                         <!-- Plan & Billing -->
                         <ng-container *ngSwitchCase="'plan-billing'">
-                            <settings-plan-billing></settings-plan-billing>
+                            <statistiques-plan-billing></statistiques-plan-billing>
                         </ng-container>
                         <!-- Notifications -->
                         <ng-container *ngSwitchCase="'notifications'">
-                            <settings-notifications></settings-notifications>
+                            <statistiques-notifications></statistiques-notifications>
                         </ng-container>
                         <!-- Team -->
                         <ng-container *ngSwitchCase="'team'">
-                            <settings-team></settings-team>
+                            <statistiques-team></statistiques-team>
                         </ng-container>
                     </ng-container>
                 </div>

@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
-    selector       : 'settings-account',
+    selector       : 'statistiques-account',
     templateUrl    : './account.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsAccountComponent implements OnInit
+export class StatistiquesAccountComponent implements OnInit
 {
     accountForm: UntypedFormGroup;
 

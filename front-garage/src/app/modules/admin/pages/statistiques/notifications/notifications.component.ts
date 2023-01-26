@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
-    selector       : 'settings-notifications',
+    selector       : 'statistiques-notifications',
     templateUrl    : './notifications.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsNotificationsComponent implements OnInit
+export class StatistiquesNotificationsComponent implements OnInit
 {
     notificationsForm: UntypedFormGroup;
 

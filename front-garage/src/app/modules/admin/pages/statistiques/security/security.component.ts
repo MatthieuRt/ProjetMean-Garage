@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
-    selector       : 'settings-security',
+    selector       : 'statistiques-security',
     templateUrl    : './security.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsSecurityComponent implements OnInit
+export class StatistiquesSecurityComponent implements OnInit
 {
     securityForm: UntypedFormGroup;
 

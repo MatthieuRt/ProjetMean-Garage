@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
-    selector       : 'settings-team',
+    selector       : 'statistiques-team',
     templateUrl    : './team.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsTeamComponent implements OnInit
+export class StatistiquesTeamComponent implements OnInit
 {
     members: any[];
     roles: any[];
@@ -88,7 +88,7 @@ export class SettingsTeamComponent implements OnInit
             {
                 label      : 'Admin',
                 value      : 'admin',
-                description: 'Can read, clone, and push to this repository. Can also manage issues, pull requests, and repository settings, including adding collaborators.'
+                description: 'Can read, clone, and push to this repository. Can also manage issues, pull requests, and repository statistiques, including adding collaborators.'
             }
         ];
     }

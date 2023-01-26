@@ -4,12 +4,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 
 @Component({
-    selector       : 'settings',
-    templateUrl    : './settings.component.html',
+    selector       : 'statistiques',
+    templateUrl    : './statistiques.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsComponent implements OnInit, OnDestroy
+export class StatistiquesComponent implements OnInit, OnDestroy
 {
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
