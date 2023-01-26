@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { StatistiquesService } from 'app/modules/admin/pages/statistiques/statistiques.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
     selector       : 'statistiques-account',
@@ -11,7 +12,9 @@ import { StatistiquesService } from 'app/modules/admin/pages/statistiques/statis
 export class StatistiquesAccountComponent implements OnInit
 {
     accountForm: UntypedFormGroup;
-    listCars : any[]
+    listCars : any[];
+    countryControl = new FormControl();
+    temps = "";
     /**
      * Constructor
      */
@@ -54,6 +57,23 @@ export class StatistiquesAccountComponent implements OnInit
            
         })
 
+
         
+    }
+
+    getTime(decimalHours: number) {
+        let totalSeconds = decimalHours * 3600;
+        let hours = Math.floor(totalSeconds / 3600);
+        totalSeconds -= hours * 3600;
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = totalSeconds - minutes * 60;
+        return `${hours} heures ${minutes} minutes`;
+    }
+
+    getTemps(){
+        console.log(this.countryControl.value);
+        this._statistiquesService.getTempsById(this.countryControl.value).subscribe((temps:any)=>{
+            this.temps = this.getTime(temps.moyenne);
+        })
     }
 }

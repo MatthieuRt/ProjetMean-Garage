@@ -14,4 +14,8 @@ export class StatistiquesService{
         return this._httpClient.get("http://localhost:9000/user/car");
     }
 
+    getTempsById(id:String){
+        return this._httpClient.get("http://localhost:9000/reparation/stats/tempsMoyen/"+id);
+    }
+
 }
