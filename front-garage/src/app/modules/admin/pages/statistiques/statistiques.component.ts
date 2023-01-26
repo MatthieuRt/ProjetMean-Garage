@@ -43,7 +43,7 @@ export class StatistiquesComponent implements OnInit, OnDestroy
                 id         : 'account',
                 icon       : 'heroicons_outline:clock',
                 title      : 'Temps de réparation moyen',
-                description: 'Statistique de temps de réparation moyen d\'une voiture'
+                description: 'Statistique de temps de réparation moyen pour une voiture'
             },
             {
                 id         : 'security',
