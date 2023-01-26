@@ -84,4 +84,23 @@ router.get('/pendingValidation/:idVoiture',(request,response)=>{
         response.json(reponse)
     });
 })
+router.put('/validation/:idDemandePaiement',(request,response)=>{
+    DemandePaiement.findOneAndUpdate({_id: request.params.idDemandePaiement},{$set:{valid:true}}, {new: true},(err,success) => {
+        if(err){
+            const rep = {
+                message : 'KO',
+                code : 404,
+                value :  err
+            }
+            response.json(rep);
+        }
+        const reponse = {
+            message : 'OK',
+            value : success,
+            code : 200
+        }
+        response.json(reponse)
+    });
+})
+
 module.exports = router;

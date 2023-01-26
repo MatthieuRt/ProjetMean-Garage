@@ -160,26 +160,16 @@ router.put('/estReceptionne/:id',(req,res)=>{
     });
 });
 router.post('/validation/paiement',async (req,res)=>{
-    console.log("miantso ")
-
     const datePaiement = req.body.datePaiement;
     const demandePaiement = new DemandePaiement(req.body.demandePaiement);
     ReparationsVoiture.find({idVoiture:demandePaiement.idVoiture,idUtilisateur:demandePaiement.idUser})
         .then(reparationvoitures=>{
-            // console.log(reparationvoitures)
             for(let i=0;i<reparationvoitures.length;i++){
                 const reparation = reparationvoitures[i];
-                // voiture => voiture.numero ===car.numero
                 let indexToUpdate = reparation.listeReparation.findIndex(lreparation=> lreparation._id.equals(demandePaiement.idReparation));
-                
                 if (indexToUpdate !== -1) {
-                    
-
                     reparation.listeReparation[indexToUpdate].datePaiement = datePaiement
                     reparation.listeReparation[indexToUpdate].estPaye = true;
-                    console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-                    console.log( reparation.listeReparation[indexToUpdate])
-                    console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
                     ReparationsVoiture.findOneAndUpdate({_id:reparation._id},{$set:{listeReparation:reparation.listeReparation}}, {new: true})
                         .then(result=>{
                             const reponse = {
