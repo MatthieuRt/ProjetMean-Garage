@@ -38,14 +38,14 @@ export class ModernComponent
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
-        // this._bonDeSoriteService.proprietaire$
-        // .pipe(takeUntil(this._unsubscribeAll))
-        // .subscribe((user: any) => {
-        //     this.proprio = user;
-        //     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        //     console.log(this.proprio)
-        //     // Mark for check
-        //     this._changeDetectorRef.markForCheck();
-        // });
+        this._bonDeSoriteService.proprietaire$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((user: any) => {
+            this.proprio = user;
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            console.log(this.proprio)
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
     }
 }

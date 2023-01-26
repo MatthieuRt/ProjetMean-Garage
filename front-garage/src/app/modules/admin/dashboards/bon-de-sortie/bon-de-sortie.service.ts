@@ -75,7 +75,8 @@ export class BonDeSortieService
      */
     getPropriétaire(idUser): Observable<any>
     {
-        let url = baseUrl+'user/'+idUser;
+        console.log('APpel getProprio : '+idUser)
+        let url = baseUrl+'user/proprio/'+idUser;
         return this._httpClient.get<any>(url).pipe(
             tap((response:any) => {
                 if(response.message==='OK'){
@@ -97,7 +98,7 @@ export class BonDeSortieService
         return this.listeVoiture.pipe(
           map(voitures => {
             const voiture = voitures.find(v => v.voitureId === id);
-            // this.getPropriétaire(voiture.utilisateurId)
+            this.getPropriétaire(voiture.utilisateurId).subscribe()
             this._voiture.next(voiture);
             return voiture;
           }),
