@@ -5,5 +5,9 @@ export const modernRoutes: Route[] = [
     {
         path     : '',
         component: ModernComponent
+    },
+    {
+        path     : ':id',
+        component: ModernComponent
     }
 ];

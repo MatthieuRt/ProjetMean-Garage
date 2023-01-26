@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { ModernComponent } from 'app/modules/admin/pages/invoice/printable/modern/modern.component';
 import { modernRoutes } from 'app/modules/admin/pages/invoice/printable/modern/modern.routing';
@@ -8,7 +9,8 @@ import { modernRoutes } from 'app/modules/admin/pages/invoice/printable/modern/m
         ModernComponent
     ],
     imports     : [
-        RouterModule.forChild(modernRoutes)
+        RouterModule.forChild(modernRoutes),
+        MatIconModule,
     ]
 })
 export class ModernModule

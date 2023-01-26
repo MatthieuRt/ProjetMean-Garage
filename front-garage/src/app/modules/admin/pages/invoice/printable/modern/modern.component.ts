@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { BonDeSortieService } from 'app/modules/admin/dashboards/bon-de-sortie.service';
 
 @Component({
     selector       : 'modern',
@@ -11,7 +13,19 @@ export class ModernComponent
     /**
      * Constructor
      */
-    constructor()
-    {
+
+    idVoiture:String;
+
+    constructor(private route: ActivatedRoute, private _bonDeSoriteService: BonDeSortieService,
+                private _changeDetectorRef: ChangeDetectorRef){
+    }
+    ngOnInit(){
+        this.route.paramMap.subscribe(params => {
+            this.route.paramMap.subscribe(params => {
+                this.idVoiture = params.get('id');
+            });
+
+        });
+        alert(this.idVoiture)
     }
 }

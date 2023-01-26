@@ -45,7 +45,5 @@ export class BonDeSortieComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
     });
   }
-  validerBonDeSortie(index){
-    
-  }
+
 }
