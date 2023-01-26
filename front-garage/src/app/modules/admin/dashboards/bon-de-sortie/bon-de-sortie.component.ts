@@ -32,18 +32,18 @@ animations     : fuseAnimations
 })
 export class BonDeSortieComponent implements OnInit {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-  listVoiture:any;
-  constructor(private _bondeSortieServ : BonDeSortieService,  private _changeDetectorRef: ChangeDetectorRef) { }
+    listVoiture:any;
+    constructor(private _bondeSortieServ : BonDeSortieService,  private _changeDetectorRef: ChangeDetectorRef) { }
 
-  ngOnInit(): void {
-    this._bondeSortieServ.listeVoiture$
-    .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((car: Voiture[]) => {
-        this.listVoiture  = car;
+    ngOnInit(): void {
+        this._bondeSortieServ.listeVoiture$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((car: Voiture[]) => {
+            this.listVoiture  = car;
 
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-    });
-  }
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
+    }
 
 }
