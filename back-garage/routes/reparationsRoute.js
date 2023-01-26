@@ -161,28 +161,8 @@ router.put('/estReceptionne/:id',(req,res)=>{
 });
 router.post('/validation/paiement',async (req,res)=>{
     console.log("miantso ")
-    const date = new Date();
-    const options = { timeZone: 'Africa/Nairobi',day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-    const formatter = new Intl.DateTimeFormat('fr-FR', options);
-    const formattedDate = formatter.format(date);
-    const dateParts = formattedDate.split(', ');
-    const dateString = dateParts[0].split('/').reverse().join('-') + 'T' + dateParts[1] + 'Z';
-    const datePaiement = new Date(dateString);
 
-    // const demandePaiement = new DemandePaiement(req.body.demandePaiement);
-    // const reparationvoitures = await ReparationsVoiture.find({idVoiture:demandePaiement.idVoiture,idUtilisateur:demandePaiement.idUser})
-    // for(let i=0;i<reparationvoitures.length;i++){
-    //     const reparation = reparationvoitures[i];
-    //     let reparationVoiture = reparation.listeReparation.find(lreparation=> lreparation._id===demandePaiement.idReparation);
-    //     if(reparationVoiture){
-    //         console.log('ita leizi')
-    //         console.log(reparationVoiture)
-    //         res.send(reparationVoiture)
-    //     }
-    //     else if(!reparationVoiture){
-    //         continue;
-    //     }
-    // }
+    const datePaiement = req.body.datePaiement;
     const demandePaiement = new DemandePaiement(req.body.demandePaiement);
     ReparationsVoiture.find({idVoiture:demandePaiement.idVoiture,idUtilisateur:demandePaiement.idUser})
         .then(reparationvoitures=>{
@@ -190,16 +170,40 @@ router.post('/validation/paiement',async (req,res)=>{
             for(let i=0;i<reparationvoitures.length;i++){
                 const reparation = reparationvoitures[i];
                 // voiture => voiture.numero ===car.numero
+                let indexToUpdate = reparation.listeReparation.findIndex(lreparation=> lreparation._id.equals(demandePaiement.idReparation));
                 
-                let reparationVoiture = reparation.listeReparation.find(lreparation=> lreparation._id===demandePaiement.idReparation);
-                console.log(reparationVoiture)
-                console.log('______________________________________________________________________')
-                if(reparationVoiture){
-                    console.log('ita leizi')
-                    console.log(reparationVoiture)
-                    res.send(reparationVoiture)
+                if (indexToUpdate !== -1) {
+                    
+
+                    reparation.listeReparation[indexToUpdate].datePaiement = datePaiement
+                    reparation.listeReparation[indexToUpdate].estPaye = true;
+                    console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                    console.log( reparation.listeReparation[indexToUpdate])
+                    console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                    ReparationsVoiture.findOneAndUpdate({_id:reparation._id},{$set:{listeReparation:reparation.listeReparation}}, {new: true})
+                        .then(result=>{
+                            const reponse = {
+                                message : 'OK',
+                                code:200,
+                                value : result
+                            }
+                            console.log('_______________Update reparationvoiture____________________')
+                            console.log(reponse)
+                            res.json(reponse)
+                        })
+                        .catch(error => {
+                            const reponse = {
+                                message : 'KO',
+                                code:500,
+                                value : error
+                            }
+                            console.log('_______________XXXXXXXXXXXX Update reparationvoiture____________________')
+                            console.log(reponse)
+                            res.json(reponse)
+                        });
+                    break;
                 }
-                else if(!reparationVoiture){
+                else{
                     continue;
                 }
             }
