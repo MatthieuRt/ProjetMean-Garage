@@ -263,11 +263,11 @@ router.get('/stats/tempsMoyen/:id',(req,res)=>{
     });
 });
 
-router.post('/stats/chiffreAffaire',(req,res)=>{
+router.get('/stats/chiffreAffaire/:date1/:date2',(req,res)=>{
     let totalPrix = 0;
     let count = 0;
-    let dateDebut = new Date(req.body.dateDebut);
-    let dateFin = new Date(req.body.dateFin);
+    let dateDebut = new Date(req.params.date1);
+    let dateFin = new Date(req.params.date2);
 
     ReparationsVoiture.find({}, function (err, reparations) {
         if (err) {
