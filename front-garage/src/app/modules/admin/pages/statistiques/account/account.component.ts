@@ -15,6 +15,7 @@ export class StatistiquesAccountComponent implements OnInit
     listCars : any[];
     countryControl = new FormControl();
     temps = "";
+    tempsGlobal : any;
     /**
      * Constructor
      */
@@ -54,7 +55,10 @@ export class StatistiquesAccountComponent implements OnInit
                     this.listCars.push( tempListCars[i].listeVoiture[j]);
                 }
             }
-           
+        })
+
+        this._statistiquesService.getTempsGlobal().subscribe((temps:any)=>{
+            this.tempsGlobal = temps;
         })
 
 
