@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { StatistiquesService } from 'app/modules/admin/pages/statistiques/statistiques.service';
 
 @Component({
     selector       : 'statistiques-account',
@@ -10,12 +11,12 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 export class StatistiquesAccountComponent implements OnInit
 {
     accountForm: UntypedFormGroup;
-
+    listCars : any
     /**
      * Constructor
      */
     constructor(
-        private _formBuilder: UntypedFormBuilder
+        private _formBuilder: UntypedFormBuilder,private _statistiquesService: StatistiquesService
     )
     {
     }
@@ -41,5 +42,9 @@ export class StatistiquesAccountComponent implements OnInit
             country : ['usa'],
             language: ['english']
         });
+
+        this.listCars = this._statistiquesService.getCars().subscribe((car:any)=>{
+            console.log(car);
+        })
     }
 }
