@@ -214,6 +214,7 @@ router.post('/validation/paiement',async (req,res)=>{
     
 });
 
+
 router.get('/stats/tempsMoyen',(req,res)=>{
     let totalDifference = 0;
     let count = 0;
