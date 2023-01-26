@@ -58,7 +58,7 @@ export class StatistiquesAccountComponent implements OnInit
         })
 
         this._statistiquesService.getTempsGlobal().subscribe((temps:any)=>{
-            this.tempsGlobal = temps;
+            this.tempsGlobal = this.getTime(temps.moyenne);
         })
 
 
