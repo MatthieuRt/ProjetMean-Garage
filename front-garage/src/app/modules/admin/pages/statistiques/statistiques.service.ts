@@ -11,7 +11,7 @@ export class StatistiquesService{
     }
 
     getCars(){
-        return this._httpClient.get("http://localhost:9000/piece/");
+        return this._httpClient.get("http://localhost:9000/user/car");
     }
 
 }
