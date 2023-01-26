@@ -41,21 +41,21 @@ export class StatistiquesComponent implements OnInit, OnDestroy
         this.panels = [
             {
                 id         : 'account',
-                icon       : 'heroicons_outline:user-circle',
-                title      : 'Account',
-                description: 'Manage your public profile and private information'
+                icon       : 'heroicons_outline:clock',
+                title      : 'Temps de réparation moyen',
+                description: 'Statistique de temps de réparation moyen d\'une voiture'
             },
             {
                 id         : 'security',
-                icon       : 'heroicons_outline:lock-closed',
-                title      : 'Security',
-                description: 'Manage your password and 2-step verification preferences'
+                icon       : 'heroicons_outline:credit-card',
+                title      : 'Chiffre d\'affaires',
+                description: 'Statistique des chiffres d\'affaires par jour, par mois'
             },
             {
                 id         : 'plan-billing',
-                icon       : 'heroicons_outline:credit-card',
-                title      : 'Plan & Billing',
-                description: 'Manage your subscription plan, payment method and billing information'
+                icon       : 'heroicons_outline:currency-dollar',
+                title      : 'Bénéfice',
+                description: 'Avoir le bénéfice par mois en entrant les dépenses'
             },
             {
                 id         : 'notifications',
