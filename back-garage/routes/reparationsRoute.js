@@ -280,7 +280,7 @@ router.get('/stats/chiffreAffaire/:date1/:date2',(req,res)=>{
             
             rep.listeReparation.forEach(function(liste) {
                 
-              if (liste.dateDebut >= dateDebut && liste.dateFin <= dateFin) {
+              if (liste.datePaiement >= dateDebut && liste.datePaiement <= dateFin) {
                 console.log(liste);
                 totalPrix += liste.prix;
                 count++;
