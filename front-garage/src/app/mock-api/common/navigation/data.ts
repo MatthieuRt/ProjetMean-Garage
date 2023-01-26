@@ -74,6 +74,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type    : 'group',
         icon    : 'heroicons_outline:home',
         children: [
+            {
+                id   : 'pages.statistiques',
+                title: 'Statistiques',
+                type : 'basic',
+                icon : 'heroicons_outline:cog',
+                link : '/pages/statistiques'
+            },
             /*{
                 id   : 'apps.reception',
                 title: 'Reception',

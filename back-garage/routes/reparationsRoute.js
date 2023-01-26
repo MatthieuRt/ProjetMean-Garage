@@ -214,4 +214,94 @@ router.post('/validation/paiement',async (req,res)=>{
     
 });
 
+router.get('/stats/tempsMoyen',(req,res)=>{
+    let totalDifference = 0;
+    let count = 0;
+    ReparationsVoiture.find({}, function (err, reparations) {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({error: "Une erreur est survenue lors de la récupération des données"});
+        }
+        
+        reparations.forEach(function(rep) {
+          if (rep.listeReparation) {
+            
+            rep.listeReparation.forEach(function(liste) {
+                
+              if (liste.dateDebut && liste.dateFin) {
+                
+                let difference = Math.abs(liste.dateFin.getTime() - liste.dateDebut.getTime()) / (1000 * 3600);
+                totalDifference += difference;
+                count++;
+              }
+            });
+          }
+        });
+        let average = totalDifference / count;
+        console.log("La moyenne des différences d'heures est : ", average);
+        res.status(200).json({moyenne : average});
+    });
+});
+
+router.get('/stats/tempsMoyen/:id',(req,res)=>{
+    let totalDifference = 0;
+    let count = 0;
+    ReparationsVoiture.find({idVoiture:req.params.id}, function (err, reparations) {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({error: "Une erreur est survenue lors de la récupération des données"});
+        }
+        
+        reparations.forEach(function(rep) {
+          if (rep.listeReparation) {
+            
+            rep.listeReparation.forEach(function(liste) {
+                
+              if (liste.dateDebut && liste.dateFin) {
+                
+                let difference = Math.abs(liste.dateFin.getTime() - liste.dateDebut.getTime()) / (1000 * 3600);
+                totalDifference += difference;
+                count++;
+              }
+            });
+          }
+        });
+        let average = totalDifference / count;
+        console.log("La moyenne des différences d'heures est : ", average);
+        res.status(200).json({moyenne : average});
+    });
+});
+
+router.post('/stats/chiffreAffaire',(req,res)=>{
+    let totalPrix = 0;
+    let count = 0;
+    let dateDebut = new Date(req.body.dateDebut);
+    let dateFin = new Date(req.body.dateFin);
+
+    ReparationsVoiture.find({}, function (err, reparations) {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({error: "Une erreur est survenue lors de la récupération des données"});
+        }
+        
+        reparations.forEach(function(rep) {
+          if (rep.listeReparation) {
+            
+            rep.listeReparation.forEach(function(liste) {
+                
+              if (liste.dateDebut >= dateDebut && liste.dateFin <= dateFin) {
+                console.log(liste);
+                totalPrix += liste.prix;
+                count++;
+              }
+            });
+          }
+        });
+        let average = totalPrix / count;
+        console.log("La moyenne des prix est : ", average);
+        res.status(200).json({moyenne : average});
+    });
+});
+
+
 module.exports = router;
