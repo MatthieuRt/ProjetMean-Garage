@@ -216,6 +216,26 @@ router.get('/car/:idUser',(request,response)=>{
         response.json(reponse)
     })
 })
+//User by id
+router.get('/:idUser',(request,response)=>{
+    Utilisateur.findOne({_id : request.params.idUser},(err,user)=>{
+        if(err){
+            const rep = {
+                message : 'KO',
+                code : 404,
+                value :  err
+            }
+            response.send(rep);
+        }
+        // console.log(user)
+        const reponse = {
+            message : 'OK',
+            value : user,
+            code : 200
+        }
+        response.json(reponse)
+    })
+})
 
 //all cars
 router.get('/car',(req,res)=>{
