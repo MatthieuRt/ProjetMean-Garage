@@ -216,26 +216,29 @@ router.get('/car/:idUser',(request,response)=>{
         response.json(reponse)
     })
 })
-//User by id
-router.get('/:idUser',(request,response)=>{
-    Utilisateur.findOne({_id : request.params.idUser},(err,user)=>{
-        if(err){
-            const rep = {
-                message : 'KO',
-                code : 404,
-                value :  err
-            }
-            response.send(rep);
-        }
-        // console.log(user)
-        const reponse = {
-            message : 'OK',
-            value : user,
-            code : 200
-        }
-        response.json(reponse)
-    })
-})
+// //User by id
+// router.get('/:idUser',(request,response)=>{
+//     Utilisateur.findOne({_id : request.params.idUser},(err,user)=>{
+//         if(err){
+//             const rep = {
+//                 message : 'KO',
+//                 code : 404,
+//                 value :  err
+//             }
+//             response.send(rep);
+//         }
+//         // console.log(user)
+//         else{
+//             const reponse = {
+//                 message : 'OK',
+//                 value : user,
+//                 code : 200
+//             }
+//             response.json(reponse)
+//         }
+        
+//     })
+// })
 
 //all cars
 router.get('/car',(req,res)=>{
@@ -247,6 +250,7 @@ router.get('/car',(req,res)=>{
 
 //liste utilisateur avec voiture
 router.get('/carlist',(req,res)=>{
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     Utilisateur.find({profil:'user'},{identifiant:1,listeVoiture:1},(err, all) => {
         let reponse = {};
         if (!err) { 
@@ -257,7 +261,7 @@ router.get('/carlist',(req,res)=>{
             }
         }
         else { 
-            console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); 
+            console.log('Erreur : ' + err); 
             reponse = {
                 message :'KO',
                 code:404,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { baseUrl } from 'environments/environment';
 import { Voiture } from './bon-de-sortie.types';
 
@@ -12,6 +12,8 @@ export class BonDeSortieService
 {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
     private listeVoiture: BehaviorSubject<Voiture[]> = new BehaviorSubject(null);
+    private _voiture: BehaviorSubject<Voiture> = new BehaviorSubject(null);
+    private _proprietaire: BehaviorSubject<any> = new BehaviorSubject(null);
     /**
      * Constructor
      */
@@ -25,6 +27,20 @@ export class BonDeSortieService
     {
         return this.listeVoiture.asObservable();
     }
+    /**
+    * Getter for Voiture
+    */
+    get voiture$(): Observable<Voiture>
+    {
+        return this._voiture.asObservable();
+    }
+     /**
+    * Getter for Propriétaire de la voiture
+    */
+     get proprietaire$(): Observable<any>
+     {
+         return this._proprietaire.asObservable();
+     }
     /**
      * Get listeVoiture
      */
@@ -54,8 +70,43 @@ export class BonDeSortieService
             })
         );
     }
+    /**
+     * Get propriétaire
+     */
+    getPropriétaire(idUser): Observable<any>
+    {
+        let url = baseUrl+'user/'+idUser;
+        return this._httpClient.get<any>(url).pipe(
+            tap((response:any) => {
+                if(response.message==='OK'){
+                    this._proprietaire.next(response.value);
+                }
+               
+            })
+        );
+    }
     getAllCar(): Observable<any>{
         let url = baseUrl+'user/carlist';
         return this._httpClient.get(url);
     }
+    /**
+     * Get voiture
+     * @param id
+     */
+    getVoitureById(id: String): Observable<Voiture> {
+        return this.listeVoiture.pipe(
+          map(voitures => {
+            const voiture = voitures.find(v => v.voitureId === id);
+            // this.getPropriétaire(voiture.utilisateurId)
+            this._voiture.next(voiture);
+            return voiture;
+          }),
+          switchMap(voiture => {
+            if (!voiture) {
+              return throwError(`La voiture avec l'id :  ${id} est introuvable!`);
+            }
+            return of(voiture);
+          })
+        );
+      }
 }
