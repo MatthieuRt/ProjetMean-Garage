@@ -57,10 +57,13 @@
         <div class="my-10 border-t"></div>
 
         <!-- Section -->
-        <div class="w-full">
-            <div class="text-xl">Chiffre d'affaires pour la date séléctionnée : </div>
-            <div class="text-secondary">Keep your account more secure with following preferences.</div>
-        </div>
+        <ng-container *ngIf="chiffreAffaires">
+            <div class="w-full">
+                <div class="text-xl">Chiffre d'affaires pour la date séléctionnée : </div>
+                <div class="text-secondary">{{chiffreAffaires}} MGA</div>
+            </div>
+        </ng-container>
+        
         
 
         

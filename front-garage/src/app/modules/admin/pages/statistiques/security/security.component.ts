@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { StatistiquesService } from 'app/modules/admin/pages/statistiques/statistiques.service';
 
@@ -14,11 +14,13 @@ export class StatistiquesSecurityComponent implements OnInit
     date1Control = new FormControl();
     date2Control = new FormControl();
 
+    chiffreAffaires : any;
+
     /**
      * Constructor
      */
     constructor(
-        private _formBuilder: UntypedFormBuilder,private _statistiquesService: StatistiquesService
+        private _formBuilder: UntypedFormBuilder,private _statistiquesService: StatistiquesService,private _changeDetectorRef: ChangeDetectorRef
     )
     {
     }
@@ -44,5 +46,10 @@ export class StatistiquesSecurityComponent implements OnInit
     getChiffreAffaires(){
         console.log(this.date1Control.value);
         console.log(this.date2Control.value);
+
+        this._statistiquesService.getChiffreAffaire(this.date1Control.value,this.date2Control.value).subscribe((res:any)=>{
+            this.chiffreAffaires = res.moyenne;
+            this._changeDetectorRef.markForCheck();
+        })
     }
 }
