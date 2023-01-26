@@ -11,7 +11,7 @@ import { StatistiquesService } from 'app/modules/admin/pages/statistiques/statis
 export class StatistiquesAccountComponent implements OnInit
 {
     accountForm: UntypedFormGroup;
-    listCars : any
+    listCars : any[]
     /**
      * Constructor
      */
@@ -43,8 +43,17 @@ export class StatistiquesAccountComponent implements OnInit
             language: ['english']
         });
 
-        this.listCars = this._statistiquesService.getCars().subscribe((car:any)=>{
-            console.log(car);
+        this.listCars = [];
+        this._statistiquesService.getCars().subscribe((car:any)=>{
+            let tempListCars = car;
+            for(let i = 0; i<tempListCars.length;i++){
+                for(let j=0;j<tempListCars[i].listeVoiture.length;j++){
+                    this.listCars.push( tempListCars[i].listeVoiture[j]);
+                }
+            }
+           
         })
+
+        
     }
 }

@@ -9,17 +9,13 @@
                     <mat-label>Voiture</mat-label>
                     <mat-icon
                         class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:location-marker'"
+                        [svgIcon]="'heroicons_solid:car'"
                         matPrefix></mat-icon>
-                    <mat-select [formControlName]="'country'">
-                        <mat-option [value]="'usa'">United States</mat-option>
-                        <mat-option [value]="'canada'">Canada</mat-option>
-                        <mat-option [value]="'mexico'">Mexico</mat-option>
-                        <mat-option [value]="'france'">France</mat-option>
-                        <mat-option [value]="'germany'">Germany</mat-option>
-                        <mat-option [value]="'italy'">Italy</mat-option>
-                    </mat-select>
+                        <mat-select [formControlName]="'country'">
+                            <mat-option *ngFor="let car of listCars" [value]="car._id">{{ car.modele }}</mat-option>
+                          </mat-select>
                 </mat-form-field>
+                
             </div>
             
         </div>
