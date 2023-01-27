@@ -59,28 +59,6 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
     searchInputControl: UntypedFormControl = new UntypedFormControl();
     depotForm: FormGroup;
     dialogRep :UntypedFormGroup;
-
-    // data static
- public ELEMENT_DATA: any[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-  {position: 6, name: 'Naina', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Matthieu', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'ADP', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'AAA', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'VVV', weight: 20.1797, symbol: 'Ne'},
-];
-
-
-
     /**
      * Constructor
      */
@@ -91,6 +69,7 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
         private _formBuilder: FormBuilder,
         private _matDialog: MatDialog,
         public _utilisateurServ : UtilisateurSerice,
+        
     )
     {
     }
@@ -112,6 +91,7 @@ export class ProjectComponent implements OnInit, AfterViewInit, OnDestroy
           this.dataSource = new MatTableDataSource(this._utilisateurServ.listVoiture);
           this.dataSource.paginator = this.paginator;
           console.log(this.dataSource);
+          this._changeDetectorRef.markForCheck();
       }
     } 
     this._utilisateurServ.getListVoiture(user._id).subscribe(onSuccess);
