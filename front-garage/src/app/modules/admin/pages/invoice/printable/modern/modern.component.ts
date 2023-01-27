@@ -49,4 +49,13 @@ export class ModernComponent
             this._changeDetectorRef.markForCheck();
         });
     }
+    exportPdf() {
+        html2canvas(document.getElementById('elementId')).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const doc = new jsPDF('p', 'mm', 'a4');
+
+            doc.addImage(imgData, 'PNG', 10, 10);
+            doc.save('elementId.pdf');
+        });
+    }
 }
