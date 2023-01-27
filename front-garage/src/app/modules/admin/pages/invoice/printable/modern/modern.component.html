@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="mx-auto" style="margin-top: -20px;">
-        <button class="fuse-mat-button-large mt-6 cursor-pointer" mat-flat-button [color]="'primary'">
+        <button class="fuse-mat-button-large mt-6 cursor-pointer" mat-flat-button [color]="'primary'" (click)="exportPdf()">
             <mat-icon [svgIcon]="'mat_solid:picture_as_pdf'"></mat-icon>
                     <span>
                         Exporter en PDF
@@ -29,7 +29,7 @@
 
     </div>
     <!-- Main -->
-    <div class="inline-block p-6 sm:p-10 text-left print:p-0">
+    <div class="inline-block p-6 sm:p-10 text-left print:p-0" id="elementId">
 
         <!-- Invoice -->
         <div class="w-240 min-w-240 p-16 rounded-2xl shadow bg-card print:w-auto print:p-0 print:rounded-none print:shadow-none print:bg-transparent">
