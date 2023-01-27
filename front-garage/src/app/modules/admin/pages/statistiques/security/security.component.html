@@ -55,10 +55,13 @@
 
         <!-- Divider -->
         <div class="my-10 border-t"></div>
-
+        <div class="chart-container">
+            <canvas  id="MyChart" >{{ chart }}</canvas>
+      </div>
         <!-- Section -->
         <ng-container *ngIf="chiffreAffaires;else noChiffre">
             <div class="w-full">
+                
                 <div class="text-xl">Chiffre d'affaires pour la date séléctionnée : </div>
                 <div class="text-secondary">{{chiffreAffaires | number: '1.3-3'}} MGA</div>
             </div>
