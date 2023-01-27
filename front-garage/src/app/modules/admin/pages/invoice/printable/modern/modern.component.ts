@@ -3,7 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { BonDeSortieService } from 'app/modules/admin/dashboards/bon-de-sortie/bon-de-sortie.service';
 import { Voiture } from 'app/modules/admin/dashboards/bon-de-sortie/bon-de-sortie.types';
 import { Subject, takeUntil } from 'rxjs';
-
+import * as jsPDF from 'jspdf';
+import * as html2canvas from 'html2canvas';
 @Component({
     selector       : 'modern',
     templateUrl    : './modern.component.html',
