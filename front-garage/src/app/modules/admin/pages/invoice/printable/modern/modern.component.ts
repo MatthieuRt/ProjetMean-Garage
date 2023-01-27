@@ -18,6 +18,7 @@ export class ModernComponent
     idVoiture:String;
     voiture?:Voiture;
     proprio?:any;
+    dateBondeSortie : Date = new Date();
      /**
      * Constructor
      */
@@ -43,9 +44,9 @@ export class ModernComponent
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((user: any) => {
             this.proprio = user;
-            console.log('___________________Prop____________')
-            console.log(this.proprio)
-            console.log('___________________Prop____________')
+            // console.log('___________________Prop____________')
+            // console.log(this.proprio)
+            // console.log('___________________Prop____________')
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
@@ -57,9 +58,8 @@ export class ModernComponent
                 unit: 'px',
                 format: [1300, 900]
             });
-
             doc.addImage(imgData, 'PNG', 10, 10);
-            doc.save('elementId.pdf');
+            doc.save('bonDeSortie.pdf');
         });
     }
 }
