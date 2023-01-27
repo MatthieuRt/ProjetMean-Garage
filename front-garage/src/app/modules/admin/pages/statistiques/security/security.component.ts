@@ -71,4 +71,9 @@ export class StatistiquesSecurityComponent implements OnInit {
         }
         console.log(data);
     }
+
+    onCheckboxChange(event) {
+        const checkboxValue = event.target.checked;
+        console.log(checkboxValue);
+    }
 }
