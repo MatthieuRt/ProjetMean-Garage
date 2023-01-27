@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ChangeDetectorRef, OnInit, ViewEnca
 import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { StatistiquesService } from 'app/modules/admin/pages/statistiques/statistiques.service';
 import { Chart } from 'chart.js';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'statistiques-security',
@@ -15,6 +16,7 @@ export class StatistiquesSecurityComponent implements OnInit {
     date2Control = new FormControl();
     chart :any;
     chiffreAffaires: any;
+    chartData = [];
 
     /**
      * Constructor
@@ -51,8 +53,9 @@ export class StatistiquesSecurityComponent implements OnInit {
         }
         return dates;
     }
+        
 
-    getChiffreAffaires() {
+    /*getChiffreAffaires() {
         /*console.log(this.date1Control.value);
         console.log(this.date2Control.value);
 
@@ -60,44 +63,64 @@ export class StatistiquesSecurityComponent implements OnInit {
         this._statistiquesService.getChiffreAffaire(this.date1Control.value,this.date2Control.value).subscribe((res:any)=>{
             this.chiffreAffaires = res.moyenne;
             this._changeDetectorRef.markForCheck();
-        })*/
+        })
         
-        /*let label = this.getDates(new Date(this.date1Control.value), new Date(this.date2Control.value))
-        let data = [];
+        let label = this.getDates(new Date(this.date1Control.value), new Date(this.date2Control.value))
+
         for(let i = 0;i<label.length;i++){
-            console.log(label[i]);
-            this._statistiquesService.getChiffreAffaireByDay(label[i]).subscribe((res:any)=>{
-                data[i] = res;
+            
+            this._statistiquesService.getChiffreAffaireByDay(label[i]).subscribe((res:number)=>{
+                this.chartData[i] = res;
             })
         }
-        console.log(data);*/
 
+        if (this.chart) this.chart.destroy();
         this.chart = new Chart("MyChart", {
             type: 'bar', //this denotes tha type of chart
-      
             data: {// values on X-Axis
-              labels: ['2022-05-10', '2022-05-11', '2022-05-12','2022-05-13',
-                                       '2022-05-14', '2022-05-15', '2022-05-16','2022-05-17', ], 
+              labels: label, 
                  datasets: [
                 {
-                  label: "Sales",
-                  data: ['467','576', '572', '79', '92',
-                                       '574', '573', '576'],
+                  label: "Chiffre d'affaires",
+                  data: this.chartData,
                   backgroundColor: 'blue'
-                },
-                {
-                  label: "Profit",
-                  data: ['542', '542', '536', '327', '17',
-                                           '0.00', '538', '541'],
-                  backgroundColor: 'limegreen'
-                }  
+                }
               ]
             },
             options: {
               aspectRatio:2.5
             }
-            
-          });
+        });
+
+        console.log(this.chart.data)
+    }*/
+
+    async getChiffreAffaires() {
+        let label = this.getDates(new Date(this.date1Control.value), new Date(this.date2Control.value))
+        let promises = [];
+        for(let i = 0;i<label.length;i++){
+            promises.push(this._statistiquesService.getChiffreAffaireByDay(label[i]).toPromise());
+        }
+        let chartData = await Promise.all(promises);
+        if (this.chart) this.chart.destroy();
+        this.chart = new Chart("MyChart", {
+            type: 'bar', 
+            data: {
+                labels: label, 
+                datasets: [
+                    {
+                        label: "Chiffre d'affaires",
+                        data: chartData,
+                        backgroundColor: 'blue'
+                    }
+                ]
+            },
+            options: {
+                aspectRatio:2.5
+            }
+        });
+        console.log(this.chart.data)
+        this._changeDetectorRef.markForCheck()
     }
 
     onCheckboxChange(event) {
