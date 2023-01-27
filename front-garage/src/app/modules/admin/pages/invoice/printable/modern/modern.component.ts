@@ -53,7 +53,10 @@ export class ModernComponent
     exportPdf() {
         html2canvas(document.getElementById('elementId')).then(canvas => {
             const imgData = canvas.toDataURL('image/png');
-            const doc = new jsPDF('p', 'mm', 'a4');
+            const doc = new jsPDF({
+                unit: 'px',
+                format: [1300, 900]
+            });
 
             doc.addImage(imgData, 'PNG', 10, 10);
             doc.save('elementId.pdf');
