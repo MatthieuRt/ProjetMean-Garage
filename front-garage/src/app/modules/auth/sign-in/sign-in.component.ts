@@ -142,10 +142,16 @@ export class AuthSignInComponent implements OnInit
                  this.showAlert = true;
             }else{
                     this._authService._authenticated = true;
-                    let user= response.value;
+                    const user  = {
+                        _id : response.value._id ,
+                        identifiant : response.value.identifiant,
+                        mail: response.value.mail,
+                        valid: response.value._id ,
+                        listeVoiture: response.value.listeVoiture,
+                        profil: response.value.profil
+                    }
                     sessionStorage.setItem('user',JSON.stringify(user));
-                    const utilisateur = response.value;
-                    if(utilisateur.profil==='user'){
+                    if(user.profil==='user'){
                         this._router.navigateByUrl('/dashboards/project');
                     }else{
                         // this._router.navigateByUrl('/dashboards/project')
