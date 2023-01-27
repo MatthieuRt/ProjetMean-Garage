@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { baseUrl } from 'environments/environment';
-import { Voiture } from './bon-de-sortie.types';
+import { Utilisateur, Voiture } from './bon-de-sortie.types';
 
 
 @Injectable({
@@ -73,14 +73,23 @@ export class BonDeSortieService
     /**
      * Get propriétaire
      */
-    getPropriétaire(idUser): Observable<any>
+    getPropriétaire(idUser): Observable<Utilisateur>
     {
         console.log('APpel getProprio : '+idUser)
         let url = baseUrl+'user/proprio/'+idUser;
         return this._httpClient.get<any>(url).pipe(
             tap((response:any) => {
                 if(response.message==='OK'){
-                    this._proprietaire.next(response.value);
+                    // this._proprietaire =  new BehaviorSubject(null);
+                    const utilisateur  = {
+                        _id : response.value._id ,
+                        identifiant : response.value.identifiant.charAt(0).toUpperCase()+response.value.identifiant.substring(1,response.value.identifiant.length),
+                        mail: response.value.mail,
+                        valid: response.value._id ,
+                        listeVoiture: response.value.listeVoiture,
+                        profil: response.value.profil
+                    }
+                    this._proprietaire.next(utilisateur);
                 }
                
             })

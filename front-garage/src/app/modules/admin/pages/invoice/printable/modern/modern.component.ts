@@ -43,8 +43,9 @@ export class ModernComponent
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((user: any) => {
             this.proprio = user;
-            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            console.log('___________________Prop____________')
             console.log(this.proprio)
+            console.log('___________________Prop____________')
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });

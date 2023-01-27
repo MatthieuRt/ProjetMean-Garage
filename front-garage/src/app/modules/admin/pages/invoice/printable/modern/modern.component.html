@@ -55,11 +55,11 @@
                         <div class="place-self-center w-24 text-center text-2xl text-secondary">
                             Destinataire
                         </div>
-                        <div class="pl-10 border-l text-md">
-                            <div class="font-medium">Brian Hughes</div>
+                        <div class="pl-10 border-l text-md" *ngIf="proprio">
+                            <div class="font-medium">{{proprio?.name}}</div>
                             <div>Antananarivo, Madagascar 101</div>
                             <div>+261 34 06 376 17</div>
-                            <div>hughes.brian@company.com</div>
+                            <div>{{proprio?.mail}}</div>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,12 @@
             <div class="col-span-8">
                 <div class="text-lg font-medium">Autorisation de sortie</div>
                 <div class="mt-2 text-md text-secondary">
-                    Nous, propriétaires d' Auto Garage, autorisons la voiture mentionnée ci-dessus à sortir de notre établissement. Nous garantissons que toutes les réparations ont été effectuées correctement et que la voiture est en bon état de marche.
+                    Nous, propriétaires d' Auto Garage, autorisons la voiture mentionnée ici
+                    <h2 class="text-2xl md:text-2xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                        {{voiture.modele}}
+                    </h2>portant le numéro :<h2 class="text-2xl md:text-2xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                        {{voiture.numero}}
+                    </h2> à sortir de notre établissement. Nous garantissons que toutes les réparations ont été effectuées correctement et que la voiture est en bon état de marche.
                 </div>
             </div>
             <!-- Divider -->
