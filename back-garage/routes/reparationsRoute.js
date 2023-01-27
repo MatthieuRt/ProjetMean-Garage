@@ -296,8 +296,7 @@ router.get('/stats/chiffreAffaire/:date1/:date2',(req,res)=>{
 
 router.get('/stats/chiffreAffaire/:date1',(req,res)=>{
     let totalPrix = 0;
-    let count = 0;
-    let date = new Date(req.params.date1);
+    let date = req.params.date1;
 
     ReparationsVoiture.find({}, function (err, reparations) {
         if (err) {
@@ -309,17 +308,16 @@ router.get('/stats/chiffreAffaire/:date1',(req,res)=>{
           if (rep.listeReparation) {
             
             rep.listeReparation.forEach(function(liste) {
-                
-              if (liste.datePaiement == date ) {
-                console.log(liste);
+                let datePaiement = new Date(liste.datePaiement);
+                datePaiement = datePaiement.toISOString().slice(0,10);
+              if (datePaiement == date) {
                 totalPrix += liste.prix;
-                count++;
               }
             });
           }
         });
-        let average = totalPrix / count;
-        res.status(200).json({moyenne : average});
+        let chiffreAffaire = totalPrix 
+        res.status(200).json(chiffreAffaire);
     });
 });
 
