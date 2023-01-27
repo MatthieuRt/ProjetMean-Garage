@@ -9,3 +9,12 @@ export interface Voiture
     identifiant?:String
     
 }
+export interface Utilisateur
+{
+    _id?: String,
+    identifiant?: String,
+    mail?: String,
+    valid?: boolean,
+    listeVoiture?:any,
+    profil?:String
+}
