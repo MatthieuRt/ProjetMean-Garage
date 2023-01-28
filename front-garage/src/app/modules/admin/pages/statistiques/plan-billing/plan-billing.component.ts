@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormControlDirective, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { StatistiquesService } from 'app/modules/admin/pages/statistiques/statistiques.service';
 
@@ -18,13 +18,14 @@ export class StatistiquesPlanBillingComponent implements OnInit
     salaireControl = new FormControl();
     loyerControl = new FormControl();
     piecesControl = new FormControl();
-    depensesControl = new FormControl()
+    depensesControl = new FormControl();
+    benefice : any;
 
     /**
      * Constructor
      */
     constructor(
-        private _formBuilder: UntypedFormBuilder,private _statistiquesService: StatistiquesService
+        private _formBuilder: UntypedFormBuilder,private _statistiquesService: StatistiquesService,private _changeDetectorRef: ChangeDetectorRef
     )
     {
     }
@@ -38,6 +39,7 @@ export class StatistiquesPlanBillingComponent implements OnInit
      */
     ngOnInit(): void
     {
+        this.piecesControl.disable()
         this.months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
         // Create the form
         this.planBillingForm = this._formBuilder.group({
@@ -90,12 +92,22 @@ export class StatistiquesPlanBillingComponent implements OnInit
 
     getBenefices(){
         console.log("clicked on getBenefices")
-
+        this._statistiquesService.getBenefice(this.monthControl.value,this.yearControl.value).subscribe((res:any)=>{
+            if(res.length>0){
+                console.log("Ok")
+                this.benefice = res[0];
+                
+            }else{
+                this.benefice = null;
+                console.log("pas ok")
+            }
+            this._changeDetectorRef.markForCheck()
+        })
     }
 
     addBenefice(){
         this._statistiquesService.insertBenefice(this.salaireControl.value,this.loyerControl.value,this.piecesControl.value,this.depensesControl.value,this.monthControl.value,this.yearControl.value).subscribe((res:any)=>{
-            
+
         });
         console.log(this.salaireControl.value,this.loyerControl.value,this.piecesControl.value,this.depensesControl.value,this.monthControl.value,this.yearControl.value);
     }

@@ -38,4 +38,8 @@ export class StatistiquesService{
         return this._httpClient.get("http://localhost:9000/benefice/insert/"+salaire+"/"+loyer+"/"+pieces+"/"+autres+"/"+mois+"/"+annee);
     }
 
+    getBenefice(mois:String,annee:String){
+        return this._httpClient.get("http://localhost:9000/benefice/find/"+mois+"/"+annee);
+    }
+
 }
