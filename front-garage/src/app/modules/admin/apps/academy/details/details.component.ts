@@ -8,7 +8,7 @@ import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
 import { FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDialog } from '@angular/material/dialog';
-import { ModificationComponent } from './modification/modification.component';
+import { ModificationComponent } from '../modification/modification.component';
 
 
 @Component({

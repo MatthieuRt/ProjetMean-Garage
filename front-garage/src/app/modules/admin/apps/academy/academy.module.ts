@@ -16,10 +16,10 @@ import { AcademyComponent } from 'app/modules/admin/apps/academy/academy.compone
 import { AcademyDetailsComponent } from 'app/modules/admin/apps/academy/details/details.component';
 import { AcademyListComponent } from 'app/modules/admin/apps/academy/list/list.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ModificationComponent } from './details/modification/modification.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ModificationComponent } from './modification/modification.component';
 
 @NgModule({
     declarations: [
