@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormControlDirective, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { StatistiquesService } from 'app/modules/admin/pages/statistiques/statistiques.service';
 
 @Component({
@@ -15,6 +15,10 @@ export class StatistiquesPlanBillingComponent implements OnInit
     months : any;
     monthControl = new FormControl();
     yearControl = new FormControl();
+    salaireControl = new FormControl();
+    loyerControl = new FormControl();
+    piecesControl = new FormControl();
+    depensesControl = new FormControl()
 
     /**
      * Constructor
@@ -86,6 +90,13 @@ export class StatistiquesPlanBillingComponent implements OnInit
 
     getBenefices(){
         console.log("clicked on getBenefices")
-        
+
+    }
+
+    addBenefice(){
+        this._statistiquesService.insertBenefice(this.salaireControl.value,this.loyerControl.value,this.piecesControl.value,this.depensesControl.value,this.monthControl.value,this.yearControl.value).subscribe((res:any)=>{
+            
+        });
+        console.log(this.salaireControl.value,this.loyerControl.value,this.piecesControl.value,this.depensesControl.value,this.monthControl.value,this.yearControl.value);
     }
 }

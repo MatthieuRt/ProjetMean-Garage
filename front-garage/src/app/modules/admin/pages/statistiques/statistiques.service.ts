@@ -34,4 +34,8 @@ export class StatistiquesService{
         return this._httpClient.get("http://localhost:9000/reparation/stats/chiffreAffaire/year/"+date);
     }
 
+    insertBenefice(salaire:String,loyer:String,pieces:String,autres:String,mois:String,annee:String){
+        return this._httpClient.get("http://localhost:9000/benefice/insert/"+salaire+"/"+loyer+"/"+pieces+"/"+autres+"/"+mois+"/"+annee);
+    }
+
 }

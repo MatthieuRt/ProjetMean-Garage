@@ -89,7 +89,7 @@
                         [svgIcon]="'heroicons_solid:credit-card'"
                         matPrefix></mat-icon>
                     <input
-                        [formControlName]="'cardNumber'"
+                    [formControl]="salaireControl"
                         matInput>
                 </mat-form-field>
             </div>
@@ -104,7 +104,7 @@
                         [svgIcon]="'heroicons_solid:calendar'"
                         matPrefix></mat-icon>
                     <input
-                        [formControlName]="'cardExpiration'"
+                    [formControl]="loyerControl"
                         matInput>
                 </mat-form-field>
             </div>
@@ -115,7 +115,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:hashtag'"
                         matPrefix></mat-icon>
-                    <input matInput>
+                    <input [formControl]="piecesControl" matInput>
                 </mat-form-field>
             </div>
             <!-- ZIP -->
@@ -126,7 +126,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:hashtag'"
                         matPrefix></mat-icon>
-                    <input matInput>
+                    <input [formControl]="depensesControl" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -167,7 +167,7 @@
                 class="ml-4"
                 mat-flat-button
                 type="button"
-                [color]="'primary'">Save
+                [color]="'primary'" (click)="addBenefice()">Ajouter
             </button>
         </div>
     </form>
