@@ -203,7 +203,26 @@ router.post('/validation/paiement',async (req,res)=>{
         })
     
 });
-
+router.put('/set/etat',(req,res)=>{
+    ReparationsVoiture.findOneAndUpdate({_id:req.body.idReparation},{$set:{etat:req.body.etat}}, {new: true})
+        .then(result=>{
+            const reponse = {
+                message : 'OK',
+                code:200,
+                value : result
+            }
+            res.json(reponse)
+        })
+        .catch(error => {
+            const reponse = {
+                message : 'KO',
+                code:500,
+                value : error
+            }
+            console.log(reponse)
+            res.json(reponse)
+        });
+});
 
 router.get('/stats/tempsMoyen',(req,res)=>{
     let totalDifference = 0;
