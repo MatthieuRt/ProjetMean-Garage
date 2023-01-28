@@ -23,7 +23,7 @@ export class AuthSignInComponent implements OnInit
     };
     signInForm: UntypedFormGroup;
     showAlert: boolean = false;
-
+    email:String[];
     /**
      * Constructor
      */
@@ -46,12 +46,17 @@ export class AuthSignInComponent implements OnInit
      */
     ngOnInit(): void
     {
+        this.email = []
+        this.email.push('andrianmattax@gmail.com')
+        this.email.push('responsable@gmail.com')
         // Create the form
         this.signInForm = this._formBuilder.group({
-            mail     : ['andrianmattax@gmail.com', [Validators.required, Validators.email]],
+            mail     : ['', [Validators.required]],
             password  : ['12345', Validators.required],
             rememberMe: ['']
         });
+        // mail     : ['andrianmattax@gmail.com', [Validators.required, Validators.email]],
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -153,8 +158,8 @@ export class AuthSignInComponent implements OnInit
                     sessionStorage.setItem('user',JSON.stringify(user));
                     if(user.profil==='user'){
                         this._router.navigateByUrl('/dashboards/project');
-                    }else{
-                        // this._router.navigateByUrl('/dashboards/project')
+                    }else if(user.profil==='responsable_atelier'){
+                        this._router.navigateByUrl('/apps/academy')
                         return;
                     }
                     // console.log(response.value)
@@ -162,6 +167,7 @@ export class AuthSignInComponent implements OnInit
                     // this._router.navigateByUrl('/dashboards/project');
             }
         };
+
         this._authService.signIn(this.signInForm.value)
             .subscribe(onSuccess);
     }
