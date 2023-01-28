@@ -263,7 +263,7 @@ router.get('/stats/tempsMoyen/:id',(req,res)=>{
     });
 });
 
-router.get('/stats/chiffreAffaire/:date1/:date2',(req,res)=>{
+/*router.get('/stats/chiffreAffaire/:date1/:date2',(req,res)=>{
     let totalPrix = 0;
     let count = 0;
     let dateDebut = new Date(req.params.date1);
@@ -292,7 +292,7 @@ router.get('/stats/chiffreAffaire/:date1/:date2',(req,res)=>{
         console.log("La moyenne des prix est : ", average);
         res.status(200).json({moyenne : average});
     });
-});
+});*/
 
 router.get('/stats/chiffreAffaire/:date1',(req,res)=>{
     let totalPrix = 0;
@@ -324,7 +324,8 @@ router.get('/stats/chiffreAffaire/:date1',(req,res)=>{
 router.get('/stats/chiffreAffaire/year/:date1',(req,res)=>{
     let totalPrix = 0;
     let date = req.params.date1;
-    let chiffreAffairePerMonth = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0};
+    let chiffreAffairePerMonth = {};
+    let months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 
     ReparationsVoiture.find({}, function (err, reparations) {
         if (err) {
@@ -351,7 +352,14 @@ router.get('/stats/chiffreAffaire/year/:date1',(req,res)=>{
             });
           }
         });
-        res.status(200).json(chiffreAffairePerMonth);
+        let result = {}
+        for(let i=1; i<=12; i++){
+            if(!chiffreAffairePerMonth[i]){
+              chiffreAffairePerMonth[i] = 0;
+            }
+            result[months[i-1]] = chiffreAffairePerMonth[i];
+          }
+        res.status(200).json(result);
     });
 });
 

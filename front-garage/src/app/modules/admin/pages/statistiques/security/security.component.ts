@@ -15,8 +15,10 @@ export class StatistiquesSecurityComponent implements OnInit {
     date1Control = new FormControl();
     date2Control = new FormControl();
     chart :any;
+    chart2 : any;
     chiffreAffaires: any;
     chartData = [];
+    yearControl = new FormControl();
 
     /**
      * Constructor
@@ -120,6 +122,34 @@ export class StatistiquesSecurityComponent implements OnInit {
             }
         });
         console.log(this.chart.data)
+        this._changeDetectorRef.markForCheck()
+    }
+
+    async getChiffreAffairesByYear(){
+        let year = this.yearControl.value;
+
+        let label = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+
+        let promises = this._statistiquesService.getChiffreAffaireByYear(year).toPromise();
+        
+        let chartData = await promises
+        if (this.chart2) this.chart2.destroy();
+        this.chart2 = new Chart("MyChart2", {
+            type: 'bar', 
+            data: {
+                datasets: [
+                    {
+                        label: "Chiffre d'affaires ( MGA )",
+                        data: chartData,
+                        backgroundColor: 'blue'
+                    }
+                ]
+            },
+            options: {
+                aspectRatio:2.5
+            }
+        });
+        console.log(this.chart2.data)
         this._changeDetectorRef.markForCheck()
     }
 

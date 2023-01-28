@@ -30,4 +30,8 @@ export class StatistiquesService{
         return this._httpClient.get("http://localhost:9000/reparation/stats/chiffreAffaire/"+date);
     }
 
+    getChiffreAffaireByYear(date:String){
+        return this._httpClient.get("http://localhost:9000/reparation/stats/chiffreAffaire/year/"+date);
+    }
+
 }
