@@ -5,6 +5,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Category, Course, ListeReparation, ReparationsVoitures, Voiture, Piece } from 'app/modules/admin/apps/academy/academy.types';
 import { AcademyService } from 'app/modules/admin/apps/academy/academy.service';
+import { FormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { MatDialog } from '@angular/material/dialog';
+import { ModificationComponent } from './modification/modification.component';
 
 
 @Component({
@@ -22,6 +26,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy {
     reparation: any;
     listeVoitures: Voiture[];
     user : any;
+    modificationEtat: UntypedFormGroup;
 
     /**
      * Constructor
@@ -31,8 +36,11 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy {
         private _academyService: AcademyService,
         private _changeDetectorRef: ChangeDetectorRef,
         private _elementRef: ElementRef,
-        private _fuseMediaWatcherService: FuseMediaWatcherService
-    ) {
+        private _fuseMediaWatcherService: FuseMediaWatcherService,
+        private _formBuilder: FormBuilder,
+        private _fuseConfirmationService: FuseConfirmationService,
+        private _matDialog: MatDialog,
+        ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -112,18 +120,42 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy {
         return item.id || index;
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Private methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Scrolls the current step element from
-     * sidenav into the view. This only happens when
-     * previous/next buttons pressed as we don't want
-     * to change the scroll position of the sidebar
-     * when the user actually clicks around the sidebar.
-     *
-     * @private
-     */
-
+    initmodificationEtat(indexReparation){
+        let select= '<p>'+
+        +'<mat-form-field class="w-full"> <mat-label>Adresse email</mat-label><mat-select>'+
+        '<mat-option [value]="terminé">'+'Terminé </mat-option>'+
+        '<mat-option [value]="en cours">'+'En cours </mat-option>'+
+          '</mat-select></mat-form-field>'+
+        '</p>'
+        this.modificationEtat = this._formBuilder.group({
+          title      : 'Modification',
+          message    : '<span class="font-medium">Vous allez modifié l\'état de :'+this.reparation.listeReparation[indexReparation].piece.designation+' !</span>'+select,
+          icon       : this._formBuilder.group({
+              show : true,
+              name : 'heroicons_outline:check',
+              color: 'success'
+          }),
+          actions    : this._formBuilder.group({
+              confirm: this._formBuilder.group({
+                  show : true,
+                  label: 'OK',
+                  color: 'warn',
+              }),
+          }),
+          dismissible: true
+        });
+        const dialogRef = this._fuseConfirmationService.open(this.modificationEtat.value);
+        dialogRef.afterClosed().subscribe((result) => {
+            console.log(result);
+        });
+      }
+    modifierEtat(index){
+        this.initmodificationEtat(index)
+    }
+    openModifcationDialog(index:any): void
+    {
+        this._matDialog.open(ModificationComponent, {
+            autoFocus: false,
+        });
+    }
 }

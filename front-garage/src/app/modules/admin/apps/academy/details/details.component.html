@@ -93,7 +93,7 @@
                                         </thead>
                                         <tbody>
                                             <ng-container *ngIf="reparation?.listeReparation.length>0; else noSortie">
-                                                <ng-container *ngFor="let liste of reparation?.listeReparation">
+                                                <ng-container *ngFor="let liste of reparation?.listeReparation; let i=index">
                                                 <tr>
                                                     <th scope="row">1</th>
                                                     <td>{{liste?.piece?.designation}}</td>
@@ -102,7 +102,7 @@
                                                     <td>{{liste?.estPaye ? 'Payé' : 'Non payé'}}</td>
                                                     <div *ngIf="user.profil=='responsable_atelier'">
                                                         <td>
-                                                            <button mat-raised-button color="primary">Modifier</button>
+                                                            <button mat-raised-button color="primary" (click)="openModifcationDialog(i)">Modifier</button>
                                                         </td>
                                                     </div>
                                                 </tr>

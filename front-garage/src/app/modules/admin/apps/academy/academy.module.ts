@@ -16,12 +16,14 @@ import { AcademyComponent } from 'app/modules/admin/apps/academy/academy.compone
 import { AcademyDetailsComponent } from 'app/modules/admin/apps/academy/details/details.component';
 import { AcademyListComponent } from 'app/modules/admin/apps/academy/list/list.component';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ModificationComponent } from './details/modification/modification.component';
 
 @NgModule({
     declarations: [
         AcademyComponent,
         AcademyDetailsComponent,
-        AcademyListComponent
+        AcademyListComponent,
+        ModificationComponent,
     ],
     imports     : [
         RouterModule.forChild(academyRoutes),
