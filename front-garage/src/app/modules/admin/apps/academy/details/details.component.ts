@@ -27,7 +27,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy {
     listeVoitures: Voiture[];
     user : any;
     modificationEtat: UntypedFormGroup;
-
+    listeEtat : String[];
     /**
      * Constructor
      */
@@ -52,7 +52,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
 
-
+        this.listeEtat = ['Terminé','En cours']
 
         this._academyService.reparation$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -154,8 +154,60 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy {
     }
     openModifcationDialog(index:any): void
     {
+        this._academyService.setReparation(this.reparation.listeReparation[index]);
         this._matDialog.open(ModificationComponent, {
             autoFocus: false,
         });
+    }
+    setEtat(event,index){
+        if(event.value!='Modifier'){
+            console.log(this.reparation.listeReparation[index])
+            const onSuccess = (response:any)=>{
+                if(response.message=='OK'){
+                    console.log(response)
+                }
+              }
+            const data = {
+            idReparation : this.reparation.listeReparation[index]._id,
+            etat : event.value
+            }
+            console.log(JSON.stringify(data))
+              this._academyService.setEtat(data).subscribe(onSuccess);
+            // console.log(this.reparation.listeReparation[index])
+        }
+        
+    }
+    refreshData(){
+        this._academyService.reparation$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((course: any) => {
+                console.log(course)
+                // Get the course
+                this.reparation = course[0];
+                console.log("--------------------------"+this.reparation?.dateArrivee)
+                let user = sessionStorage.getItem("user");
+                let jsonObject = JSON.parse(user);
+                this.user = jsonObject;
+
+                this.listeVoitures = jsonObject.listeVoiture;
+                for (let i = 0; i < this.listeVoitures.length; i++) {
+                    if (this.listeVoitures[i].id == this.reparation.idVoiture) this.reparation.voiture = this.listeVoitures[i];
+                }
+
+                for (let i = 0; i < this.reparation.listeReparation.length; i++) {
+                    if (!this.reparation.listeReparation[i].piece) {
+
+                        this._academyService.getPieceById(this.reparation.listeReparation[i].idPiece).subscribe(piece => {
+                            this.reparation.listeReparation[i].piece = piece[0];
+                            this._changeDetectorRef.markForCheck();
+                        });
+                    }
+                    this._changeDetectorRef.markForCheck();
+                }
+
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
     }
 }

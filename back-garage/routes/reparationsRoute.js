@@ -204,6 +204,7 @@ router.post('/validation/paiement',async (req,res)=>{
     
 });
 router.put('/set/etat',(req,res)=>{
+    console.log(req.body.idReparation)
     ReparationsVoiture.findOneAndUpdate({_id:req.body.idReparation},{$set:{etat:req.body.etat}}, {new: true})
         .then(result=>{
             const reponse = {

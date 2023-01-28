@@ -20,6 +20,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ModificationComponent } from './modification/modification.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+
 
 @NgModule({
     declarations: [
@@ -43,6 +45,7 @@ import { ModificationComponent } from './modification/modification.component';
         MatTooltipModule,
         FuseFindByKeyPipeModule,
         MatDividerModule,
+        ScrollingModule,
         SharedModule,
         MatTabsModule,
     ]
