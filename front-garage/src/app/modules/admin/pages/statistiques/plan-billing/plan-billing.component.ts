@@ -20,6 +20,9 @@ export class StatistiquesPlanBillingComponent implements OnInit
     piecesControl = new FormControl();
     depensesControl = new FormControl();
     benefice : any;
+    listePieces : any;
+    isInsert : any;
+    prixPiece : any;
 
     /**
      * Constructor
@@ -94,21 +97,43 @@ export class StatistiquesPlanBillingComponent implements OnInit
         console.log("clicked on getBenefices")
         this._statistiquesService.getBenefice(this.monthControl.value,this.yearControl.value).subscribe((res:any)=>{
             if(res.length>0){
+                this.isInsert = null;
                 console.log("Ok")
                 this.benefice = res[0];
                 
             }else{
                 this.benefice = null;
-                console.log("pas ok")
+                this.isInsert = true;
+                console.log("pas ok");
+                
+                
+                this.piecesControl.disable()
+                this.listePieces = this._statistiquesService.getListePiece(this.monthControl.value,this.yearControl.value).subscribe((res:any)=>{
+                    this.piecesControl = new FormControl(res[res.length-1].totalPrix)
+                    this.piecesControl.disable();
+                    this._changeDetectorRef.markForCheck()
+                })
             }
             this._changeDetectorRef.markForCheck()
         })
     }
 
     addBenefice(){
-        this._statistiquesService.insertBenefice(this.salaireControl.value,this.loyerControl.value,this.piecesControl.value,this.depensesControl.value,this.monthControl.value,this.yearControl.value).subscribe((res:any)=>{
+        let chiffreAffaire = "";
+        let month = this.months[this.monthControl.value-1]
+        
+        this._statistiquesService.getChiffreAffaireByYear(this.yearControl.value).subscribe((res:any)=>{
+            chiffreAffaire = res[month]
+            this._statistiquesService.insertBenefice(this.salaireControl.value,this.loyerControl.value,this.piecesControl.value,this.depensesControl.value,this.monthControl.value,this.yearControl.value,chiffreAffaire).subscribe((res:any)=>{
 
+            });
         });
+        this.isInsert = null;
+        this._changeDetectorRef.markForCheck();
+   
+        
         console.log(this.salaireControl.value,this.loyerControl.value,this.piecesControl.value,this.depensesControl.value,this.monthControl.value,this.yearControl.value);
+       
     }
+
 }

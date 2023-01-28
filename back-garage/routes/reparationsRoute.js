@@ -8,6 +8,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 const Utilisateur = require('../models/Utilisateur');
 const ReparationsVoiture = require('../models/ReparationsVoiture');
 const DemandePaiement = require('../models/DemandePaiement');
+const Piece = require('../models/Piece')
 
 
 router.get('/', (req, res) => {
@@ -405,5 +406,39 @@ router.get('/stats/chiffreAffaire/year/:date1',(req,res)=>{
     });
 });
 
+router.get("/byDate/:month/:year",(req,res)=>{
+    const startDate = new Date(req.params.year+"-"+req.params.month+"-01");
+    const endDate = new Date(req.params.year+"-"+req.params.month+"-31");
+    let result = [];
+    let sum = 0;
+    ReparationsVoiture.find({ },{}, async function (err, reparations) {
+        let idPieces = reparations.map(rep => rep.listeReparation.map(liste => liste.idPiece)).flat();
+        let pieces = await Piece.find({ _id: { $in: idPieces } });
+        let piecesMap = pieces.reduce((map, piece) => {
+            map[piece._id] = piece;
+            return map;
+        }, {});
+        reparations.forEach(function(rep) {
+            if (rep.listeReparation) {
+              rep.listeReparation.forEach(function(liste) {
+                  let datePaiement = new Date(liste.datePaiement);
+                  datePaiement = datePaiement.toISOString().slice(0,10);
+                  datePaiement = new Date(datePaiement)
+                if (datePaiement >= startDate && datePaiement<=endDate) {
+                    liste.piece = piecesMap[liste.idPiece];
+                    console.log("piece : "+liste.piece.designation)
+                    console.log("prix : "+liste.piece.prix)
+                    
+                    sum+=liste.piece.prix;
+                    result.push(liste);
+                }
+              });
+            }
+          });
+        if (err) return res.status(500).send(err);
+        result.push({totalPrix : sum})
+        res.send(result,);
+    });
+})
 
 module.exports = router;

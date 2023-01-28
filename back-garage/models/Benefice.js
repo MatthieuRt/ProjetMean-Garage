@@ -6,6 +6,7 @@ const beneficeSchema = mongoose.Schema({
     achat_piece : Number,
     autres_depenses : Number,
     mois : Number,
-    annee : Number
+    annee : Number,
+    benefice : Number
 })
 module.exports = mongoose.model('Benefice',beneficeSchema);

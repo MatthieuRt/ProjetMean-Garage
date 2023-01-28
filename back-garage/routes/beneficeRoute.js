@@ -15,14 +15,15 @@ router.get('/find/:mois/:annee',(req,res)=>{
     });
 });
 
-router.get('/insert/:salaire/:loyer/:achatPiece/:autres/:mois/:annee',(req,res)=>{
+router.get('/insert/:salaire/:loyer/:achatPiece/:autres/:mois/:annee/:benefice',(req,res)=>{
     var benefice = new Benefice({
         salaire:req.params.salaire,
         loyer:req.params.loyer,
         achat_piece:req.params.achatPiece,
         autres_depenses:req.params.autres,
         mois:req.params.mois,
-        annee:req.params.annee
+        annee:req.params.annee,
+        benefice:req.params.benefice
     });
     benefice.save((err, doc) => {
         if (!err) { res.send(doc); }

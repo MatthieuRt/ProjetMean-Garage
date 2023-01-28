@@ -1,9 +1,5 @@
 <div class="w-full max-w-3xl">
 
-    <!-- Form -->
-    <form [formGroup]="planBillingForm">
-
-        <!-- Section -->
         <div class="w-full">
             <div class="text-xl">Voir bénéfice par mois</div>
         </div>
@@ -52,21 +48,24 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">benefice?.salaire</th>
-                                        <th scope="col">benefice?.loyer</th>
-                                        <th scope="col">benefice?.achat_piece</th>
-                                        <th scope="col">benefice?.autres_depenses</th>
+                                        <th scope="col">Salaire</th>
+                                        <th scope="col">Loyer</th>
+                                        <th scope="col">Achats pieces</th>
+                                        <th scope="col">Autres depenses</th>
                                         <th scope="col">Bénéfice</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Données</td>
+                                        <td scope="col">{{benefice?.salaire}} MGA</td>
+                                        <td scope="col">{{benefice?.loyer}} MGA</td>
+                                        <td scope="col">{{benefice?.achat_piece}} MGA</td>
+                                        <td scope="col">{{benefice?.autres_depenses}} MGA</td>
+                                        <td scope="col">{{benefice?.benefice}} MGA</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        
                     </ng-template>
                 </mat-tab>
             </ng-container>
@@ -78,102 +77,106 @@
         <div class="mt-12 mb-10 border-t"></div>
 
         <!-- Section -->
-        <div class="w-full">
-            <div class="text-xl">Veuillez rentrer les dépenses du mois</div>
-        </div>
-        <div class="grid grid-cols-4 gap-6 w-full mt-8">
-            <!-- Card holder -->
-            
-            <!-- Card number -->
-            <div class="col-span-4 sm:col-span-2">
-                <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Salaire</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:credit-card'"
-                        matPrefix></mat-icon>
-                    <input
-                    [formControl]="salaireControl"
-                        matInput>
-                </mat-form-field>
+        <ng-container *ngIf="isInsert">
+            <div class="w-full">
+                <div class="text-xl">Veuillez rentrer les dépenses du mois</div>
             </div>
-            <!-- Card expiration -->
-            <div class="col-span-4 sm:col-span-2">
-                <mat-form-field
-                    class="fuse-mat-no-subscript w-full"
-                    [floatLabel]="'always'">
-                    <mat-label>Loyer</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:calendar'"
-                        matPrefix></mat-icon>
-                    <input
-                    [formControl]="loyerControl"
-                        matInput>
-                </mat-form-field>
+            <div class="grid grid-cols-4 gap-6 w-full mt-8">
+                <!-- Card holder -->
+                
+                <!-- Card number -->
+                <div class="col-span-4 sm:col-span-2">
+                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>Salaire</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:credit-card'"
+                            matPrefix></mat-icon>
+                        <input
+                        [formControl]="salaireControl"
+                            matInput>
+                    </mat-form-field>
+                </div>
+                <!-- Card expiration -->
+                <div class="col-span-4 sm:col-span-2">
+                    <mat-form-field
+                        class="fuse-mat-no-subscript w-full"
+                        [floatLabel]="'always'">
+                        <mat-label>Loyer</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:calendar'"
+                            matPrefix></mat-icon>
+                        <input
+                        [formControl]="loyerControl"
+                            matInput>
+                    </mat-form-field>
+                </div>
+                <div class="col-span-4 sm:col-span-2">
+                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>Achat pièces</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:hashtag'"
+                            matPrefix></mat-icon>
+                        <input [formControl]="piecesControl"  matInput>
+                    </mat-form-field>
+                </div>
+                <!-- ZIP -->
+                <div class="col-span-4 sm:col-span-2">
+                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>Autre dépenses</mat-label>
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:hashtag'"
+                            matPrefix></mat-icon>
+                        <input [formControl]="depensesControl" matInput>
+                    </mat-form-field>
+                </div>
             </div>
-            <div class="col-span-4 sm:col-span-2">
-                <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Achat pièces</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:hashtag'"
-                        matPrefix></mat-icon>
-                    <input [formControl]="piecesControl" matInput>
-                </mat-form-field>
+    
+            <mat-tab-group class="fuse-mat-no-header">
+                <ng-container>
+                    <mat-tab>
+                        <ng-template matTabContent>
+                            <div
+                                class="prose prose-sm max-w-3xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card">
+                                <h1>Liste des pièces</h1>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Piece</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Prix</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Données</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </ng-template>
+                    </mat-tab>
+                </ng-container>
+            </mat-tab-group>
+            <!-- Divider -->
+            <div class="mt-11 mb-10 border-t"></div>
+    
+            <!-- Actions -->
+            <div class="flex items-center justify-end">
+                <button
+                    class="ml-4"
+                    mat-flat-button
+                    type="button"
+                    [color]="'primary'" (click)="addBenefice()">Ajouter
+                </button>
             </div>
-            <!-- ZIP -->
-            <div class="col-span-4 sm:col-span-2">
-                <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Autre dépenses</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:hashtag'"
-                        matPrefix></mat-icon>
-                    <input [formControl]="depensesControl" matInput>
-                </mat-form-field>
-            </div>
-        </div>
+    
+        </ng-container>
+        
 
-        <mat-tab-group class="fuse-mat-no-header">
-            <ng-container>
-                <mat-tab>
-                    <ng-template matTabContent>
-                        <div
-                            class="prose prose-sm max-w-3xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card">
-                            <h1>Liste des pièces</h1>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Piece</th>
-                                        <th scope="col">Description</th>
-                                        <th scope="col">Prix</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Données</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                    </ng-template>
-                </mat-tab>
-            </ng-container>
-        </mat-tab-group>
-        <!-- Divider -->
-        <div class="mt-11 mb-10 border-t"></div>
-
-        <!-- Actions -->
-        <div class="flex items-center justify-end">
-            <button
-                class="ml-4"
-                mat-flat-button
-                type="button"
-                [color]="'primary'" (click)="addBenefice()">Ajouter
-            </button>
-        </div>
-    </form>
 
 </div>
