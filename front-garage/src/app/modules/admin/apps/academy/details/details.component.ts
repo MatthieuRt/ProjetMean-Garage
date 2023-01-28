@@ -161,21 +161,21 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy {
     }
     setEtat(event,index){
         if(event.value!='Modifier'){
-            console.log(this.reparation.listeReparation[index])
+            console.log(this.reparation)
             const onSuccess = (response:any)=>{
                 if(response.message=='OK'){
                     console.log(response)
                 }
               }
             const data = {
-            idReparation : this.reparation.listeReparation[index]._id,
+            idReparation : this.reparation._id,
+            idPiece : this.reparation.listeReparation[index].idPiece,
             etat : event.value
             }
             console.log(JSON.stringify(data))
               this._academyService.setEtat(data).subscribe(onSuccess);
             // console.log(this.reparation.listeReparation[index])
         }
-        
     }
     refreshData(){
         this._academyService.reparation$

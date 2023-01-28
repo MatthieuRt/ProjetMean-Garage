@@ -205,24 +205,46 @@ router.post('/validation/paiement',async (req,res)=>{
 });
 router.put('/set/etat',(req,res)=>{
     console.log(req.body.idReparation)
-    ReparationsVoiture.findOneAndUpdate({_id:req.body.idReparation},{$set:{etat:req.body.etat}}, {new: true})
-        .then(result=>{
-            const reponse = {
-                message : 'OK',
-                code:200,
-                value : result
-            }
-            res.json(reponse)
+    ReparationsVoiture.findOne({_id:req.body.idReparation})
+        .then(reparation=>{
+                let indexToUpdate = reparation.listeReparation.findIndex(lreparation=> lreparation.idPiece===(req.body.idPiece));
+                if (indexToUpdate !== -1) {
+                    reparation.listeReparation[indexToUpdate].avancement = req.body.etat
+                    ReparationsVoiture.findOneAndUpdate({_id:reparation._id},{$set:{listeReparation:reparation.listeReparation}}, {new: true})
+                        .then(result=>{
+                            const reponse = {
+                                message : 'OK',
+                                code:200,
+                                value : result
+                            }
+                            // console.log('_______________Update reparationvoiture____________________')
+                            // console.log(reponse)
+                            res.json(reponse)
+                        })
+                        .catch(error => {
+                            const reponse = {
+                                message : 'KO',
+                                code:500,
+                                value : error
+                            }
+                            console.log('_______________XXXXXXXXXXXX Update reparationvoiture____________________')
+                            console.log(reponse)
+                            res.json(reponse)
+                        });
+                }else{
+                    const reponse = {
+                        message : 'KO',
+                        code:500,
+                        value : 'Piece id : '+req.body.idPiece+' introuvable'
+                    }
+                    console.log('_______________XXXXXXXXXXXX INTROUVABLE reparationvoiture____________________')
+                    console.log(reponse)
+                    res.json(reponse)
+                }
         })
-        .catch(error => {
-            const reponse = {
-                message : 'KO',
-                code:500,
-                value : error
-            }
-            console.log(reponse)
-            res.json(reponse)
-        });
+        .catch(err=>{
+            console.log(err)
+        })
 });
 
 router.get('/stats/tempsMoyen',(req,res)=>{
