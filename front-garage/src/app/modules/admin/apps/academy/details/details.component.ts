@@ -164,7 +164,8 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy {
             console.log(this.reparation)
             const onSuccess = (response:any)=>{
                 if(response.message=='OK'){
-                    console.log(response)
+                    // console.log(response)
+                    this.refreshData();
                 }
               }
             const data = {
