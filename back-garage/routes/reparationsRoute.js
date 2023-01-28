@@ -321,5 +321,39 @@ router.get('/stats/chiffreAffaire/:date1',(req,res)=>{
     });
 });
 
+router.get('/test/stats/chiffreAffaire/:date1',(req,res)=>{
+    let totalPrix = 0;
+    let date = req.params.date1;
+    let chiffreAffairePerMonth = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0};
+
+    ReparationsVoiture.find({}, function (err, reparations) {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({error: "Une erreur est survenue lors de la récupération des données"});
+        }
+        
+        reparations.forEach(function(rep) {
+          if (rep.listeReparation) {
+            rep.listeReparation.forEach(function(liste) {
+                let datePaiement = new Date(liste.datePaiement);
+                datePaiement = datePaiement.toISOString().slice(0,10);
+                datePaiement  = new Date(datePaiement);
+                let month = datePaiement.getMonth() + 1; // adding 1 because month starts from 0
+                let year = datePaiement.getFullYear();
+                if (year == date) {
+                  if(chiffreAffairePerMonth[month]){
+                    chiffreAffairePerMonth[month] += liste.prix;
+                  }
+                  else {
+                    chiffreAffairePerMonth[month] = liste.prix;
+                  }
+                }
+            });
+          }
+        });
+        res.status(200).json(chiffreAffairePerMonth);
+    });
+});
+
 
 module.exports = router;
