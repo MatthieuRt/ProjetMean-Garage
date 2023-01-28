@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { StatistiquesService } from 'app/modules/admin/pages/statistiques/statistiques.service';
 
 @Component({
     selector       : 'statistiques-plan-billing',
@@ -11,12 +12,15 @@ export class StatistiquesPlanBillingComponent implements OnInit
 {
     planBillingForm: UntypedFormGroup;
     plans: any[];
+    months : any;
+    monthControl = new FormControl();
+    yearControl = new FormControl();
 
     /**
      * Constructor
      */
     constructor(
-        private _formBuilder: UntypedFormBuilder
+        private _formBuilder: UntypedFormBuilder,private _statistiquesService: StatistiquesService
     )
     {
     }
@@ -30,6 +34,7 @@ export class StatistiquesPlanBillingComponent implements OnInit
      */
     ngOnInit(): void
     {
+        this.months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
         // Create the form
         this.planBillingForm = this._formBuilder.group({
             plan          : ['team'],
@@ -77,5 +82,10 @@ export class StatistiquesPlanBillingComponent implements OnInit
     trackByFn(index: number, item: any): any
     {
         return item.id || index;
+    }
+
+    getBenefices(){
+        console.log("clicked on getBenefices")
+        
     }
 }

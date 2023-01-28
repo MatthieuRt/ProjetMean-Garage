@@ -7,8 +7,8 @@ var ObjectId = require('mongoose').Types.ObjectId;
 const Benefice = require('../models/Benefice');
 
 
-router.get('/',(req,res)=>{
-    Benefice.find((err,docs)=>{
+router.get('/find/:mois/:annee',(req,res)=>{
+    Benefice.find({mois:req.params.mois,annee:req.params.annee},(err,docs)=>{
         if (!err) { res.send(docs); }
         else { console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); }
     });
