@@ -27,15 +27,20 @@
             <div class="mt-1 text-md text-hint">La deuxième date ne doit pas être antérieure à la première.</div>
         </div>
     </div>
-
-    <!-- Divider -->
-    <div class="my-10 border-t"></div>
-
+    
     <!-- Actions -->
     <div class="flex items-center justify-end">
         <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="getChiffreAffaires()">Voir
         </button>
     </div>
+
+    <div class="chart-container">
+        <canvas id="MyChart">{{ chart }}</canvas>
+    </div>
+
+    <!-- Divider -->
+    <div class="my-10 border-t"></div>
+
 
     <div class="my-10 border-t"></div>
     <div class="w-full">
@@ -48,7 +53,7 @@
             <mat-form-field class="fuse-mat-no-subscript w-full">
                 <mat-label>Année</mat-label>
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:car'" matPrefix></mat-icon>
-                <mat-select>
+                <mat-select [formControl]="yearControl">
                     <!-- <mat-option *ngFor="let car of listCars" [value]="car._id">{{ car.modele }}</mat-option> -->
                     <mat-option value="2022">2022</mat-option>
                     <mat-option value="2023">2023</mat-option>
@@ -62,14 +67,14 @@
 
     <!-- Actions -->
     <div class="flex items-center justify-end">
-        <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="getChiffreAffaires()">Voir
+        <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="getChiffreAffairesByYear()">Voir
         </button>
     </div>
 
     <!-- Divider -->
     <div class="my-10 border-t"></div>
     <div class="chart-container">
-        <canvas id="MyChart">{{ chart }}</canvas>
+        <canvas id="MyChart2">{{ chart2 }}</canvas>
     </div>
     <!-- Section -->
     <ng-container *ngIf="chiffreAffaires;else noChiffre">
