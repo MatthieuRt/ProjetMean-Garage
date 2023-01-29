@@ -148,4 +148,7 @@ export class AcademyService
         return this._httpClient.put(url,data);
     }
     
+    getAllCars(){
+        return this._httpClient.get("http://localhost:9000/user/car");
+    }
 }

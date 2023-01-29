@@ -19,6 +19,8 @@ export class CompactComponent {
     listePieces: any;
     totalPrix: number;
     user:any;
+    dateBondeSortie : Date = new Date();
+    
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(private route: ActivatedRoute, private _academyService: AcademyService, private _changeDetectorRef: ChangeDetectorRef,) {

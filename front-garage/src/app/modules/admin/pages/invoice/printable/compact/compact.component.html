@@ -12,7 +12,7 @@
                     <div class="text-4xl tracking-tight text-secondary">Facture</div>
                     <div class="text-4xl">#9-0004</div>
                     <div class="font-medium tracking-tight text-secondary">Date de la Facture</div>
-                    <div class="font-medium">Jul 19, 2022</div>
+                    <div class="font-medium">{{dateBondeSortie |  date:'d MMMM yyyy'}}</div>
 
                     <div class="font-medium tracking-tight text-secondary">Total</div>
                     <div class="font-medium">{{ totalPrix | number: '1.3-3' }} MGA</div>
@@ -33,9 +33,9 @@
             </div>
 
             <div class="text-md">
-                <div class="text-xl font-medium">{{user.identifiant}}</div>
+                <div class="text-xl font-medium">{{user?.identifiant}}</div>
                 <div>Antananarivo, Madagascar 101</div>
-                <div>{{user.mail}}</div>
+                <div>{{user?.mail}}</div>
                 <div>+261 34 06 376 17</div>
             </div>
 

@@ -72,17 +72,34 @@ export class AcademyListComponent implements OnInit, OnDestroy {
                 this.isLoading = false;
                 this.listereparations = this.filteredListeReparations = response;
 
-                for (let i = 0; i < this.listereparations.length; i++) {
-                    for (let j = 0; j < this.listeVoitures.length; j++) {
-                        if (this.listereparations[i].idVoiture == this.listeVoitures[j]._id) {
-                            this.listereparations[i].modele = this.listeVoitures[j].modele;
+                
+                this._academyService.getAllCars().subscribe((res:any)=>{
+                    let newList = res.map(user => {
+                        return user.listeVoiture.map(voiture=>{
+                                return {
+                                    _id: voiture._id,
+                                    modele: voiture.modele,
+                                    numero: voiture.numero
+                                }
+                        }).flat();
+                    })
+                    newList = this.flattenData(newList)
+                    this.listeVoitures = newList;
+                    for (let i = 0; i < this.listereparations.length; i++) {
+                        for (let j = 0; j < this.listeVoitures.length; j++) {
+                            if (this.listereparations[i].idVoiture == this.listeVoitures[j]._id) {
+                                
+                                this.listereparations[i].modele = this.listeVoitures[j].modele;
+                                this._changeDetectorRef.markForCheck();
+                            }
                         }
                     }
-                }
-
-                for (let i = 0; i < this.listereparations.length; i++) {
-                    if (!this.listereparations[i].modele) this.listereparations[i].modele = "";
-                }
+                    console.log(this.listereparations)
+                    for (let i = 0; i < this.listereparations.length; i++) {
+                        if (!this.listereparations[i].modele) this.listereparations[i].modele = "";
+                    }
+                })
+                
                 this._changeDetectorRef.markForCheck();
             });
         }else if(jsonObject.profil=="user"){
@@ -170,6 +187,17 @@ export class AcademyListComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
+    flattenData(data) {
+        let flatArray = [];
+        data.forEach(subArray => {
+            subArray.forEach(item => {
+                if (item) {
+                    flatArray.push(item);
+                }
+            });
+        });
+        return flatArray;
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
