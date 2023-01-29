@@ -25,6 +25,7 @@ router.post('/inscription',(request,response)=>{
     //check compte s'il existe déjà
     Utilisateur.findOne({mail : user.mail} , (err,userExist)=>{
         let rep = {};
+        let idUser;
         //si utilisateur n'existe pas encore
         if(userExist==null){
             user.save()
@@ -32,12 +33,13 @@ router.post('/inscription',(request,response)=>{
                 const uuid = new ConfirmCompte({
                     userId : data._id,
                 })
+                userId = data._id;
                 uuid.save()
                     .then(code=>{
                         var body = '<h1>Bonjour,</h1><p>Nous avons reçu une demande de création de compte pour cette adresse e-mail.</p><p> Pour compléter la création de votre compte, veuillez entrer le code de confirmation suivant : '+code.code+' sur notre site web.</p> \n'
                         +'<p>Merci d\'avoir utiliser notre service.</p><p>Cordialement,</p> <p>L\'équipe de notre service</p>';
                         let mailOptions = {
-                            to: 'andrianmattax@gmail.com',
+                            to: user.mail,
                             subject: 'Email de confirmation de création de compte',
                             html: body
                         };
@@ -54,6 +56,9 @@ router.post('/inscription',(request,response)=>{
                                 console.log('Email sent: ' + info.response);
                             }
                         });
+                    })
+                    .catch(erreurUid=>{
+                        Utilisateur.remove({_id : idUser._id})
                     })
                 
             })
