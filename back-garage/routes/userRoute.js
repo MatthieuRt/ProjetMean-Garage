@@ -143,14 +143,16 @@ router.post('/login',(request,response)=>{
             response.json(reponse)
         }
         // console.log(user)
-        const reponse = {
-            message : 'OK',
-            value : user,
-            code : 200
+        else{
+            const reponse = {
+                message : 'OK',
+                value : user,
+                code : 200
+            }
+            response.json(reponse)
+            // console.log('----------------------------------------------------')
+            // console.log(reponse);
         }
-        response.json(reponse)
-        // console.log('----------------------------------------------------')
-        // console.log(reponse);
     })
 })
 // ajout nouvelle voiture
