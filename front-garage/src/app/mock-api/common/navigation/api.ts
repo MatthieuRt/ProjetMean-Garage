@@ -43,7 +43,7 @@ export class NavigationMockApi {
                 //Si responsable atelier 
                 if (userJson.profil == "responsable_atelier") {
                     //indice des options à enlever
-                    let removeIndices = [0, 2, 3];
+                    let removeIndices = [0, 3, 4];
 
                     for (let i = removeIndices.length - 1; i >= 0; i--) {
                         children.splice(removeIndices[i], 1);
@@ -51,7 +51,13 @@ export class NavigationMockApi {
                 //Si responsable financier 
                 }else if(userJson.profil == "responsable_financier"){
                     //indice des options à enlever
-                    let removeIndices = [0, 2, 3];
+                    let removeIndices = [0, 3, 4];
+
+                    for (let i = removeIndices.length - 1; i >= 0; i--) {
+                        children.splice(removeIndices[i], 1);
+                    }
+                }else{
+                    let removeIndices = [1,5,6,7];
 
                     for (let i = removeIndices.length - 1; i >= 0; i--) {
                         children.splice(removeIndices[i], 1);
