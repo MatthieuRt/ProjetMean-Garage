@@ -25,16 +25,13 @@ router.post('/inscription',(request,response)=>{
     //check compte s'il existe déjà
     Utilisateur.findOne({mail : user.mail} , (err,userExist)=>{
         let rep = {};
-        let idUser;
         //si utilisateur n'existe pas encore
-        console.log(user.mail)
         if(userExist==null){
             user.save()
             .then(data=>{
                 const uuid = new ConfirmCompte({
                     userId : data._id,
                 })
-                userId = data._id;
                 uuid.save()
                     .then(code=>{
                         var body = '<h1>Bonjour,</h1><p>Nous avons reçu une demande de création de compte pour cette adresse e-mail.</p><p> Pour compléter la création de votre compte, veuillez entrer le code de confirmation suivant : '+code.code+' sur notre site web.</p> \n'
@@ -53,13 +50,10 @@ router.post('/inscription',(request,response)=>{
                                     value : null,
                                     code : 200
                                 }
-                                response.json(rep);
                                 console.log('Email sent: ' + info.response);
+                                response.json(rep);
                             }
                         });
-                    })
-                    .catch(erreurUid=>{
-                        Utilisateur.remove({_id : idUser._id})
                     })
                 
             })
