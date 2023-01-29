@@ -27,6 +27,7 @@ router.post('/inscription',(request,response)=>{
         let rep = {};
         let idUser;
         //si utilisateur n'existe pas encore
+        console.log(user.mail)
         if(userExist==null){
             user.save()
             .then(data=>{
