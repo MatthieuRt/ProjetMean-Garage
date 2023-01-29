@@ -20,7 +20,7 @@ export class UtilisateurSerice
         return this._httpClient.post(url,data);
     }
     getListVoiture(idUser): Observable<any>{
-        console.log(idUser)
+        console.log("getListVoiture : " +idUser)
         return this._httpClient.get(this.url+'car/'+idUser);
     }
     depotVoiture(data:any): Observable<any>{

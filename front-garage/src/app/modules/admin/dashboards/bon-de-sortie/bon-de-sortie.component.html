@@ -53,7 +53,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <ng-container *ngIf="listVoiture.length>0; else noList">
+                                                <ng-container *ngIf="listVoiture && listVoiture.length>0; else noList">
                                                     <tr  *ngFor="let vehicule of listVoiture; let i = index">
                                                         <th scope="row">1</th>
                                                         <td>{{vehicule?.identifiant}}</td>
@@ -63,9 +63,9 @@
                                                                 class="ml-4"
                                                                 mat-flat-button
                                                                 style="background-color: #0070acd4;"
-                                                                (click)="validerBonDeSortie(i)">
+                                                                [routerLink]="'/pages/invoice/printable/modern/' + vehicule?.voitureId" >
                                                                 <mat-icon [svgIcon]="'heroicons_outline:key'"></mat-icon>
-                                                                <span class="ml-2 mr-1">Validé</span>
+                                                                <span class="ml-2 mr-1">Générer</span>
                                                             </button>
                                                         </td>
                                                     </tr>

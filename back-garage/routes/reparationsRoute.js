@@ -8,6 +8,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 const Utilisateur = require('../models/Utilisateur');
 const ReparationsVoiture = require('../models/ReparationsVoiture');
 const DemandePaiement = require('../models/DemandePaiement');
+const Piece = require('../models/Piece')
 
 
 router.get('/', (req, res) => {
@@ -160,46 +161,40 @@ router.put('/estReceptionne/:id',(req,res)=>{
     });
 });
 router.post('/validation/paiement',async (req,res)=>{
-    console.log("miantso ")
-    const date = new Date();
-    const options = { timeZone: 'Africa/Nairobi',day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-    const formatter = new Intl.DateTimeFormat('fr-FR', options);
-    const formattedDate = formatter.format(date);
-    const dateParts = formattedDate.split(', ');
-    const dateString = dateParts[0].split('/').reverse().join('-') + 'T' + dateParts[1] + 'Z';
-    const datePaiement = new Date(dateString);
-
-    // const demandePaiement = new DemandePaiement(req.body.demandePaiement);
-    // const reparationvoitures = await ReparationsVoiture.find({idVoiture:demandePaiement.idVoiture,idUtilisateur:demandePaiement.idUser})
-    // for(let i=0;i<reparationvoitures.length;i++){
-    //     const reparation = reparationvoitures[i];
-    //     let reparationVoiture = reparation.listeReparation.find(lreparation=> lreparation._id===demandePaiement.idReparation);
-    //     if(reparationVoiture){
-    //         console.log('ita leizi')
-    //         console.log(reparationVoiture)
-    //         res.send(reparationVoiture)
-    //     }
-    //     else if(!reparationVoiture){
-    //         continue;
-    //     }
-    // }
+    const datePaiement = req.body.datePaiement;
     const demandePaiement = new DemandePaiement(req.body.demandePaiement);
     ReparationsVoiture.find({idVoiture:demandePaiement.idVoiture,idUtilisateur:demandePaiement.idUser})
         .then(reparationvoitures=>{
-            // console.log(reparationvoitures)
             for(let i=0;i<reparationvoitures.length;i++){
                 const reparation = reparationvoitures[i];
-                // voiture => voiture.numero ===car.numero
-                
-                let reparationVoiture = reparation.listeReparation.find(lreparation=> lreparation._id===demandePaiement.idReparation);
-                console.log(reparationVoiture)
-                console.log('______________________________________________________________________')
-                if(reparationVoiture){
-                    console.log('ita leizi')
-                    console.log(reparationVoiture)
-                    res.send(reparationVoiture)
+                let indexToUpdate = reparation.listeReparation.findIndex(lreparation=> lreparation._id.equals(demandePaiement.idReparation));
+                if (indexToUpdate !== -1) {
+                    reparation.listeReparation[indexToUpdate].datePaiement = datePaiement
+                    reparation.listeReparation[indexToUpdate].estPaye = true;
+                    ReparationsVoiture.findOneAndUpdate({_id:reparation._id},{$set:{listeReparation:reparation.listeReparation}}, {new: true})
+                        .then(result=>{
+                            const reponse = {
+                                message : 'OK',
+                                code:200,
+                                value : result
+                            }
+                            // console.log('_______________Update reparationvoiture____________________')
+                            // console.log(reponse)
+                            res.json(reponse)
+                        })
+                        .catch(error => {
+                            const reponse = {
+                                message : 'KO',
+                                code:500,
+                                value : error
+                            }
+                            console.log('_______________XXXXXXXXXXXX Update reparationvoiture____________________')
+                            console.log(reponse)
+                            res.json(reponse)
+                        });
+                    break;
                 }
-                else if(!reparationVoiture){
+                else{
                     continue;
                 }
             }
@@ -208,6 +203,49 @@ router.post('/validation/paiement',async (req,res)=>{
             console.log(err)
         })
     
+});
+router.put('/set/etat',(req,res)=>{
+    console.log(req.body.idReparation)
+    ReparationsVoiture.findOne({_id:req.body.idReparation})
+        .then(reparation=>{
+                let indexToUpdate = reparation.listeReparation.findIndex(lreparation=> lreparation.idPiece===(req.body.idPiece));
+                if (indexToUpdate !== -1) {
+                    reparation.listeReparation[indexToUpdate].avancement = req.body.etat
+                    ReparationsVoiture.findOneAndUpdate({_id:reparation._id},{$set:{listeReparation:reparation.listeReparation}}, {new: true})
+                        .then(result=>{
+                            const reponse = {
+                                message : 'OK',
+                                code:200,
+                                value : result
+                            }
+                            // console.log('_______________Update reparationvoiture____________________')
+                            // console.log(reponse)
+                            res.json(reponse)
+                        })
+                        .catch(error => {
+                            const reponse = {
+                                message : 'KO',
+                                code:500,
+                                value : error
+                            }
+                            console.log('_______________XXXXXXXXXXXX Update reparationvoiture____________________')
+                            console.log(reponse)
+                            res.json(reponse)
+                        });
+                }else{
+                    const reponse = {
+                        message : 'KO',
+                        code:500,
+                        value : 'Piece id : '+req.body.idPiece+' introuvable'
+                    }
+                    console.log('_______________XXXXXXXXXXXX INTROUVABLE reparationvoiture____________________')
+                    console.log(reponse)
+                    res.json(reponse)
+                }
+        })
+        .catch(err=>{
+            console.log(err)
+        })
 });
 
 router.get('/stats/tempsMoyen',(req,res)=>{
@@ -268,11 +306,11 @@ router.get('/stats/tempsMoyen/:id',(req,res)=>{
     });
 });
 
-router.post('/stats/chiffreAffaire',(req,res)=>{
+/*router.get('/stats/chiffreAffaire/:date1/:date2',(req,res)=>{
     let totalPrix = 0;
     let count = 0;
-    let dateDebut = new Date(req.body.dateDebut);
-    let dateFin = new Date(req.body.dateFin);
+    let dateDebut = new Date(req.params.date1);
+    let dateFin = new Date(req.params.date2);
 
     ReparationsVoiture.find({}, function (err, reparations) {
         if (err) {
@@ -285,7 +323,7 @@ router.post('/stats/chiffreAffaire',(req,res)=>{
             
             rep.listeReparation.forEach(function(liste) {
                 
-              if (liste.dateDebut >= dateDebut && liste.dateFin <= dateFin) {
+              if (liste.datePaiement >= dateDebut && liste.datePaiement <= dateFin) {
                 console.log(liste);
                 totalPrix += liste.prix;
                 count++;
@@ -297,7 +335,110 @@ router.post('/stats/chiffreAffaire',(req,res)=>{
         console.log("La moyenne des prix est : ", average);
         res.status(200).json({moyenne : average});
     });
+});*/
+
+router.get('/stats/chiffreAffaire/:date1',(req,res)=>{
+    let totalPrix = 0;
+    let date = req.params.date1;
+
+    ReparationsVoiture.find({}, function (err, reparations) {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({error: "Une erreur est survenue lors de la récupération des données"});
+        }
+        
+        reparations.forEach(function(rep) {
+          if (rep.listeReparation) {
+            
+            rep.listeReparation.forEach(function(liste) {
+                let datePaiement = new Date(liste.datePaiement);
+                datePaiement = datePaiement.toISOString().slice(0,10);
+              if (datePaiement == date) {
+                totalPrix += liste.prix;
+              }
+            });
+          }
+        });
+        let chiffreAffaire = totalPrix 
+        res.status(200).json(chiffreAffaire);
+    });
 });
 
+router.get('/stats/chiffreAffaire/year/:date1',(req,res)=>{
+    let totalPrix = 0;
+    let date = req.params.date1;
+    let chiffreAffairePerMonth = {};
+    let months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+
+    ReparationsVoiture.find({}, function (err, reparations) {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({error: "Une erreur est survenue lors de la récupération des données"});
+        }
+        
+        reparations.forEach(function(rep) {
+          if (rep.listeReparation) {
+            rep.listeReparation.forEach(function(liste) {
+                let datePaiement = new Date(liste.datePaiement);
+                datePaiement = datePaiement.toISOString().slice(0,10);
+                datePaiement  = new Date(datePaiement);
+                let month = datePaiement.getMonth() + 1; // adding 1 because month starts from 0
+                let year = datePaiement.getFullYear();
+                if (year == date) {
+                  if(chiffreAffairePerMonth[month]){
+                    chiffreAffairePerMonth[month] += liste.prix;
+                  }
+                  else {
+                    chiffreAffairePerMonth[month] = liste.prix;
+                  }
+                }
+            });
+          }
+        });
+        let result = {}
+        for(let i=1; i<=12; i++){
+            if(!chiffreAffairePerMonth[i]){
+              chiffreAffairePerMonth[i] = 0;
+            }
+            result[months[i-1]] = chiffreAffairePerMonth[i];
+          }
+        res.status(200).json(result);
+    });
+});
+
+router.get("/byDate/:month/:year",(req,res)=>{
+    const startDate = new Date(req.params.year+"-"+req.params.month+"-01");
+    const endDate = new Date(req.params.year+"-"+req.params.month+"-31");
+    let result = [];
+    let sum = 0;
+    ReparationsVoiture.find({ },{}, async function (err, reparations) {
+        let idPieces = reparations.map(rep => rep.listeReparation.map(liste => liste.idPiece)).flat();
+        let pieces = await Piece.find({ _id: { $in: idPieces } });
+        let piecesMap = pieces.reduce((map, piece) => {
+            map[piece._id] = piece;
+            return map;
+        }, {});
+        reparations.forEach(function(rep) {
+            if (rep.listeReparation) {
+              rep.listeReparation.forEach(function(liste) {
+                  let datePaiement = new Date(liste.datePaiement);
+                  datePaiement = datePaiement.toISOString().slice(0,10);
+                  datePaiement = new Date(datePaiement)
+                if (datePaiement >= startDate && datePaiement<=endDate) {
+                    liste.piece = piecesMap[liste.idPiece];
+                    console.log("piece : "+liste.piece.designation)
+                    console.log("prix : "+liste.piece.prix)
+                    
+                    sum+=liste.piece.prix;
+                    result.push(liste);
+                }
+              });
+            }
+          });
+        if (err) return res.status(500).send(err);
+        result.push({totalPrix : sum})
+        res.send(result,);
+    });
+})
 
 module.exports = router;

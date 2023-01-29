@@ -20,7 +20,7 @@ export class UserComponent implements OnInit, OnDestroy
 
     @Input() showAvatar: boolean = true;
     user: User;
-
+    mail:String
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -43,6 +43,7 @@ export class UserComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        this.mail = JSON.parse(sessionStorage.getItem("user")).mail
         // Subscribe to user changes
         this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))

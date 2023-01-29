@@ -45,7 +45,7 @@ router.post('/',async (request,response)=>{
 
 //liste demande paiement en attente
 router.get('/pendingValidation',(request,response)=>{
-    DemandePaiement.find((err,success) => {
+    DemandePaiement.find({valid:false},(err,success) => {
         if(err){
             const rep = {
                 message : 'KO',
@@ -65,7 +65,7 @@ router.get('/pendingValidation',(request,response)=>{
 })
 //liste demande paiement en attente par idVoiture
 router.get('/pendingValidation/:idVoiture',(request,response)=>{
-    DemandePaiement.find({idVoiture: request.params.idVoiture},(err,success) => {
+    DemandePaiement.find({idVoiture: request.params.idVoiture,valid:false},(err,success) => {
         if(err){
             const rep = {
                 message : 'KO',
@@ -84,4 +84,24 @@ router.get('/pendingValidation/:idVoiture',(request,response)=>{
         response.json(reponse)
     });
 })
+router.put('/validation',(request,response)=>{
+    DemandePaiement.findOneAndUpdate({_id: request.body.idDemandePaiement},{$set:{valid:true}}, {new: true})
+        .then(success => {
+            const reponse = {
+                message : 'OK',
+                value : success,
+                code : 200
+            }
+        response.json(reponse)
+        })
+        .catch(err=>{
+            const rep = {
+                message : 'KO',
+                code : 404,
+                value :  err
+            }
+            response.json(rep);
+        })
+})
+
 module.exports = router;

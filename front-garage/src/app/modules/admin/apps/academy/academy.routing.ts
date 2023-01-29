@@ -3,6 +3,7 @@ import { AcademyComponent } from 'app/modules/admin/apps/academy/academy.compone
 import { AcademyListComponent } from 'app/modules/admin/apps/academy/list/list.component';
 import { AcademyDetailsComponent } from 'app/modules/admin/apps/academy/details/details.component';
 import { AcademyCategoriesResolver, AcademyCourseResolver, AcademyCoursesResolver } from 'app/modules/admin/apps/academy/academy.resolvers';
+import { ModificationComponent } from './modification/modification.component';
 
 export const academyRoutes: Route[] = [
     {
@@ -26,7 +27,12 @@ export const academyRoutes: Route[] = [
                 resolve  : {
                     course: AcademyCourseResolver
                 }
+            },
+            {
+                path     : '',
+                component: ModificationComponent,
             }
+
         ]
     }
 ];

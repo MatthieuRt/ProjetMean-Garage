@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { Category, Course, ListeReparation, ReparationsVoitures } from 'app/modules/admin/apps/academy/academy.types';
+import { baseUrl } from 'environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,7 @@ export class AcademyService
     private _courses: BehaviorSubject<Course[] | null> = new BehaviorSubject(null);
     private _listeReparations: BehaviorSubject<ListeReparation[] | null> = new BehaviorSubject(null);
     private reparation: Observable<ReparationsVoitures>;
-
+    private reparationtoSet;
     /**
      * Constructor
      */
@@ -60,6 +61,12 @@ export class AcademyService
         return this.reparation;
     }
 
+    get reparationtoSet$(){
+        return this.reparationtoSet;
+    }
+    setReparation(reparation){
+        this.reparationtoSet = reparation;
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -136,6 +143,12 @@ export class AcademyService
             map(response => response as any)
         );
     }
-
+    setEtat(data:any){
+        let url = baseUrl+'reparation/set/etat';
+        return this._httpClient.put(url,data);
+    }
     
+    getAllCars(){
+        return this._httpClient.get("http://localhost:9000/user/car");
+    }
 }

@@ -23,7 +23,7 @@ router.post('/inscription',(request,response)=>{
         }
     });
     //check compte s'il existe déjà
-    Utilisateur.findOne({mail : user.mail} , (err,userExist)=>{
+    Utilisateur.findOne({mail : user.mail} , (erreurFindUser,userExist)=>{
         let rep = {};
         //si utilisateur n'existe pas encore
         if(userExist==null){
@@ -37,7 +37,7 @@ router.post('/inscription',(request,response)=>{
                         var body = '<h1>Bonjour,</h1><p>Nous avons reçu une demande de création de compte pour cette adresse e-mail.</p><p> Pour compléter la création de votre compte, veuillez entrer le code de confirmation suivant : '+code.code+' sur notre site web.</p> \n'
                         +'<p>Merci d\'avoir utiliser notre service.</p><p>Cordialement,</p> <p>L\'équipe de notre service</p>';
                         let mailOptions = {
-                            to: 'andrianmattax@gmail.com',
+                            to: user.mail,
                             subject: 'Email de confirmation de création de compte',
                             html: body
                         };
@@ -50,8 +50,8 @@ router.post('/inscription',(request,response)=>{
                                     value : null,
                                     code : 200
                                 }
-                                response.json(rep);
                                 console.log('Email sent: ' + info.response);
+                                response.json(rep);
                             }
                         });
                     })
@@ -83,7 +83,11 @@ router.post('/inscription',(request,response)=>{
                 code:404
             }
         }
+        if(erreurFindUser){
+            console.log(erreurFindUser)
+        }
         response.json(rep);
+        
     })   
     
 })
@@ -216,6 +220,31 @@ router.get('/car/:idUser',(request,response)=>{
         response.json(reponse)
     })
 })
+// //User by id
+router.get('/proprio/:idUser',(request,response)=>{
+    console.log(request.params.idUser)
+    Utilisateur.findOne({_id : request.params.idUser},(err,user)=>{
+        console.log(user)
+
+        if(err){
+            const rep = {
+                message : 'KO',
+                code : 404,
+                value :  err
+            }
+            response.send(rep);
+        }
+        else{
+            const reponse = {
+                message : 'OK',
+                value : user,
+                code : 200
+            }
+            response.json(reponse)
+        }
+        
+    })
+})
 
 //all cars
 router.get('/car',(req,res)=>{
@@ -237,7 +266,7 @@ router.get('/carlist',(req,res)=>{
             }
         }
         else { 
-            console.log('Erreur : ' + JSON.stringify(err, undefined, 2)); 
+            console.log('Erreur : ' + err); 
             reponse = {
                 message :'KO',
                 code:404,

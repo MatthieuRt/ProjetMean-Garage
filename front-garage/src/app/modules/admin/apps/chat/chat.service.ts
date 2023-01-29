@@ -299,4 +299,8 @@ export class ChatService
         let url = baseUrl+'reparation/validation/paiement';
         return this._httpClient.post(url,data);
     }
+    suppressionDemandePaiement(idDemandePaiement): Observable<any>{
+        let url = baseUrl+'demandepaiement/validation';
+        return this._httpClient.put(url,{idDemandePaiement: idDemandePaiement});
+    }
 }

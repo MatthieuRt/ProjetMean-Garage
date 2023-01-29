@@ -17,6 +17,7 @@ import { StatistiquesPlanBillingComponent } from 'app/modules/admin/pages/statis
 import { StatistiquesNotificationsComponent } from 'app/modules/admin/pages/statistiques/notifications/notifications.component';
 import { StatistiquesTeamComponent } from 'app/modules/admin/pages/statistiques/team/team.component';
 import { statistiquesRoutes } from 'app/modules/admin/pages/statistiques/statistiques.routing';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
     declarations: [
@@ -38,7 +39,9 @@ import { statistiquesRoutes } from 'app/modules/admin/pages/statistiques/statist
         MatSidenavModule,
         MatSlideToggleModule,
         FuseAlertModule,
-        SharedModule
+        SharedModule,
+        MatFormFieldModule,
+        MatTabsModule
     ]
 })
 export class StatistiquesModule

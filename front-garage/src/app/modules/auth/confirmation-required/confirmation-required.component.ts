@@ -49,8 +49,14 @@ export class AuthConfirmationRequiredComponent  implements OnInit
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         const onSuccess  =(response: any)=>{
             if(response.message==='OK'){
-                const user  = response.value;
-                user.removeAttribute('motDePasse');
+                const user  = {
+                    _id : response.value._id ,
+                    identifiant : response.value.identifiant,
+                    mail: response.value.mail,
+                    valid: response.value._id ,
+                    listeVoiture: response.value.listeVoiture,
+                    profil: response.value.profil
+                }
                 sessionStorage.setItem('user',JSON.stringify(user));
                 this._authService._authenticated = true;
                 this._router.navigateByUrl('/dashboards/project');

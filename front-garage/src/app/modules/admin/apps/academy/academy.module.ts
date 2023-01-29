@@ -16,12 +16,19 @@ import { AcademyComponent } from 'app/modules/admin/apps/academy/academy.compone
 import { AcademyDetailsComponent } from 'app/modules/admin/apps/academy/details/details.component';
 import { AcademyListComponent } from 'app/modules/admin/apps/academy/list/list.component';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ModificationComponent } from './modification/modification.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+
 
 @NgModule({
     declarations: [
         AcademyComponent,
         AcademyDetailsComponent,
-        AcademyListComponent
+        AcademyListComponent,
+        ModificationComponent,
     ],
     imports     : [
         RouterModule.forChild(academyRoutes),
@@ -32,9 +39,13 @@ import { MatTabsModule } from '@angular/material/tabs';
         MatProgressBarModule,
         MatSelectModule,
         MatSidenavModule,
+        MatRadioModule,
+        MatCheckboxModule,
         MatSlideToggleModule,
         MatTooltipModule,
         FuseFindByKeyPipeModule,
+        MatDividerModule,
+        ScrollingModule,
         SharedModule,
         MatTabsModule,
     ]

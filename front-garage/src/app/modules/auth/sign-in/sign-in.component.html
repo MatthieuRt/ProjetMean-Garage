@@ -36,6 +36,15 @@
                 <!-- Email field -->
                 <mat-form-field class="w-full">
                     <mat-label>Adresse email</mat-label>
+                    <mat-select [formControlName]="'mail'">
+                        <mat-option *ngFor="let mail of email" [value]="mail">
+                          {{mail}}
+                        </mat-option>
+                      </mat-select>
+                </mat-form-field>
+               
+                <!-- <mat-form-field class="w-full">
+                    <mat-label>Adresse email</mat-label>
                     <input
                         id="email"
                         matInput
@@ -46,7 +55,7 @@
                     <mat-error *ngIf="signInForm.get('mail').hasError('mail')">
                         Veuillez entrer un adresse email valide
                     </mat-error>
-                </mat-form-field>
+                </mat-form-field> -->
 
                 <!-- Password field -->
                 <mat-form-field class="w-full">
