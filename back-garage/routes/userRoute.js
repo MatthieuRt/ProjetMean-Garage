@@ -23,7 +23,7 @@ router.post('/inscription',(request,response)=>{
         }
     });
     //check compte s'il existe déjà
-    Utilisateur.findOne({mail : user.mail} , (err,userExist)=>{
+    Utilisateur.findOne({mail : user.mail} , (erreurFindUser,userExist)=>{
         let rep = {};
         //si utilisateur n'existe pas encore
         if(userExist==null){
@@ -83,7 +83,11 @@ router.post('/inscription',(request,response)=>{
                 code:404
             }
         }
+        if(erreurFindUser){
+            console.log(erreurFindUser)
+        }
         response.json(rep);
+        
     })   
     
 })
