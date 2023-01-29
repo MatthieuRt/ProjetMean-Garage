@@ -46,9 +46,11 @@ export class AuthSignInComponent implements OnInit
      */
     ngOnInit(): void
     {
+        
         this.email = []
         this.email.push('andrianmattax@gmail.com')
         this.email.push('responsable@gmail.com')
+        this.email.push('axelinfiny19@gmail.com')
         // Create the form
         this.signInForm = this._formBuilder.group({
             mail     : ['', [Validators.required]],
